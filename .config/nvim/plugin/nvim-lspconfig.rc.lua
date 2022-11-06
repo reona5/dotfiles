@@ -217,11 +217,9 @@ lspconfig.solargraph.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   cmd = { "solargraph", "stdio" },
-  filetypes = { "ruby" },
   init_options = {
     formatting = false
   },
-  root_dir = require 'lspconfig.util'.root_pattern("Gemfile", ".git"),
   settings = {
     solargraph = {
       diagnostics = false

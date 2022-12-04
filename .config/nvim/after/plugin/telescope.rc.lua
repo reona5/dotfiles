@@ -17,11 +17,9 @@ local new_maker = function(filepath, bufnr, opts)
 	end)
 end
 local opts = { noremap = true, silent = true }
-telescope.load_extension "file_browser"
 vim.api.nvim_set_keymap('n', '<Leader>f', "<Cmd>lua require('telescope.builtin').find_files()<CR>", opts)
 vim.api.nvim_set_keymap('n', '<Leader>g', "<Cmd>lua require('telescope.builtin').live_grep()<CR>", opts)
 vim.api.nvim_set_keymap('n', '<Leader><leader>', "<Cmd>lua require('telescope.builtin').buffers()<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>t", ":Telescope file_browser<CR>", opts)
 
 -- Global remapping
 ------------------------------

@@ -40,10 +40,8 @@ return packer.startup(function(use)
   use 'terrortylor/nvim-comment'
   use { 'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons' }
   use { "iamcco/markdown-preview.nvim", run = function() vim.fn["mkdp#util#install"]() end, }
-  use 'nvim-lua/popup.nvim'
   use 'nvim-lua/plenary.nvim'
   use 'nvim-telescope/telescope.nvim'
-  use 'nvim-telescope/telescope-file-browser.nvim'
   use 'kdheepak/lazygit.nvim'
   use 'rebelot/kanagawa.nvim'
   use 'tpope/vim-fugitive'

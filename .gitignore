@@ -42,6 +42,7 @@
 !/.zsh
 !/.zsh/**
 !/.zshrc
+!/.zshrc.lazy
 !/.zshenv
 
 !/.Brewfile

@@ -23,7 +23,7 @@ local on_attach = function(client, bufnr)
     local group = vim.api.nvim_create_augroup('format', { clear = true })
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
-      command = 'lua vim.lsp.buf.formatting { async = true }',
+      command = 'lua vim.lsp.buf.format { async = true }',
       group = group
     })
     vim.api.nvim_create_autocmd("BufWritePre", {

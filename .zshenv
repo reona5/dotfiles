@@ -14,5 +14,3 @@ export TERM=screen-256color
 export LG_CONFIG_FILE=~/.config/lazygit/config.yml
 export PATH="$(yarn global bin):$PATH:$GOBIN:$HOMEBREWPATH:$LG_CONFIG_FILE:$LUAPATH"
 export GPG_TTY=$(tty)
-
-. /usr/local/opt/asdf/libexec/asdf.sh

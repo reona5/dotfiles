@@ -25,3 +25,6 @@ zinit wait lucid light-mode as'null' \
     for 'zdharma-continuum/null'
 
 eval "$(starship init zsh)"
+eval "$(direnv hook zsh)"
+
+. /usr/local/opt/asdf/libexec/asdf.sh

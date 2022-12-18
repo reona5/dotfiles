@@ -1,7 +1,7 @@
 fpath=(/usr/local/share/zsh-completions $fpath)
 alias -g @g='| rg'
 alias -g @l='| less'
-alias -g @f='--force-with-lease'
+alias -g @f='--force-with-lease --force-if-includes'
 
 alias awsume='. awsume'
 alias ssh='TERM=xterm-256color ssh'
@@ -35,6 +35,7 @@ alias gp='git push'
 alias gpo='git push origin'
 alias gpom='git push origin master'
 alias gpod='git push origin develop'
+alias gpoh='git push origin HEAD'
 alias gpoh='git push origin HEAD'
 alias gpl='git pull'
 alias gplo='git pull origin'

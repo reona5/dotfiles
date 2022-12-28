@@ -166,14 +166,6 @@ if (packer) then
       end
     }
     use {
-      'rebelot/kanagawa.nvim',
-      module = { 'kanagawa' },
-      event = 'VimEnter',
-      config = function()
-        require('plugins.kanagawa')
-      end
-    }
-    use {
       'tpope/vim-fugitive',
       event = 'VimEnter',
       requires = { 'tpope/vim-rhubarb', opts = true },
@@ -212,6 +204,12 @@ if (packer) then
       event = { 'InsertEnter' },
       config = function()
         require('plugins.emmet')
+      end
+    }
+    use {
+      'rebelot/kanagawa.nvim',
+      config = function()
+        require('plugins.kanagawa')
       end
     }
 

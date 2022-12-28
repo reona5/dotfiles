@@ -7,6 +7,7 @@ vim.o.autoindent = true
 vim.o.cursorline = true
 vim.o.number = true
 vim.o.wrap = true
+vim.o.swapfile = false
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.scrolloff = 5

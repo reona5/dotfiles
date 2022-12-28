@@ -1,6 +1,6 @@
 require('base.option')
 require('base.maps')
-require('plugins')
+require('plugins.packer')
 
 local has = function(x)
   return vim.fn.has(x) == 1

@@ -1,5 +1,4 @@
-local status, kanagawa = pcall(require, "kanagawa")
-if (not status) then return end
+local _, kanagawa = pcall(require, "kanagawa")
 
 kanagawa.setup({
     undercurl = true,           -- enable undercurls

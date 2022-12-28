@@ -2,12 +2,12 @@ local status, _ = pcall(require, "nvim-treesitter")
 if (not status) then return end
 
 -- NOTE: https://github.com/nvim-treesitter/nvim-treesitter/issues/270#issuecomment-725883316jI
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
   ensure_installed = 'all',
   sync_install = false,
   auto_install = true,
   ignore_install = { "phpdoc" },
-	indent = {
+  indent = {
     enable = true
   },
   highlight = {

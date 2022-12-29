@@ -199,11 +199,8 @@ return packer.startup(function(use)
     end
   }
   use {
-    'mattn/emmet-vim',
-    event = { 'InsertEnter' },
-    config = function()
-      require('plugins.emmet')
-    end
+    'nanotee/sqls.nvim',
+    ft = { 'sql' }
   }
   use {
     'rebelot/kanagawa.nvim',

@@ -1,11 +1,13 @@
 local status, lspconfig = pcall(require, "lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 if (not status) then return end
 
 local on_attach = function(client, bufnr)
   -- Enable to insert imported library for golang
-  function OrgImports(wait_ms)
+  -- refs: https://github.com/golang/tools/blob/master/gopls/doc/vim.md#neovim-imports
+  function GoOrgImports(wait_ms)
     local params = vim.lsp.util.make_range_params()
     params.context = { only = { "source.organizeImports" } }
     local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
@@ -28,7 +30,7 @@ local on_attach = function(client, bufnr)
     })
     vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = '*.go',
-      command = 'lua OrgImports(100)',
+      command = 'lua GoOrgImports()',
       group = group
     })
   end
@@ -271,3 +273,18 @@ lspconfig.sqls.setup {
   on_attach = on_attach,
   capabilities = capabilities
 }
+
+-- emmet
+lspconfig.emmet_ls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'vue', 'css', 'sass', 'scss', 'less' },
+  init_options = {
+    html = {
+      options = {
+        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+        ["bem.enabled"] = true,
+      },
+    },
+  }
+})

@@ -25,7 +25,11 @@ local on_attach = function(client, bufnr)
     local group = vim.api.nvim_create_augroup('format', { clear = true })
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
-      command = 'lua vim.lsp.buf.format { async = true }',
+      callback = function()
+        -- Avoid format using tsserver
+        -- https://neovim.io/doc/user/lsp.html#vim.lsp.buf.format():~:text=%2D%2D%20Never%20request%20typescript%2Dlanguage%2Dserver%20for%20formatting%0Avim.lsp.buf.format%20%7B%0A%20%20filter%20%3D%20function(client)%20return%20client.name%20~%3D%20%22tsserver%22%20end%0A%7D
+        vim.lsp.buf.format { filter = function(c) return c.name ~= 'tsserver' end, async = true }
+      end,
       group = group
     })
     vim.api.nvim_create_autocmd("BufWritePre", {
@@ -44,7 +48,6 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-[>', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-t>', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-a>', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl',
@@ -52,7 +55,14 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', ',f', '<cmd>lua vim.lsp.buf.format { async = true }<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', ',a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', ',f', '', {
+    noremap = true,
+    silent = true,
+    callback = function()
+      vim.lsp.buf.format { filter = function(c) return c.name ~= 'tsserver' end, async = true }
+    end
+  })
 end
 
 -- diagnosticls
@@ -233,6 +243,11 @@ lspconfig.solargraph.setup {
 -- vuels
 lspconfig.vuels.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+-- tsserver
+lspconfig.tsserver.setup {
   capabilities = capabilities,
 }
 

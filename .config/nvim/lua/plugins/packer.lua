@@ -81,10 +81,20 @@ return packer.startup(function(use)
     'hoob3rt/lualine.nvim',
     module = { 'lualine' },
     event = 'VimEnter',
-    requires = { 'kyazdani42/nvim-web-devicons', opts = true },
-    wants = { 'nvim-web-devicons' },
+    requires = {
+      { 'kyazdani42/nvim-web-devicons', opts = true },
+    },
+    wants = { 'nvim-web-devicons', 'vim-fugitive' },
     config = function()
       require('plugins.lualine')
+    end
+  }
+  use {
+    'tpope/vim-fugitive',
+    requires = { 'tpope/vim-rhubarb', opts = true },
+    wants = { 'vim-rhubarb' },
+    config = function()
+      require('plugins.fugitive')
     end
   }
   use {
@@ -98,8 +108,6 @@ return packer.startup(function(use)
   }
   use {
     'kyazdani42/nvim-tree.lua',
-    module = { 'nvim-tree' },
-    event = 'VimEnter',
     requires = { 'kyazdani42/nvim-web-devicons', opts = true },
     wants = { 'nvim-web-devicons' },
     config = function()
@@ -149,8 +157,6 @@ return packer.startup(function(use)
   }
   use {
     'nvim-telescope/telescope.nvim',
-    module = { 'telescope' },
-    event = 'VimEnter',
     requires = { 'nvim-lua/plenary.nvim', opts = true },
     wants = { 'plenary.nvim' },
     config = function()
@@ -162,15 +168,6 @@ return packer.startup(function(use)
     event = 'VimEnter',
     config = function()
       require('plugins.lazygit')
-    end
-  }
-  use {
-    'tpope/vim-fugitive',
-    event = 'VimEnter',
-    requires = { 'tpope/vim-rhubarb', opts = true },
-    wants = { 'vim-rhubarb' },
-    config = function()
-      require('plugins.fugitive')
     end
   }
   use {

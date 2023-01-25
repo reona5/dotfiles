@@ -23,7 +23,7 @@ local on_attach = function(client, bufnr)
 
   if client.server_capabilities.documentFormattingProvider then
     local group = vim.api.nvim_create_augroup('format', { clear = true })
-    vim.api.nvim_create_autocmd("BufWritePre", {
+    vim.api.nvim_create_autocmd("BufWritePost", {
       buffer = bufnr,
       callback = function()
         -- Avoid format using tsserver
@@ -32,7 +32,7 @@ local on_attach = function(client, bufnr)
       end,
       group = group
     })
-    vim.api.nvim_create_autocmd("BufWritePre", {
+    vim.api.nvim_create_autocmd("BufWritePost", {
       pattern = '*.go',
       command = 'lua GoOrgImports()',
       group = group

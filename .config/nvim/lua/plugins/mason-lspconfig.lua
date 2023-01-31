@@ -7,7 +7,7 @@ mason_lspconfig.setup {
     'sumneko_lua',
     'solargraph',
     'tsserver',
-    'vuels',
+    'volar',
     'stylelint_lsp',
     'gopls',
     'emmet_ls'

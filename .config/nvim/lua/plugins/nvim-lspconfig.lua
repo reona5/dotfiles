@@ -240,8 +240,8 @@ lspconfig.solargraph.setup {
   }
 }
 
--- vuels
-lspconfig.vuels.setup {
+-- volar
+lspconfig.volar.setup {
   on_attach = on_attach,
   capabilities = capabilities,
 }

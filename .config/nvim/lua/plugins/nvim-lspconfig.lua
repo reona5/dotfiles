@@ -290,11 +290,17 @@ lspconfig.sqls.setup {
   capabilities = capabilities
 }
 
+-- astro
+lspconfig.astro.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+
 -- emmet
 lspconfig.emmet_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'vue', 'css', 'sass', 'scss', 'less' },
+  filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'vue', 'css', 'sass', 'scss', 'less', 'astro' },
   init_options = {
     html = {
       options = {

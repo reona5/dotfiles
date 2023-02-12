@@ -3,6 +3,7 @@ if (not status) then return end
 
 mason_lspconfig.setup {
   ensure_installed = {
+    'astro',
     'diagnosticls',
     'sumneko_lua',
     'solargraph',

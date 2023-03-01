@@ -5,7 +5,7 @@ mason_lspconfig.setup {
   ensure_installed = {
     'astro',
     'diagnosticls',
-    'sumneko_lua',
+    'lua_ls',
     'solargraph',
     'tsserver',
     'volar',

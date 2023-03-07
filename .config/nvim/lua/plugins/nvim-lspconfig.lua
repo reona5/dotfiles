@@ -70,7 +70,7 @@ lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'ruby', 'css', 'less', 'scss',
-    'markdown', 'vue' },
+    'markdown', 'vue', 'astro' },
   init_options = {
     linters = {
       eslint = {
@@ -149,6 +149,7 @@ lspconfig.diagnosticls.setup {
       javascriptreact = 'eslint',
       typescript = 'eslint',
       typescriptreact = 'eslint',
+      astro = 'eslint',
       vue = 'eslint',
       ruby = 'rubocop'
     },
@@ -180,6 +181,7 @@ lspconfig.diagnosticls.setup {
       less = 'prettier',
       typescript = 'prettier',
       typescriptreact = 'prettier',
+      astro = 'prettier',
       ruby = 'rubocop',
       vue = 'prettier',
       markdown = 'prettier',

@@ -102,8 +102,8 @@ lspconfig.diagnosticls.setup {
           security = 'severity'
         },
         securities = {
-          [2] = 'error',
-          [1] = 'warning'
+              [2] = 'error',
+              [1] = 'warning'
         }
       },
       eslint_d = {
@@ -122,8 +122,8 @@ lspconfig.diagnosticls.setup {
           security = 'severity'
         },
         securities = {
-          [2] = 'error',
-          [1] = 'warning'
+              [2] = 'error',
+              [1] = 'warning'
         }
       },
       rubocop = {
@@ -254,6 +254,11 @@ lspconfig.volar.setup {
 -- tsserver
 lspconfig.tsserver.setup {
   capabilities = capabilities,
+  -- refs: https://www.reddit.com/r/neovim/comments/nv3qh8/comment/h11d6cf/?utm_source=share&utm_medium=web2x&context=3
+  handlers = {
+        ['textDocument/publishDiagnostics'] = function()
+    end
+  },
 }
 
 -- stylelint
@@ -310,7 +315,7 @@ lspconfig.emmet_ls.setup({
     html = {
       options = {
         -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-        ["bem.enabled"] = true,
+            ["bem.enabled"] = true,
       },
     },
   }

@@ -16,3 +16,6 @@ require 'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = true,
   },
 }
+
+-- refs: https://phelipetls.github.io/posts/mdx-syntax-highlight-treesitter-nvim/
+require("nvim-treesitter.parsers").filetype_to_parsername.mdx = "markdown"

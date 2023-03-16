@@ -15,6 +15,8 @@ vim.o.updatetime = 500
 vim.o.whichwrap = "b,s,h,l,[,],<,>"
 vim.o.signcolumn = "yes"
 
+vim.filetype.add({ extension = { mdx = 'mdx' } })
+
 vim.cmd([[
 	" Full-width Space highlight
 	function! Space()

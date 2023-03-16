@@ -24,6 +24,8 @@
 !/.config/nvim/
 !/.config/nvim/**
 /.config/nvim/plugin/packer_compiled.lua
+!/.config/sheldon/
+!/.config/sheldon/**
 !/.ctags.d/
 !/.ctags.d/config.ctags
 !/.fzf.zsh

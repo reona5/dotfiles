@@ -1,10 +1,6 @@
 # emacs mode
 bindkey -e
 
-# 色を使用出来るようにする
-autoload -Uz colors
-colors
-
 # KEYTIMEOUTの短縮
 KEYTIMEOUT=1
 

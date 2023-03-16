@@ -61,6 +61,7 @@ brew "pngpaste"
 brew "postgresql", restart_service: true
 brew "reattach-to-user-namespace"
 brew "ripgrep"
+brew "sheldon"
 brew "starship"
 brew "tig"
 brew "tmux"

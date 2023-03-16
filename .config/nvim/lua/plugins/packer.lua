@@ -59,10 +59,10 @@ return packer.startup(function(use)
     module = { 'cmp' },
     event = { 'InsertEnter' },
     requires = {
-      { 'hrsh7th/cmp-buffer', event = { 'InsertEnter' } },
-      { 'hrsh7th/cmp-path', event = { 'InsertEnter' } },
+      { 'hrsh7th/cmp-buffer',  event = { 'InsertEnter' } },
+      { 'hrsh7th/cmp-path',    event = { 'InsertEnter' } },
       { 'hrsh7th/cmp-cmdline', event = { 'InsertEnter' } },
-      { 'hrsh7th/cmp-vsnip', event = { 'InsertEnter' } },
+      { 'hrsh7th/cmp-vsnip',   event = { 'InsertEnter' } },
       {
         'hrsh7th/vim-vsnip',
         event = { 'InsertEnter' },
@@ -84,7 +84,7 @@ return packer.startup(function(use)
     requires = {
       { 'kyazdani42/nvim-web-devicons', opts = true },
     },
-    wants = { 'nvim-web-devicons', 'vim-fugitive' },
+    wants = { 'nvim-web-devicons' },
     config = function()
       require('plugins.lualine')
     end

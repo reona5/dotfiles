@@ -23,7 +23,7 @@ local on_attach = function(client, bufnr)
 
   if client.server_capabilities.documentFormattingProvider then
     local group = vim.api.nvim_create_augroup('format', { clear = true })
-    vim.api.nvim_create_autocmd("BufWritePost", {
+    vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
       callback = function()
         -- Avoid format using tsserver and volar
@@ -70,7 +70,7 @@ lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'ruby', 'css', 'less', 'scss',
-    'markdown', 'vue', 'astro' },
+    'markdown', 'vue', 'astro', 'mdx', 'yml' },
   init_options = {
     linters = {
       eslint = {
@@ -102,8 +102,8 @@ lspconfig.diagnosticls.setup {
           security = 'severity'
         },
         securities = {
-              [2] = 'error',
-              [1] = 'warning'
+          [2] = 'error',
+          [1] = 'warning'
         }
       },
       eslint_d = {
@@ -122,8 +122,8 @@ lspconfig.diagnosticls.setup {
           security = 'severity'
         },
         securities = {
-              [2] = 'error',
-              [1] = 'warning'
+          [2] = 'error',
+          [1] = 'warning'
         }
       },
       rubocop = {
@@ -185,6 +185,8 @@ lspconfig.diagnosticls.setup {
       ruby = 'rubocop',
       vue = 'prettier',
       markdown = 'prettier',
+      mdx = 'prettier',
+      yml = 'prettier',
     }
   }
 }
@@ -256,7 +258,7 @@ lspconfig.tsserver.setup {
   capabilities = capabilities,
   -- refs: https://www.reddit.com/r/neovim/comments/nv3qh8/comment/h11d6cf/?utm_source=share&utm_medium=web2x&context=3
   handlers = {
-        ['textDocument/publishDiagnostics'] = function()
+    ['textDocument/publishDiagnostics'] = function()
     end
   },
 }
@@ -294,8 +296,8 @@ lspconfig.gopls.setup {
   },
 }
 
--- sqls
-lspconfig.sqls.setup {
+-- sqlls
+lspconfig.sqlls.setup {
   on_attach = on_attach,
   capabilities = capabilities
 }
@@ -315,7 +317,7 @@ lspconfig.emmet_ls.setup({
     html = {
       options = {
         -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-            ["bem.enabled"] = true,
+        ["bem.enabled"] = true,
       },
     },
   }

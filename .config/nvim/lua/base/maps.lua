@@ -44,3 +44,5 @@ keymap.set('i', '<C-e>', '<End>')
 keymap.set('i', '<C-d>', '<Del>')
 keymap.set('i', '<C-h>', '<BS>')
 keymap.set('i', '<C-k>', '<C-r>=s:kill()<CR>')
+
+keymap.set('n', '<Leader>p', '<C-c>:r! paste_image_on_markdown <CR>')

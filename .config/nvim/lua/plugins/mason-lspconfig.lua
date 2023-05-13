@@ -11,7 +11,8 @@ mason_lspconfig.setup {
     'volar',
     'stylelint_lsp',
     'gopls',
-    'emmet_ls'
+    'emmet_ls',
+    'tailwindcss'
   },
   automatic_installation = true
 }

@@ -107,7 +107,7 @@ tree.setup(
     renderer = {
       add_trailing = false,
       group_empty = false,
-      highlight_git = true,
+      highlight_git = false,
       highlight_opened_files = "name",
       root_folder_modifier = ":~",
       indent_markers = {

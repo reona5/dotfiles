@@ -18,4 +18,4 @@ require 'nvim-treesitter.configs'.setup {
 }
 
 -- refs: https://phelipetls.github.io/posts/mdx-syntax-highlight-treesitter-nvim/
-require("nvim-treesitter.parsers").filetype_to_parsername.mdx = "markdown"
+vim.treesitter.language.register("markdown", "mdx")

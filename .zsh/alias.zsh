@@ -1,4 +1,3 @@
-fpath=(/usr/local/share/zsh-completions $fpath)
 alias -g @g='| rg'
 alias -g @l='| less'
 alias -g @f='--force-with-lease --force-if-includes'

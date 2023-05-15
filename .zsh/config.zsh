@@ -36,9 +36,6 @@ setopt hist_ignore_space
 # ヒストリに保存するときに余分なスペースを削除する
 setopt hist_reduce_blanks
 
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # fbrm - checkout git branch (including remote branches)
 fbrm() {
   local branches branch

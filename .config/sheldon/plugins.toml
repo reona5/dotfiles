@@ -16,17 +16,11 @@ shell = "zsh"
 github = 'romkatv/zsh-defer'
 apply = ['source']
 
-# refs: https://github.com/rossmacarthur/sheldon/issues/158
-[templates]
-defer = """{% for file in files %}
-zsh-defer source "{{ file }}"
-{% endfor %}"""
-
 [plugins.compinit]
-inline = 'autoload -Uz compinit && zsh-defer compinit'
+inline = 'autoload -Uz compinit && compinit'
 
 [plugins.colors]
-inline = 'autoload -Uz colors && zsh-defer colors'
+inline = 'autoload -Uz colors && colors'
 
 [plugins.zsh-completions]
 github = 'zsh-users/zsh-completions'
@@ -44,3 +38,6 @@ apply = ['defer']
 local = '~/.zsh'
 use = ['*.zsh']
 apply = ['source']
+
+[templates]
+defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"

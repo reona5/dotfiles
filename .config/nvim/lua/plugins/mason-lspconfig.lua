@@ -4,10 +4,8 @@ if (not status) then return end
 mason_lspconfig.setup {
   ensure_installed = {
     'astro',
-    'diagnosticls',
     'lua_ls',
     'solargraph',
-    'tsserver',
     'volar',
     'stylelint_lsp',
     'gopls',

@@ -18,6 +18,12 @@ local packer_bootstrap = ensure_packer()
 return packer.startup(function(use)
   use 'wbthomason/packer.nvim'
   use {
+    'rebelot/kanagawa.nvim',
+    config = function()
+      require('plugins.kanagawa')
+    end
+  }
+  use {
     'neovim/nvim-lspconfig',
     module = { 'lspconfig' },
     event = { 'BufRead' },
@@ -39,7 +45,11 @@ return packer.startup(function(use)
           require('plugins.mason')
         end
       },
-      { 'hrsh7th/cmp-nvim-lsp', opts = true }
+      {
+        'jose-elias-alvarez/null-ls.nvim',
+        requires = { 'nvim-lua/plenary.nvim', opts = true },
+      },
+      { 'hrsh7th/cmp-nvim-lsp', opts = true },
     },
     wants = { 'mason-lspconfig.nvim', 'mason.nvim', 'cmp-nvim-lsp' },
     config = function()
@@ -197,12 +207,6 @@ return packer.startup(function(use)
   use {
     'nanotee/sqls.nvim',
     ft = { 'sql' }
-  }
-  use {
-    'rebelot/kanagawa.nvim',
-    config = function()
-      require('plugins.kanagawa')
-    end
   }
 
   if packer_bootstrap then

@@ -16,7 +16,3 @@ defaults:
 .PHONY: brew
 brew:
 	.bin/brew.sh
-
-.PHONY: mas
-mas:
-	.bin/mas.sh

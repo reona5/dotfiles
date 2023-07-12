@@ -80,6 +80,7 @@ cask "alacritty"
 cask "chromedriver"
 cask "deepl"
 cask "docker"
+cask "discord"
 cask "firefox"
 cask "google-japanese-ime"
 cask "google-chrome"
@@ -94,3 +95,8 @@ cask "skitch"
 cask "slack"
 cask "visual-studio-code"
 cask "zoom"
+
+mas 'Dash', id: 449589707
+mas 'Kindle', id: 405399194
+mas 'LINE', id: 539883307
+mas "RunCat", id: 1429033973

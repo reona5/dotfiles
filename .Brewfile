@@ -5,10 +5,8 @@ tap "eugenmayer/dockersync"
 tap "github/gh"
 tap "heroku/brew"
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
-tap "homebrew/core"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
 tap "osx-cross/arm"
@@ -82,6 +80,7 @@ cask "deepl"
 cask "docker"
 cask "discord"
 cask "firefox"
+cask "font-jetbrains-mono-nerd-font"
 cask "google-japanese-ime"
 cask "google-chrome"
 cask "gyazo"
@@ -96,7 +95,6 @@ cask "slack"
 cask "visual-studio-code"
 cask "zoom"
 
-mas 'Dash', id: 449589707
 mas 'Kindle', id: 405399194
 mas 'LINE', id: 539883307
 mas "RunCat", id: 1429033973

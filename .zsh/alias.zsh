@@ -54,7 +54,6 @@ alias grhh='git reset --hard HEAD^'
 alias gre='git restore'
 alias vi='nvim'
 alias vanish='git branch | grep -v "main" | grep -v "develop" | xargs git branch -D'
-alias brew="PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin brew"
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'

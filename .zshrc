@@ -3,7 +3,7 @@ eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-. /usr/local/opt/asdf/libexec/asdf.sh
+. "$HOME/.asdf/asdf.sh"
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc

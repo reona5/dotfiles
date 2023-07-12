@@ -76,7 +76,6 @@ null_ls.setup({
   diagnostics_format = "#{m} (#{s}: #{c})",
   sources = {
     null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.diagnostics.tsc,
     null_ls.builtins.diagnostics.eslint_d,
     null_ls.builtins.diagnostics.rubocop,
     null_ls.builtins.formatting.rubocop,
@@ -210,6 +209,12 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
     prefix = "",
   },
 })
+
+-- tsserver
+lspconfig.tsserver.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
 
 -- lua-language-server
 local runtime_path = vim.split(package.path, ";")

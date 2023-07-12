@@ -10,7 +10,8 @@ mason_lspconfig.setup {
     'stylelint_lsp',
     'gopls',
     'emmet_ls',
-    'tailwindcss'
+    'tailwindcss',
+    'tsserver'
   },
   automatic_installation = true
 }

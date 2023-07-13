@@ -20,10 +20,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # make commands without mas 
+      # make commands without mas
       - name: Set MacOS.
-        run: | 
+        run: |
           make init
           make link
           make defaults
+          MAS_APPS="$(grep -o 'mas "[^"]*"' .Brewfile | awk -F'"' '{ print $2 }' | tr '\n' ' ')"
+          export HOMEBREW_BUNDLE_MAS_SKIP="$MAS_APPS"
           make brew

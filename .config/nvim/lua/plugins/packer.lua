@@ -1,8 +1,4 @@
-local status, packer = pcall(require, 'packer')
-if (not status or not packer) then
-  print('Packer is not installed')
-  return
-end
+local _, packer = pcall(require, 'packer')
 local ensure_packer = function()
   local fn = vim.fn
   local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'

@@ -97,6 +97,7 @@ if OS.mac?
   cask "visual-studio-code"
   cask "zoom"
 
+  mas "Contrast", id: 1254981365
   mas "RunCat", id: 1429033973
   mas "Xcode", id: 497799835
   mas "LINE", id: 539883307

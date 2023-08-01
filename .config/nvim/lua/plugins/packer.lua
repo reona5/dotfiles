@@ -106,6 +106,7 @@ return packer.startup(function(use)
   }
   use {
     'nvim-treesitter/nvim-treesitter',
+    requires = { 'JoosepAlviste/nvim-ts-context-commentstring', opts = true },
     module = { 'nvim-treesitter' },
     run = ':TSUpdate',
     event = 'BufRead',

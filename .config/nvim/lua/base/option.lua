@@ -11,7 +11,7 @@ vim.o.swapfile = false
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.scrolloff = 5
-vim.o.updatetime = 500
+vim.o.updatetime = 100
 vim.o.whichwrap = "b,s,h,l,[,],<,>"
 vim.o.signcolumn = "yes"
 

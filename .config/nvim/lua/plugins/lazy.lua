@@ -1,38 +1,34 @@
-local _, packer = pcall(require, 'packer')
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
+    lazypath,
+  })
 end
-local packer_bootstrap = ensure_packer()
+vim.opt.rtp:prepend(lazypath)
 
-return packer.startup(function(use)
-  use 'wbthomason/packer.nvim'
-  use {
+require('lazy').setup({
+  {
     'rebelot/kanagawa.nvim',
     config = function()
       require('plugins.kanagawa')
     end
-  }
-  use {
+  },
+  {
     'neovim/nvim-lspconfig',
-    module = { 'lspconfig' },
     event = { 'BufRead' },
-    requires = {
+    dependencies = {
       {
         'williamboman/mason.nvim',
-        opts = true,
-        module = 'mason',
+        lazy = true,
         cmd = 'Mason',
-        requires = {
+        dependencies = {
           'williamboman/mason-lspconfig.nvim',
-          opts = true,
-          module = 'mason-lspconfig',
+          lazy = true,
           config = function()
             require('plugins.mason-lspconfig')
           end
@@ -43,29 +39,26 @@ return packer.startup(function(use)
       },
       {
         'jose-elias-alvarez/null-ls.nvim',
-        requires = { 'nvim-lua/plenary.nvim', opts = true },
+        dependencies = { 'nvim-lua/plenary.nvim', lazy = true },
       },
-      { 'hrsh7th/cmp-nvim-lsp',                  opts = true },
-      { 'davidosomething/format-ts-errors.nvim', opts = true },
+      { 'hrsh7th/cmp-nvim-lsp',                  lazy = true },
+      { 'davidosomething/format-ts-errors.nvim', lazy = true },
     },
-    wants = { 'mason-lspconfig.nvim', 'mason.nvim', 'cmp-nvim-lsp' },
     config = function()
       require('plugins.nvim-lspconfig')
     end
-  }
-  use {
+  },
+  {
     'glepnir/lspsaga.nvim',
-    module = { 'lspsaga' },
     event = 'BufRead',
     config = function()
       require('plugins.lspsaga')
     end,
-  }
-  use {
+  },
+  {
     'hrsh7th/nvim-cmp',
-    module = { 'cmp' },
     event = { 'InsertEnter' },
-    requires = {
+    dependencies = {
       { 'hrsh7th/cmp-buffer',  event = { 'InsertEnter' } },
       { 'hrsh7th/cmp-path',    event = { 'InsertEnter' } },
       { 'hrsh7th/cmp-cmdline', event = { 'InsertEnter' } },
@@ -82,132 +75,113 @@ return packer.startup(function(use)
     config = function()
       require('plugins.nvim-cmp')
     end,
-    wants = { 'lspkind-nvim' }
-  }
-  use {
+  },
+  {
     'hoob3rt/lualine.nvim',
-    module = { 'lualine' },
     event = 'VimEnter',
-    requires = {
-      { 'kyazdani42/nvim-web-devicons', opts = true },
+    dependencies = {
+      { 'kyazdani42/nvim-web-devicons', lazy = true },
     },
-    wants = { 'nvim-web-devicons' },
     config = function()
       require('plugins.lualine')
     end
-  }
-  use {
+  },
+  {
     'tpope/vim-fugitive',
-    requires = { 'tpope/vim-rhubarb', opts = true },
-    wants = { 'vim-rhubarb' },
+    dependencies = { 'tpope/vim-rhubarb', lazy = true },
     config = function()
       require('plugins.fugitive')
     end
-  }
-  use {
+  },
+  {
     'nvim-treesitter/nvim-treesitter',
-    requires = { 'JoosepAlviste/nvim-ts-context-commentstring', opts = true },
-    module = { 'nvim-treesitter' },
-    run = ':TSUpdate',
+    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring', lazy = true },
+    build = ':TSUpdate',
     event = 'BufRead',
     config = function()
       require('plugins.nvim-treesitter')
     end
-  }
-  use {
+  },
+  {
     'kyazdani42/nvim-tree.lua',
-    requires = { 'kyazdani42/nvim-web-devicons', opts = true },
-    wants = { 'nvim-web-devicons' },
+    dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
     config = function()
       require('plugins.nvim-tree')
     end
-  }
-  use {
+  },
+  {
     'lewis6991/gitsigns.nvim',
-    module = { 'gitsigns' },
     event = 'BufRead',
     config = function()
       require('plugins.gitsigns')
     end
-  }
-  use {
+  },
+  {
     'lukas-reineke/indent-blankline.nvim',
-    module = { 'indent_blankline' },
     event = 'BufRead',
     config = function()
       require('plugins.indent-blankline')
     end
-  }
-  use {
+  },
+  {
     'terrortylor/nvim-comment',
-    module = { 'nvim_comment' },
     event = 'BufRead',
     config = function()
       require('plugins.nvim-comment')
     end
-  }
-  use {
+  },
+  {
     'akinsho/bufferline.nvim',
-    module = { 'bufferline' },
     event = 'VimEnter',
-    requires = { 'kyazdani42/nvim-web-devicons', opts = true },
-    wants = { 'nvim-web-devicons' },
+    dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
     config = function()
       require('plugins.bufferline')
     end
-  }
-  use {
+  },
+  {
     'iamcco/markdown-preview.nvim',
-    run = function()
+    build = function()
       vim.fn['mkdp#util#install']()
     end
-  }
-  use {
+  },
+  {
     'nvim-telescope/telescope.nvim',
-    requires = { 'nvim-lua/plenary.nvim', opts = true },
-    wants = { 'plenary.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', lazy = true },
     config = function()
       require('plugins.telescope')
     end
-  }
-  use {
+  },
+  {
     'kdheepak/lazygit.nvim',
     event = 'VimEnter',
     config = function()
       require('plugins.lazygit')
     end
-  }
-  use {
+  },
+  {
     'vim-test/vim-test',
     event = 'BufRead',
-    requires = { 'preservim/vimux', opts = true },
-    wants = { 'vimux' },
+    dependencies = { 'preservim/vimux', lazy = true },
     config = function()
       require('plugins.vim-test')
     end
-  }
-  use {
+  },
+  {
     'windwp/nvim-ts-autotag',
-    module = { 'nvim-ts-autotag' },
     event = { 'InsertEnter' },
     config = function()
       require('plugins.nvim-ts-autotag')
     end
-  }
-  use {
+  },
+  {
     'windwp/nvim-autopairs',
-    module = { 'nvim-autopairs' },
     event = { 'InsertEnter' },
     config = function()
       require('plugins.nvim-autopairs')
     end
-  }
-  use {
+  },
+  {
     'nanotee/sqls.nvim',
     ft = { 'sql' }
-  }
-
-  if packer_bootstrap then
-    packer.sync()
-  end
-end)
+  },
+})

@@ -8,7 +8,6 @@ mason_lspconfig.setup {
     'solargraph',
     'volar',
     'stylelint_lsp',
-    'gopls',
     'emmet_ls',
     'tailwindcss',
     'tsserver'

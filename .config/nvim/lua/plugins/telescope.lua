@@ -2,24 +2,11 @@ local status, telescope = pcall(require, "telescope")
 if (not status) then return end
 
 local actions = require('telescope.actions')
-local previewers = require("telescope.previewers")
-local new_maker = function(filepath, bufnr, opts)
-  opts = opts or {}
-
-  filepath = vim.fn.expand(filepath)
-  vim.loop.fs_stat(filepath, function(_, stat)
-    if not stat then return end
-    if stat.size > 100000 then
-      return
-    else
-      previewers.buffer_previewer_maker(filepath, bufnr, opts)
-    end
-  end)
-end
+local builtin = require('telescope.builtin')
 local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap('n', '<Leader>f', "<Cmd>lua require('telescope.builtin').find_files()<CR>", opts)
-vim.api.nvim_set_keymap('n', '<Leader>g', "<Cmd>lua require('telescope.builtin').live_grep()<CR>", opts)
-vim.api.nvim_set_keymap('n', '<Leader><leader>', "<Cmd>lua require('telescope.builtin').buffers()<CR>", opts)
+vim.keymap.set('n', '<Leader>f', builtin.find_files, opts)
+vim.keymap.set('n', '<Leader>g', builtin.live_grep, opts)
+vim.keymap.set('n', '<Leader><leader>', builtin.buffers, opts)
 
 -- Global remapping
 ------------------------------
@@ -58,6 +45,5 @@ telescope.setup {
       'channel.html',
       'ctags'
     },
-    buffer_previewer_maker = new_maker,
   }
 }

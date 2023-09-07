@@ -4,13 +4,14 @@ if (not status) then return end
 mason_lspconfig.setup {
   ensure_installed = {
     'astro',
+    'emmet_ls',
+    'gopls',
     'lua_ls',
     'solargraph',
-    'volar',
     'stylelint_lsp',
-    'emmet_ls',
     'tailwindcss',
-    'tsserver'
+    'tsserver',
+    'volar',
   },
   automatic_installation = true
 }

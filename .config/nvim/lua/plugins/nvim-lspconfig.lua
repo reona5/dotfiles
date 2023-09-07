@@ -320,31 +320,8 @@ lspconfig.stylelint_lsp.setup({
   },
 })
 
--- gopls
-lspconfig.gopls.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-  cmd = { "gopls", "serve" },
-  filetypes = { "go", "gomod" },
-  root_dir = require("lspconfig.util").root_pattern("go.work", "go.mod", ".git"),
-  settings = {
-    gopls = {
-      analyses = {
-        unusedparams = true,
-      },
-      staticcheck = true,
-    },
-  },
-})
-
 -- sqlls
 lspconfig.sqlls.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
--- astro
-lspconfig.astro.setup({
   on_attach = on_attach,
   capabilities = capabilities,
 })

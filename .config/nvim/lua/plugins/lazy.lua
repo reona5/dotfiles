@@ -95,7 +95,7 @@ require('lazy').setup({
   },
   {
     'nvim-treesitter/nvim-treesitter',
-    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring', lazy = true },
+    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
     build = ':TSUpdate',
     event = 'BufRead',
     config = function()
@@ -179,9 +179,5 @@ require('lazy').setup({
     config = function()
       require('plugins.nvim-autopairs')
     end
-  },
-  {
-    'nanotee/sqls.nvim',
-    ft = { 'sql' }
   },
 })

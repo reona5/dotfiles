@@ -37,10 +37,6 @@ require('lazy').setup({
           require('plugins.mason-lspconfig')
         end
       },
-      {
-        'jose-elias-alvarez/null-ls.nvim',
-        dependencies = { 'nvim-lua/plenary.nvim', lazy = true },
-      },
       { 'hrsh7th/cmp-nvim-lsp',                  lazy = true },
       { 'davidosomething/format-ts-errors.nvim', lazy = true },
     },

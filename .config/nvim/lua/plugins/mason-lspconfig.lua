@@ -7,6 +7,7 @@ mason_lspconfig.setup {
     'emmet_ls',
     'gopls',
     'lua_ls',
+    'rubocop',
     'solargraph',
     'stylelint_lsp',
     'tailwindcss',

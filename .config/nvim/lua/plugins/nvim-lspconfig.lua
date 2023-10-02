@@ -1,11 +1,9 @@
 local status, lspconfig = pcall(require, "lspconfig")
-local null_ls_status, null_ls = pcall(require, "null-ls")
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 if not status then return end
-if not null_ls_status then return end
 
 local on_attach = function(_, bufnr)
   -- Enable to insert imported library for golang
@@ -73,134 +71,99 @@ local on_attach = function(_, bufnr)
   })
 end
 
-null_ls.setup({
-  diagnostics_format = "#{m} (#{s}: #{c})",
-  sources = {
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.diagnostics.eslint_d,
-    null_ls.builtins.diagnostics.rubocop,
-    null_ls.builtins.formatting.rubocop,
-    null_ls.builtins.formatting.prettier,
-  },
-  on_attach = on_attach,
-})
-
 -- diagnosticls
--- lspconfig.diagnosticls.setup {
---   on_attach = on_attach,
---   capabilities = capabilities,
---   filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'ruby', 'css', 'less', 'scss',
---     'markdown', 'vue', 'astro', 'mdx', 'yml' },
---   init_options = {
---     linters = {
---       eslint = {
---         options = {
---           rulePaths = { 'config/eslint/custom_rules' }
---         },
---         sourceName = 'eslint',
---         command = 'eslint',
---         rootPatterns = {
---           '.git',
---           'package.json'
---         },
---         debounce = 100,
---         args = {
---           '--cache',
---           '--stdin',
---           '--stdin-filename',
---           '%filepath',
---           '--format',
---           'json'
---         },
---         parseJson = {
---           errorsRoot = '[0].messages',
---           line = 'line',
---           column = 'column',
---           endLine = 'endLine',
---           endColumn = 'endColumn',
---           message = '${message} [${ruleId}]',
---           security = 'severity'
---         },
---         securities = {
---           [2] = 'error',
---           [1] = 'warning'
---         }
---       },
---       eslint_d = {
---         command = 'eslint_d',
---         rootPatterns = { '.git' },
---         debounce = 100,
---         args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
---         sourceName = 'eslint_d',
---         parseJson = {
---           errorsRoot = '[0].messages',
---           line = 'line',
---           column = 'column',
---           endLine = 'endLine',
---           endColumn = 'endColumn',
---           message = '[eslint] ${message} [${ruleId}]',
---           security = 'severity'
---         },
---         securities = {
---           [2] = 'error',
---           [1] = 'warning'
---         }
---       },
---       rubocop = {
---         command = 'bundle',
---         args = { 'exec', 'rubocop', '--format', 'json', '--force-exclusion', '%filepath' },
---         debounce = 100,
---         sourceName = 'rubocop',
---         parseJson = {
---           errorsRoot = 'files[0].offenses',
---           line = 'location.line',
---           column = 'location.column',
---           message = '[${cop_name}] ${message}',
---           security = 'severity'
---         },
---         securities = {
---           fatal = 'error',
---           warning = 'warning'
---         }
---       }
---     },
---     filetypes = {
---       javascript = 'eslint',
---       javascriptreact = 'eslint',
---       typescript = 'eslint',
---       typescriptreact = 'eslint',
---       astro = 'eslint',
---       vue = 'eslint',
---       ruby = 'rubocop'
---     },
---     formatters = {
---       prettier = {
---         command = 'prettier',
---         args = { '--stdin-filepath', '%filename' }
---       },
---       rubocop = {
---         command = 'bundle',
---         args = { 'exec', 'rubocop', '-a', '--stderr', '--stdin', '%filepath' }
---       },
---     },
---     formatFiletypes = {
---       css = 'prettier',
---       javascript = 'prettier',
---       javascriptreact = 'prettier',
---       json = 'prettier',
---       scss = 'prettier',
---       less = 'prettier',
---       typescript = 'prettier',
---       typescriptreact = 'prettier',
---       astro = 'prettier',
---       ruby = 'rubocop',
---       vue = 'prettier',
---       markdown = 'prettier',
---       mdx = 'prettier',
---       yml = 'prettier',
---     }
---   }
--- }
+lspconfig.diagnosticls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss',
+    'markdown', 'vue', 'astro', 'mdx', 'yml' },
+  init_options = {
+    linters = {
+      eslint = {
+        options = {
+          rulePaths = { 'config/eslint/custom_rules' }
+        },
+        sourceName = 'eslint',
+        command = 'eslint',
+        rootPatterns = {
+          '.git',
+          'package.json'
+        },
+        debounce = 100,
+        args = {
+          '--cache',
+          '--stdin',
+          '--stdin-filename',
+          '%filepath',
+          '--format',
+          'json'
+        },
+        parseJson = {
+          errorsRoot = '[0].messages',
+          line = 'line',
+          column = 'column',
+          endLine = 'endLine',
+          endColumn = 'endColumn',
+          message = '${message} [${ruleId}]',
+          security = 'severity'
+        },
+        securities = {
+          [2] = 'error',
+          [1] = 'warning'
+        }
+      },
+      eslint_d = {
+        command = 'eslint_d',
+        rootPatterns = { '.git' },
+        debounce = 100,
+        args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
+        sourceName = 'eslint_d',
+        parseJson = {
+          errorsRoot = '[0].messages',
+          line = 'line',
+          column = 'column',
+          endLine = 'endLine',
+          endColumn = 'endColumn',
+          message = '[eslint] ${message} [${ruleId}]',
+          security = 'severity'
+        },
+        securities = {
+          [2] = 'error',
+          [1] = 'warning'
+        }
+      },
+    },
+    filetypes = {
+      javascript = 'eslint',
+      javascriptreact = 'eslint',
+      typescript = 'eslint',
+      typescriptreact = 'eslint',
+      astro = 'eslint',
+      vue = 'eslint',
+    },
+    formatters = {
+      prettier = {
+        command = 'prettier',
+        args = { '--stdin-filepath', '%filename' }
+      },
+    },
+    formatFiletypes = {
+      css = 'prettier',
+      javascript = 'prettier',
+      javascriptreact = 'prettier',
+      json = 'prettier',
+      scss = 'prettier',
+      less = 'prettier',
+      typescript = 'prettier',
+      typescriptreact = 'prettier',
+      astro = 'prettier',
+      vue = 'prettier',
+      markdown = 'prettier',
+      mdx = 'prettier',
+      yml = 'prettier',
+    }
+  }
+}
 
 -- diagnostics-icon
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -281,6 +244,12 @@ lspconfig.lua_ls.setup({
       },
     },
   },
+})
+
+-- rubocop
+lspconfig.rubocop.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
 })
 
 -- solargraph

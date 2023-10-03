@@ -10,9 +10,9 @@ xcode-select --install > /dev/null
 
 # Install Homebrew
 if [ ! -f /usr/local/bin/brew ]
- then
+then
   echo "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
- else
+else
   echo "Homebrew already installed."
 fi

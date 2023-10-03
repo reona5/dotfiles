@@ -97,7 +97,6 @@ tree.setup(
     view = {
       adaptive_size = false,
       width = 40,
-      hide_root_folder = false,
       side = "left",
       preserve_window_proportions = false,
       number = false,

@@ -13,9 +13,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   {
-    'rebelot/kanagawa.nvim',
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
     config = function()
-      require('plugins.kanagawa')
+      require('plugins.catputtin')
     end
   },
   {

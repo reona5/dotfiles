@@ -23,7 +23,10 @@ local on_attach = function(_, bufnr)
   end
 
   local lsp_format = function()
+    -- Avoid format using tsserver and volar
+    -- https://neovim.io/doc/user/lsp.html#vim.lsp.buf.format():~:text=%2D%2D%20Never%20request%20typescript%2Dlanguage%2Dserver%20for%20formatting%0Avim.lsp.buf.format%20%7B%0A%20%20filter%20%3D%20function(client)%20return%20client.name%20~%3D%20%22tsserver%22%20end%0A%7D
     vim.lsp.buf.format({
+      filter = function(c) return c.name ~= 'tsserver' and c.name ~= 'volar' end,
       async = true,
       bufnr = bufnr,
     })

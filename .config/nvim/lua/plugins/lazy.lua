@@ -179,4 +179,8 @@ require('lazy').setup({
       require('plugins.nvim-autopairs')
     end
   },
+  {
+    "github/copilot.vim",
+    lazy = false,
+  },
 })

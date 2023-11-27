@@ -3,6 +3,7 @@
 	name = reona5
 [core]
 	editor = nvim
+	commentChar = ";"
 [merge]
 	ff = false
 [pull]
@@ -19,3 +20,5 @@
 	defaultBranch = main
 [ghq]
 	root = ~/src
+[commit]
+	gpgsign = true

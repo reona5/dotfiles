@@ -9,6 +9,8 @@ export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export STARSHIP_CONFIG=$HOME/.zsh/starship/config.toml
+# commit signing
+export GPG_TTY=$(tty)
 
 # pnpm
 export PNPM_HOME=$HOME/.local/share/pnpm

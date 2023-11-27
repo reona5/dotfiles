@@ -38,6 +38,7 @@ brew "gdk-pixbuf"
 brew "gh"
 brew "ghq"
 brew "git", link: true, conflicts_with: ["git"]
+brew "git-lfs"
 brew "gnupg"
 brew "gobject-introspection"
 brew "harfbuzz"

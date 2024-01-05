@@ -9,7 +9,7 @@
 !/.bin.local
 !/.config/
 !/.config/alacritty/
-!/.config/alacritty/alacritty.yml
+!/.config/alacritty/alacritty.toml
 !/.config/gh/
 !/.config/gh/state.yml
 !/.config/gh/config.yml

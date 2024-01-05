@@ -269,6 +269,12 @@ lspconfig.solargraph.setup({
   },
 })
 
+-- textlint
+lspconfig.textlint.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
 -- volar
 lspconfig.volar.setup({
   on_attach = on_attach,

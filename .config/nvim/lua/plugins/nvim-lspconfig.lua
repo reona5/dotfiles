@@ -78,7 +78,7 @@ lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss',
-    'markdown', 'vue', 'astro', 'mdx', 'yml' },
+    'markdown', 'vue', 'astro', 'mdx', 'yml', 'txt' },
   init_options = {
     linters = {
       eslint = {
@@ -134,6 +134,26 @@ lspconfig.diagnosticls.setup {
           [1] = 'warning'
         }
       },
+      textlint = {
+        command = 'textlint',
+        sourceName = 'textlint',
+        rootPatterns = { '.textlintrc' },
+        debounce = 100,
+        args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
+        parseJson = {
+          errorsRoot = '[0].messages',
+          line = 'line',
+          column = 'column',
+          endLine = 'endLine',
+          endColumn = 'endColumn',
+          message = '[textlint] ${message} [${ruleId}]',
+          security = 'severity'
+        },
+        securities = {
+          [2] = 'error',
+          [1] = 'warning'
+        }
+      }
     },
     filetypes = {
       javascript = 'eslint',
@@ -142,6 +162,9 @@ lspconfig.diagnosticls.setup {
       typescriptreact = 'eslint',
       astro = 'eslint',
       vue = 'eslint',
+      markdown = 'textlint',
+      mdx = 'textlint',
+      txt = 'textlint'
     },
     formatters = {
       prettier = {
@@ -267,12 +290,6 @@ lspconfig.solargraph.setup({
       diagnostics = false,
     },
   },
-})
-
--- textlint
-lspconfig.textlint.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
 })
 
 -- volar

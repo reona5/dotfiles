@@ -11,7 +11,6 @@ mason_lspconfig.setup {
     'solargraph',
     'stylelint_lsp',
     'tailwindcss',
-    'textlint',
     'tsserver',
     'volar',
   },

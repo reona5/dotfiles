@@ -31,7 +31,14 @@
 !/.github/
 !/.github/**
 !/.gitignore
+!/.local/
+!/.local/share/
+!/.local/share/pnpm/
+!/.local/share/pnpm/global/
+!/.local/share/pnpm/global/5/
+!/.local/share/pnpm/global/5/package.json
 !/.tmux.conf
+!/.textlintrc
 !/.tmux/
 !/.tmux/plugins/
 !/.tmux/plugins/**

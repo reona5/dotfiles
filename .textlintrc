@@ -10,5 +10,8 @@
       "no-exclamation-question-mark": false
     },
     "preset-smarthr": true
-  }
+  },
+   "filters": {
+    "comments": true
+  } 
 }

@@ -1,16 +1,15 @@
 {
     "dependencies": {
-        "@fsouza/prettierd": "^0.24.1",
-        "astro": "^4.0.5",
-        "eslint": "^8.44.0",
+        "@fsouza/prettierd": "^0.24.2",
+        "@proofdict/textlint-rule-proofdict": "^3.1.2",
+        "astro": "^4.1.1",
+        "eslint": "^8.56.0",
         "eslint_d": "^12.2.1",
-        "prettier": "^3.0.0",
+        "prettier": "^3.1.1",
         "textlint": "^13.4.1",
-        "textlint-rule-preset-ja-spacing": "^2.3.0",
         "textlint-rule-preset-ja-technical-writing": "^10.0.1",
-        "textlint-rule-preset-jtf-style": "^2.3.14",
-        "textlint-rule-prh": "^5.3.0",
-        "typescript": "^5.1.6",
+        "textlint-rule-preset-smarthr": "^1.28.0",
+        "typescript": "^5.3.3",
         "typescript-language-server": "^3.3.2"
     }
 }

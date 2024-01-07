@@ -1,0 +1,33 @@
+{
+  "rules": {
+    "@proofdict/proofdict": {
+      "dictURL": "https://azu.github.io/proof-dictionary/"
+    },
+    "preset-ja-technical-writing": {
+      "sentence-length": false,
+      "ja-no-weak-phrase": false,
+      "ja-no-mixed-period": false,
+      "no-exclamation-question-mark": false
+    },
+    "preset-smarthr": {
+      "ja-space-between-half-and-full-width": {
+        "space": "always"
+      }
+    }
+  },
+  "plugins": {
+    "@textlint/markdown": {
+      "extensions": [".mdx"]
+    }
+  },
+  "filters": {
+    "allowlist": {
+      "allow": [
+        "/株式会社\\S*|\\S*株式会社/",
+        "/\\S*県\\S*市/",
+        "基本情報技術者試験"
+      ]
+    },
+    "comments": true
+  }
+}

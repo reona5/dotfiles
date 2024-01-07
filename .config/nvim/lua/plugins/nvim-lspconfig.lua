@@ -137,7 +137,7 @@ lspconfig.diagnosticls.setup {
       textlint = {
         command = 'textlint',
         sourceName = 'textlint',
-        rootPatterns = { '.textlintrc' },
+        rootPatterns = { '.textlintrc.json' },
         debounce = 100,
         args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
         parseJson = {

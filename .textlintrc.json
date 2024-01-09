@@ -9,6 +9,9 @@
       "ja-no-mixed-period": false,
       "no-exclamation-question-mark": false
     },
+    "preset-jtf-style": {
+      "3.1.1.全角文字と半角文字の間": false
+    },
     "preset-smarthr": {
       "ja-space-between-half-and-full-width": {
         "space": "always"

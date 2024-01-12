@@ -10,6 +10,7 @@
 !/.config/
 !/.config/alacritty/
 !/.config/alacritty/alacritty.toml
+!/.config/alacritty/catppuccin-mocha.toml
 !/.config/gh/
 !/.config/gh/state.yml
 !/.config/gh/config.yml

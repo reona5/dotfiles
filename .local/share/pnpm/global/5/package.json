@@ -1,5 +1,6 @@
 {
     "dependencies": {
+        "@antfu/ni": "^0.21.12",
         "@fsouza/prettierd": "^0.24.2",
         "@proofdict/textlint-rule-proofdict": "^3.1.2",
         "@textlint/textlint-plugin-markdown": "^13.4.1",

@@ -82,9 +82,6 @@ lspconfig.diagnosticls.setup {
   init_options = {
     linters = {
       eslint = {
-        options = {
-          rulePaths = { 'config/eslint/custom_rules' }
-        },
         sourceName = 'eslint',
         command = 'eslint',
         rootPatterns = {
@@ -137,7 +134,7 @@ lspconfig.diagnosticls.setup {
       textlint = {
         command = 'textlint',
         sourceName = 'textlint',
-        rootPatterns = { '.textlintrc.json' },
+        rootPatterns = { '.git' },
         debounce = 100,
         args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
         parseJson = {

@@ -57,6 +57,7 @@
 !/.Brewfile
 !/.Masfile
 
+!/changelog.config.js
 !/LICENSE
 !/Makefile
 !/README.md

@@ -166,6 +166,7 @@ lspconfig.diagnosticls.setup {
     formatters = {
       prettier = {
         command = 'prettier',
+        rootPatterns = { '.git' },
         args = { '--stdin-filepath', '%filename' }
       },
     },

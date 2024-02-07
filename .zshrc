@@ -12,3 +12,10 @@ fi
 if (which zprof > /dev/null 2>&1) ;then
   zprof
 fi
+
+# bun completions
+[ -s "/Users/reona.shimada/.bun/_bun" ] && source "/Users/reona.shimada/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

@@ -14,6 +14,7 @@ vim.o.scrolloff = 5
 vim.o.updatetime = 100
 vim.o.whichwrap = "b,s,h,l,[,],<,>"
 vim.o.signcolumn = "yes"
+vim.o.clipboard = "unnamedplus"
 
 vim.filetype.add({ extension = { mdx = 'mdx' } })
 

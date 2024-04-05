@@ -24,6 +24,10 @@
 !/.config/neofetch/**
 !/.config/nvim/
 !/.config/nvim/**
+!/.config/pnpm/
+!/.config/pnpm/*
+!/.config/pnpm/5/
+!/.config/pnpm/5/*
 !/.config/sheldon/
 !/.config/sheldon/**
 !/.ctags.d/

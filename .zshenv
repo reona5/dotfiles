@@ -9,14 +9,7 @@ export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
 export STARSHIP_CONFIG=$HOME/.zsh/starship/config.toml
-# commit signing
-export GPG_TTY=$(tty)
+export PNPM_HOME=$HOME/.config/pnpm
+export GPG_TTY=$(tty) # commit signing
 
-# pnpm
-export PNPM_HOME=$HOME/.local/share/pnpm
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
 . "$HOME/.cargo/env"

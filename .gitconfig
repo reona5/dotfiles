@@ -22,3 +22,7 @@
 	root = ~/src
 [commit]
 	gpgsign = true
+[rebase]
+	autostash = true
+	abbreviateCommands = true
+	autosquash = true

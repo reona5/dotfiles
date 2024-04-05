@@ -32,7 +32,6 @@
 !/.github/
 !/.github/**
 !/.gitignore
-!/.local/share/pnpm/global/5/package.json
 !/.tmux.conf
 !/.textlintrc.json
 !/.tmux/

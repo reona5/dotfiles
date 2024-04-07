@@ -25,7 +25,6 @@
 !/.config/nvim/
 !/.config/nvim/**
 !/.config/pnpm/
-!/.config/pnpm/*
 !/.config/pnpm/5/
 !/.config/pnpm/5/*
 !/.config/sheldon/
@@ -36,6 +35,7 @@
 !/.github/
 !/.github/**
 !/.gitignore
+!/.npmrc
 !/.tmux.conf
 !/.textlintrc.json
 !/.tmux/

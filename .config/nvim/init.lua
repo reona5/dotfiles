@@ -1,6 +1,9 @@
 require('base.option')
 require('base.maps')
-require('plugins.lazy')
+if vim.g.vscode then
+else
+  require('plugins.lazy')
+end
 
 local has = function(x)
   return vim.fn.has(x) == 1
@@ -14,3 +17,4 @@ end
 if is_win then
   require('base.windows')
 end
+

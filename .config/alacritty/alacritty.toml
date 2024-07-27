@@ -25,7 +25,7 @@ key = "Q"
 mods = "Control"
 
 [shell]
-args = ["-l", "-c", "tmux"]
+args = ["-l", "-c", "tmux a -t default || tmux new -s default"]
 program = "/bin/zsh"
 
 [window]

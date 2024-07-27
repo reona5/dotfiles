@@ -151,13 +151,6 @@ require('lazy').setup({
     end
   },
   {
-    'kdheepak/lazygit.nvim',
-    event = 'VimEnter',
-    config = function()
-      require('plugins.lazygit')
-    end
-  },
-  {
     'vim-test/vim-test',
     event = 'BufRead',
     dependencies = { 'preservim/vimux', lazy = true },

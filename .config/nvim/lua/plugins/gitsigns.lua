@@ -28,15 +28,15 @@ require('gitsigns').setup {
   },
   auto_attach = true,
   attach_to_untracked = false,
-  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame = true,
   current_line_blame_opts = {
     virt_text = true,
     virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-    delay = 1000,
+    delay = 500,
     ignore_whitespace = false,
     virt_text_priority = 100,
   },
-  current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> / <summary> / <sha>',
   sign_priority = 6,
   update_debounce = 100,
   status_formatter = nil, -- Use default
@@ -76,7 +76,7 @@ require('gitsigns').setup {
     end)
 
     -- Actions
-    map('n', '<leader>hs', gitsigns.stage_hunk)
+    map('n', '<leader>ha', gitsigns.stage_hunk)
     map('n', '<leader>hr', gitsigns.reset_hunk)
     map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
     map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)

@@ -3,6 +3,7 @@
         "@antfu/ni": "^0.21.12",
         "@fsouza/prettierd": "^0.24.2",
         "@proofdict/textlint-rule-proofdict": "^3.1.2",
+        "@slidev/cli": "^0.49.23",
         "@textlint/textlint-plugin-markdown": "^13.4.1",
         "astro": "^4.1.1",
         "eslint": "^8.56.0",

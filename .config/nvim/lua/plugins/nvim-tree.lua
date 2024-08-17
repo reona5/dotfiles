@@ -186,6 +186,11 @@ tree.setup(
       enable = false,
       ignore = false,
     },
+    filesystem_watchers = {
+      ignore_dirs = {
+        "node_modules"
+      },
+    },
     actions = {
       use_system_clipboard = true,
       change_dir = {

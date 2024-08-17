@@ -2,6 +2,13 @@ local status, chat = pcall(require, "CopilotChat")
 if (not status) then return end
 
 chat.setup({
+  window = {
+    layout = 'float',
+    relative = 'cursor',
+    width = 0.8,
+    height = 0.8,
+    row = 1
+  },
   prompts = {
     Explain = {
       prompt = "/COPILOT_EXPLAIN 上記のコードを日本語で説明してください",

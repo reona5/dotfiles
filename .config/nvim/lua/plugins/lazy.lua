@@ -184,11 +184,34 @@ require('lazy').setup({
     event = { 'BufRead' },
     branch = "canary",
     dependencies = {
-      { "github/copilot.vim",    lazy = true },
-      { "nvim-lua/plenary.nvim", lazy = true },
+      { "github/copilot.vim",            lazy = true },
+      { "nvim-lua/plenary.nvim",         lazy = true },
+      { "nvim-telescope/telescope.nvim", lazy = true },
     },
     config = function()
       require('plugins.copilot-chat')
-    end
+    end,
+    keys = {
+      -- Show prompts actions with telescope
+      {
+        ",cp",
+        function()
+          local actions = require("CopilotChat.actions")
+          require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
+        end,
+        desc = "CopilotChat - Prompt actions",
+      },
+      -- Quick chat with Copilot
+      {
+        ",ca",
+        function()
+          local input = vim.fn.input("Quick Chat: ")
+          if input ~= "" then
+            require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
+          end
+        end,
+        desc = "CopilotChat - Quick chat",
+      },
+    }
   },
 })

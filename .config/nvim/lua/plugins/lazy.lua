@@ -5,7 +5,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -184,11 +184,11 @@ require('lazy').setup({
     event = { 'BufRead' },
     branch = "canary",
     dependencies = {
-      { "github/copilot.vim", lazy = true },
+      { "github/copilot.vim",    lazy = true },
       { "nvim-lua/plenary.nvim", lazy = true },
     },
-    opts = {
-      debug = true,
-    },
+    config = function()
+      require('plugins.copilot-chat')
+    end
   },
 })

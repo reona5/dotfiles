@@ -200,6 +200,7 @@ require('lazy').setup({
           require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
         end,
         desc = "CopilotChat - Prompt actions",
+        mode = { 'n', 'v' }
       },
       -- Quick chat with Copilot
       {
@@ -211,6 +212,7 @@ require('lazy').setup({
           end
         end,
         desc = "CopilotChat - Quick chat",
+        mode = { 'n', 'v' }
       },
     }
   },

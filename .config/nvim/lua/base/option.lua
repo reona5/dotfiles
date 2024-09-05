@@ -14,6 +14,7 @@ vim.o.scrolloff = 5
 vim.o.updatetime = 100
 vim.o.whichwrap = "b,s,h,l,[,],<,>"
 vim.o.signcolumn = "yes"
+vim.o.fileformats="unix,dos,mac"
 
 local has_clipboard = vim.fn.has("clipboard") == 1
 local has_unnamedplus = vim.fn.has("unnamedplus") == 1

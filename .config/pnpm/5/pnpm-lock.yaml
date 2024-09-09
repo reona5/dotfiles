@@ -63,8 +63,8 @@ importers:
         specifier: ^5.3.3
         version: 5.4.4
       typescript-language-server:
-        specifier: ^3.3.2
-        version: 3.3.2
+        specifier: ^4.3.3
+        version: 4.3.3
       yarn:
         specifier: ^1.22.22
         version: 1.22.22
@@ -5313,9 +5313,9 @@ packages:
   typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  typescript-language-server@3.3.2:
-    resolution: {integrity: sha512-jzun53CIkTbpAki0nP+hk5baGW+86SNNlVhyIj2ZUy45zUkCnmoetWuAtfRRQYrlIr8x4QB3ymGJPuwDQSd/ew==}
-    engines: {node: '>=14.17'}
+  typescript-language-server@4.3.3:
+    resolution: {integrity: sha512-3QLj57Ru9S6zv10sa4z1pA3TIR1Rdkd04Ke0EszbO4fx5PLdlYhlC/PMxwlyxls9wrZs7wPCME1Ru0s1Gabz4Q==}
+    engines: {node: '>=18'}
     hasBin: true
 
   typescript@5.4.4:
@@ -12666,7 +12666,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typescript-language-server@3.3.2:
+  typescript-language-server@4.3.3:
     dependencies:
       vscode-jsonrpc: 5.0.1
       vscode-languageserver-protocol: 3.17.5

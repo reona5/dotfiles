@@ -23,10 +23,10 @@ local on_attach = function(_, bufnr)
   end
 
   local lsp_format = function()
-    -- Avoid format using tsserver and volar
+    -- Avoid format using ts_ls and volar
     -- https://neovim.io/doc/user/lsp.html#vim.lsp.buf.format():~:text=%2D%2D%20Never%20request%20typescript%2Dlanguage%2Dserver%20for%20formatting%0Avim.lsp.buf.format%20%7B%0A%20%20filter%20%3D%20function(client)%20return%20client.name%20~%3D%20%22tsserver%22%20end%0A%7D
     vim.lsp.buf.format({
-      filter = function(c) return c.name ~= 'tsserver' and c.name ~= 'volar' end,
+      filter = function(c) return c.name ~= 'ts_ls' and c.name ~= 'volar' end,
       async = true,
       bufnr = bufnr,
     })
@@ -194,47 +194,21 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
   },
 })
 
--- tsserver
-lspconfig.tsserver.setup {
+-- ts_ls
+lspconfig.ts_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  handlers = {
-    ["textDocument/publishDiagnostics"] = function(
-      _,
-      result,
-      ctx,
-      config
-    )
-      if result.diagnostics == nil then
-        return
-      end
-
-      -- ignore some tsserver diagnostics
-      local idx = 1
-      while idx <= #result.diagnostics do
-        local entry = result.diagnostics[idx]
-
-        local formatter = require('format-ts-errors')[entry.code]
-        entry.message = formatter and formatter(entry.message) or entry.message
-
-        -- codes: https://github.com/microsoft/TypeScript/blob/main/src/compiler/diagnosticMessages.json
-        if entry.code == 80001 then
-          -- { message = "File is a CommonJS module; it may be converted to an ES module.", }
-          table.remove(result.diagnostics, idx)
-        else
-          idx = idx + 1
-        end
-      end
-
-      vim.lsp.diagnostic.on_publish_diagnostics(
-        _,
-        result,
-        ctx,
-        config
-      )
-    end,
+  init_options = {
+    plugins = {
+      {
+        name = "@vue/typescript-plugin",
+        location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
+        languages = { "javascript", "typescript", "vue" },
+      },
+    },
   },
-}
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
+})
 
 -- lua-language-server
 local runtime_path = vim.split(package.path, ";")

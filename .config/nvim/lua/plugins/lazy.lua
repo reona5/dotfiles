@@ -42,8 +42,7 @@ require('lazy').setup({
           require('plugins.mason-lspconfig')
         end
       },
-      { 'hrsh7th/cmp-nvim-lsp',                  lazy = true },
-      { 'davidosomething/format-ts-errors.nvim', lazy = true },
+      { 'hrsh7th/cmp-nvim-lsp', lazy = true },
     },
     config = function()
       require('plugins.nvim-lspconfig')

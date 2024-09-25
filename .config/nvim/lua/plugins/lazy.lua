@@ -20,7 +20,7 @@ require('lazy').setup({
     name = "catppuccin",
     priority = 1000,
     config = function()
-      require('plugins.catputtin')
+      require('plugins.catppuccin')
     end
   },
   {
@@ -191,7 +191,6 @@ require('lazy').setup({
       require('plugins.copilot-chat')
     end,
     keys = {
-      -- Show prompts actions with telescope
       {
         ",cp",
         function()
@@ -201,7 +200,6 @@ require('lazy').setup({
         desc = "CopilotChat - Prompt actions",
         mode = { 'n', 'v' }
       },
-      -- Quick chat with Copilot
       {
         ",ca",
         function()

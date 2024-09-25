@@ -168,22 +168,28 @@ lspconfig.diagnosticls.setup {
       },
     },
     formatFiletypes = {
-      css = 'prettier',
-      javascript = 'prettier',
-      javascriptreact = 'prettier',
+      -- css = 'prettier',
+      -- javascript = 'prettier',
+      -- javascriptreact = 'prettier',
       json = 'prettier',
       scss = 'prettier',
       less = 'prettier',
-      typescript = 'prettier',
-      typescriptreact = 'prettier',
+      -- typescript = 'prettier',
+      -- typescriptreact = 'prettier',
       astro = 'prettier',
-      vue = 'prettier',
+      -- vue = 'prettier',
       markdown = 'prettier',
       mdx = 'prettier',
       yml = 'prettier',
     }
   }
 }
+
+-- ts_ls
+lspconfig.biome.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
 
 -- diagnostics-icon
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {

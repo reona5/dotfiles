@@ -289,12 +289,6 @@ lspconfig.stylelint_lsp.setup({
   },
 })
 
--- sqlls
-lspconfig.sqlls.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
 -- emmet
 lspconfig.emmet_ls.setup({
   on_attach = on_attach,

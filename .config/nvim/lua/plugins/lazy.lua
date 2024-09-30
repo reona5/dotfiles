@@ -148,6 +148,7 @@ require('lazy').setup({
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', lazy = true },
+    event = 'VimEnter',
     config = function()
       require('plugins.telescope')
     end

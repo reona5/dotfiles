@@ -128,26 +128,26 @@ lspconfig.diagnosticls.setup {
           [1] = 'warning'
         }
       },
-      textlint = {
-        command = 'textlint',
-        sourceName = 'textlint',
-        rootPatterns = { '.git' },
-        debounce = 100,
-        args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
-        parseJson = {
-          errorsRoot = '[0].messages',
-          line = 'line',
-          column = 'column',
-          endLine = 'endLine',
-          endColumn = 'endColumn',
-          message = '[textlint] ${message} [${ruleId}]',
-          security = 'severity'
-        },
-        securities = {
-          [2] = 'error',
-          [1] = 'warning'
-        }
-      }
+      -- textlint = {
+      --   command = 'textlint',
+      --   sourceName = 'textlint',
+      --   rootPatterns = { '.git' },
+      --   debounce = 100,
+      --   args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
+      --   parseJson = {
+      --     errorsRoot = '[0].messages',
+      --     line = 'line',
+      --     column = 'column',
+      --     endLine = 'endLine',
+      --     endColumn = 'endColumn',
+      --     message = '[textlint] ${message} [${ruleId}]',
+      --     security = 'severity'
+      --   },
+      --   securities = {
+      --     [2] = 'error',
+      --     [1] = 'warning'
+      --   }
+      -- }
     },
     filetypes = {
       javascript = 'eslint',
@@ -185,7 +185,7 @@ lspconfig.diagnosticls.setup {
   }
 }
 
--- ts_ls
+-- biome
 lspconfig.biome.setup({
   on_attach = on_attach,
   capabilities = capabilities,
@@ -208,7 +208,7 @@ lspconfig.ts_ls.setup({
     plugins = {
       {
         name = "@vue/typescript-plugin",
-        location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
+        location = require("mason-registry").get_package("vue-language-server"):get_install_path() .. "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
         languages = { "javascript", "typescript", "vue" },
       },
     },
@@ -275,6 +275,8 @@ lspconfig.volar.setup({
 
 -- stylelint
 lspconfig.stylelint_lsp.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
   filetypes = {
     "css",
     "scss",

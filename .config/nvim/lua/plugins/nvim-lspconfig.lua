@@ -277,12 +277,6 @@ lspconfig.volar.setup({
 lspconfig.stylelint_lsp.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  filetypes = {
-    "css",
-    "scss",
-    "vue",
-  },
-  cmd = { "stylelint-lsp", "--stdio" },
   settings = {
     stylelintplus = {
       autoFixOnSave = true,

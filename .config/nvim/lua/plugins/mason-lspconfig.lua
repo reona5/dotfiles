@@ -7,6 +7,7 @@ mason_lspconfig.setup {
     'biome',
     'emmet_ls',
     'gopls',
+    'intelephense',
     'lua_ls',
     'rubocop',
     'solargraph',

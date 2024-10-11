@@ -176,15 +176,19 @@ require('lazy').setup({
     end
   },
   {
-    "github/copilot.vim",
-    event = { 'InsertEnter' },
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require('plugins.copilot')
+    end,
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     event = { 'BufRead' },
     branch = "canary",
     dependencies = {
-      { "github/copilot.vim",            lazy = true },
+      { "zbirenbaum/copilot.lua",        lazy = true },
       { "nvim-lua/plenary.nvim",         lazy = true },
       { "nvim-telescope/telescope.nvim", lazy = true },
     },

@@ -39,4 +39,8 @@ export PHP_BUILD_CONFIGURE_OPTS="--with-bz2=$(brew --prefix bzip2) --with-iconv=
 export LDFLAGS="-L/opt/homebrew/opt/mysql@5.7/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/mysql@5.7/include"
 
+export REQUESTS_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
+export NODE_EXTRA_CA_CERTS="/etc/ssl/certs/netskope-cert-bundle.pem"
+export CURL_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
+
 . "$HOME/.cargo/env"

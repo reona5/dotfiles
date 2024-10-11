@@ -46,6 +46,7 @@ brew "imagemagick"
 brew "jq"
 brew "lazygit"
 brew "libxml2"
+brew "luarocks"
 brew "lua-language-server"
 brew "luajit", args: ["HEAD"]
 brew "mas"
@@ -73,6 +74,7 @@ brew "unison"
 brew "vim"
 brew "universal-ctags"
 brew "watchman"
+brew "wget"
 
 if OS.mac?
   cask "alacritty"

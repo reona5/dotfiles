@@ -185,12 +185,6 @@ lspconfig.diagnosticls.setup {
   }
 }
 
--- biome
-lspconfig.biome.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
 -- diagnostics-icon
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
   underline = true,
@@ -200,20 +194,37 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
   },
 })
 
--- ts_ls
-lspconfig.ts_ls.setup({
+-- biome
+lspconfig.biome.setup({
   on_attach = on_attach,
   capabilities = capabilities,
+})
+
+-- emmet
+lspconfig.emmet_ls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
+  filetypes = { "html", "typescriptreact", "javascriptreact", "vue", "css", "sass", "scss", "less", "astro" },
   init_options = {
-    plugins = {
-      {
-        name = "@vue/typescript-plugin",
-        location = require("mason-registry").get_package("vue-language-server"):get_install_path() .. "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
-        languages = { "javascript", "typescript", "vue" },
+    html = {
+      options = {
+        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+        ["bem.enabled"] = true,
       },
     },
   },
-  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
+})
+
+-- gopls
+lspconfig.gopls.setup({
+  on_attach = on_attach,
+  capabilities = capabilities
+})
+
+-- intelephense
+lspconfig.intelephense.setup({
+  on_attach = on_attach,
+  capabilities = capabilities
 })
 
 -- lua-language-server
@@ -267,12 +278,6 @@ lspconfig.solargraph.setup({
   },
 })
 
--- volar
-lspconfig.volar.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
 -- stylelint
 lspconfig.stylelint_lsp.setup({
   on_attach = on_attach,
@@ -285,17 +290,24 @@ lspconfig.stylelint_lsp.setup({
   },
 })
 
--- emmet
-lspconfig.emmet_ls.setup({
+-- ts_ls
+lspconfig.ts_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  filetypes = { "html", "typescriptreact", "javascriptreact", "vue", "css", "sass", "scss", "less", "astro" },
   init_options = {
-    html = {
-      options = {
-        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-        ["bem.enabled"] = true,
+    plugins = {
+      {
+        name = "@vue/typescript-plugin",
+        location = require("mason-registry").get_package("vue-language-server"):get_install_path() .. "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
+        languages = { "javascript", "typescript", "vue" },
       },
     },
   },
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
+})
+
+-- volar
+lspconfig.volar.setup({
+  on_attach = on_attach,
+  capabilities = capabilities,
 })

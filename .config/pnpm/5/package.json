@@ -25,6 +25,7 @@
         "textlint-rule-preset-smarthr": "^1.28.0",
         "typescript": "^5.3.3",
         "typescript-language-server": "^4.3.3",
+        "vue-tsc": "^2.1.6",
         "yarn": "^1.22.22"
     }
 }

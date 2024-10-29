@@ -13,6 +13,7 @@ tap "qmk/qmk"
 tap "sanemat/font"
 tap "yutomizutani/jc"
 
+brew "actionlint"
 brew "awsume"
 brew "imath"
 brew "autoconf"

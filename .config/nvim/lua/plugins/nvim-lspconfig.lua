@@ -75,90 +75,103 @@ lspconfig.diagnosticls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss',
-    'markdown', 'vue', 'astro', 'mdx', 'yml', 'txt' },
+    'markdown', 'vue', 'astro', 'mdx', 'yaml', 'txt' },
   init_options = {
-    linters = {
-      eslint = {
-        sourceName = 'eslint',
-        command = 'eslint',
-        rootPatterns = {
-          'package.json'
-        },
-        debounce = 100,
-        args = {
-          '--cache',
-          '--stdin',
-          '--stdin-filename',
-          '%filepath',
-          '--format',
-          'json'
-        },
-        parseJson = {
-          errorsRoot = '[0].messages',
-          line = 'line',
-          column = 'column',
-          endLine = 'endLine',
-          endColumn = 'endColumn',
-          message = '${message} [${ruleId}]',
-          security = 'severity'
-        },
-        securities = {
-          [2] = 'error',
-          [1] = 'warning'
-        }
-      },
-      eslint_d = {
-        command = 'eslint_d',
-        rootPatterns = { '.git' },
-        debounce = 100,
-        args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
-        sourceName = 'eslint_d',
-        parseJson = {
-          errorsRoot = '[0].messages',
-          line = 'line',
-          column = 'column',
-          endLine = 'endLine',
-          endColumn = 'endColumn',
-          message = '[eslint] ${message} [${ruleId}]',
-          security = 'severity'
-        },
-        securities = {
-          [2] = 'error',
-          [1] = 'warning'
-        }
-      },
-      -- textlint = {
-      --   command = 'textlint',
-      --   sourceName = 'textlint',
-      --   rootPatterns = { '.git' },
-      --   debounce = 100,
-      --   args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
-      --   parseJson = {
-      --     errorsRoot = '[0].messages',
-      --     line = 'line',
-      --     column = 'column',
-      --     endLine = 'endLine',
-      --     endColumn = 'endColumn',
-      --     message = '[textlint] ${message} [${ruleId}]',
-      --     security = 'severity'
-      --   },
-      --   securities = {
-      --     [2] = 'error',
-      --     [1] = 'warning'
-      --   }
-      -- }
-    },
-    filetypes = {
-      javascript = 'eslint',
-      javascriptreact = 'eslint',
-      typescript = 'eslint',
-      typescriptreact = 'eslint',
-      astro = 'eslint',
-      vue = 'eslint',
-      markdown = 'textlint',
-      mdx = 'textlint',
-      txt = 'textlint'
-    },
+    -- linters = {
+    --   eslint = {
+    --     sourceName = 'eslint',
+    --     command = 'eslint',
+    --     rootPatterns = {
+    --       'package.json'
+    --     },
+    --     debounce = 100,
+    --     args = {
+    --       '--cache',
+    --       '--stdin',
+    --       '--stdin-filename',
+    --       '%filepath',
+    --       '--format',
+    --       'json'
+    --     },
+    --     parseJson = {
+    --       errorsRoot = '[0].messages',
+    --       line = 'line',
+    --       column = 'column',
+    --       endLine = 'endLine',
+    --       endColumn = 'endColumn',
+    --       message = '${message} [${ruleId}]',
+    --       security = 'severity'
+    --     },
+    --     securities = {
+    --       [2] = 'error',
+    --       [1] = 'warning'
+    --     }
+    --   },
+    --   eslint_d = {
+    --     command = 'eslint_d',
+    --     rootPatterns = { '.git' },
+    --     debounce = 100,
+    --     args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
+    --     sourceName = 'eslint_d',
+    --     parseJson = {
+    --       errorsRoot = '[0].messages',
+    --       line = 'line',
+    --       column = 'column',
+    --       endLine = 'endLine',
+    --       endColumn = 'endColumn',
+    --       message = '[eslint] ${message} [${ruleId}]',
+    --       security = 'severity'
+    --     },
+    --     securities = {
+    --       [2] = 'error',
+    --       [1] = 'warning'
+    --     }
+    --   },
+    --   actionlint = {
+    --     command = 'actionlint',
+    --     sourceName = 'actionlint',
+    --     rootPatterns = {
+    --       '.github/workflows/*.yml',
+    --       '.github/workflows/*.yaml'
+    --     },
+    --     debounce = 100,
+    --     args = { '-oneline', '-stdin-filename', '%filepath', '-format', '{{json .}}' },
+    --     isStderr = false,
+    --     isStdout = true,
+    --     parseJson = {
+    --       errorsRoot = '[0].messages',
+    --       line = 'line',
+    --       column = 'column',
+    --       endLine = 'endLine',
+    --       endColumn = 'endColumn',
+    --       message = '[actionlint] ${message} [${ruleId}]',
+    --       security = 'severity'
+    --     },
+    --     formatLines = 1,
+    --     formatPattern = {
+    --       "^([^:]+):(\\d+):(\\d+):\\s+(.*)$",
+    --       {
+    --         line = 'line',
+    --         column = 'column',
+    --         message = 'message',
+    --         security = 'security'
+    --       }
+    --     },
+    --     securities = {
+    --       [2] = 'error',
+    --       [1] = 'warning'
+    --     }
+    --   }
+    -- },
+    -- filetypes = {
+    --   javascript = 'eslint',
+    --   javascriptreact = 'eslint',
+    --   typescript = 'eslint',
+    --   typescriptreact = 'eslint',
+    --   astro = 'eslint',
+    --   vue = 'eslint',
+    --   yaml = 'actionlint'
+    -- },
     formatters = {
       prettier = {
         command = 'prettier',
@@ -179,7 +192,7 @@ lspconfig.diagnosticls.setup {
       vue = 'prettier',
       markdown = 'prettier',
       mdx = 'prettier',
-      yml = 'prettier',
+      yaml = 'prettier',
     }
   }
 }
@@ -289,7 +302,7 @@ lspconfig.ts_ls.setup({
       {
         name = "@vue/typescript-plugin",
         location = require("mason-registry").get_package("vue-language-server"):get_install_path() ..
-        "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
+            "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
         languages = { "javascript", "typescript", "vue" },
       },
     },

@@ -49,6 +49,16 @@ require("lazy").setup({
     end
   },
   {
+    "mfussenegger/nvim-lint",
+    event = {
+      "BufReadPre",
+      "BufNewFile",
+    },
+    config = function()
+      require("plugins.nvim-lint")
+    end
+  },
+  {
     "glepnir/lspsaga.nvim",
     event = "BufRead",
     config = function()

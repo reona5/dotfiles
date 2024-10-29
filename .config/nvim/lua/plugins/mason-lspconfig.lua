@@ -10,7 +10,7 @@ mason_lspconfig.setup {
     'intelephense',
     'lua_ls',
     'rubocop',
-    'solargraph',
+    'ruby_lsp',
     'stylelint_lsp',
     'tailwindcss',
     'ts_ls',

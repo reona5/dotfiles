@@ -13,9 +13,6 @@ export GPG_TTY=$(tty) # commit signing
 export PNPM_HOME=$HOME/.config/pnpm/5/node_modules/.bin
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PNPM_HOME:$PATH"
-export GOPATH=$(go env GOPATH)
-export PATH=$PATH:$GOPATH/bin
-export ASDF_GOLANG_MOD_VERSION_ENABLED=true
 
 export PATH="$(brew --prefix mysql@5.7)/bin:$PATH"
 export PATH="/opt/homebrew/opt/bison/bin:$PATH"

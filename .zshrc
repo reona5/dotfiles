@@ -5,6 +5,9 @@ eval "$(direnv hook zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
+export GOPATH=$(go env GOPATH)
+export PATH=$PATH:$GOPATH/bin
+
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc
 fi

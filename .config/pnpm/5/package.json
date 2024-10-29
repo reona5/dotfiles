@@ -16,6 +16,7 @@
         "neovim": "^5.3.0",
         "postcss-html": "^1.7.0",
         "prettier": "^3.1.1",
+        "stylelint": "^16.10.0",
         "stylelint-lsp": "^2.0.0",
         "textlint": "^14.0.3",
         "textlint-filter-rule-allowlist": "^4.0.0",

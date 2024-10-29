@@ -82,7 +82,6 @@ lspconfig.diagnosticls.setup {
         sourceName = 'eslint',
         command = 'eslint',
         rootPatterns = {
-          '.git',
           'package.json'
         },
         debounce = 100,
@@ -163,21 +162,21 @@ lspconfig.diagnosticls.setup {
     formatters = {
       prettier = {
         command = 'prettier',
-        rootPatterns = { '.git' },
+        rootPatterns = { 'package.json' },
         args = { '--stdin-filepath', '%filename' }
       },
     },
     formatFiletypes = {
-      -- css = 'prettier',
-      -- javascript = 'prettier',
-      -- javascriptreact = 'prettier',
+      css = 'prettier',
+      javascript = 'prettier',
+      javascriptreact = 'prettier',
       json = 'prettier',
       scss = 'prettier',
       less = 'prettier',
-      -- typescript = 'prettier',
-      -- typescriptreact = 'prettier',
+      typescript = 'prettier',
+      typescriptreact = 'prettier',
       astro = 'prettier',
-      -- vue = 'prettier',
+      vue = 'prettier',
       markdown = 'prettier',
       mdx = 'prettier',
       yml = 'prettier',
@@ -263,19 +262,10 @@ lspconfig.rubocop.setup({
   capabilities = capabilities,
 })
 
--- solargraph
-lspconfig.solargraph.setup({
+-- ruby_lsp
+lspconfig.ruby_lsp.setup({
   on_attach = on_attach,
   capabilities = capabilities,
-  cmd = { "solargraph", "stdio" },
-  init_options = {
-    formatting = false,
-  },
-  settings = {
-    solargraph = {
-      diagnostics = false,
-    },
-  },
 })
 
 -- stylelint
@@ -298,7 +288,8 @@ lspconfig.ts_ls.setup({
     plugins = {
       {
         name = "@vue/typescript-plugin",
-        location = require("mason-registry").get_package("vue-language-server"):get_install_path() .. "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
+        location = require("mason-registry").get_package("vue-language-server"):get_install_path() ..
+        "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
         languages = { "javascript", "typescript", "vue" },
       },
     },

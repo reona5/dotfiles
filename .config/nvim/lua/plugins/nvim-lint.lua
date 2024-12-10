@@ -20,7 +20,7 @@ lint.linters_by_ft = {
   javascriptreact = { "eslint_d" },
   typescriptreact = { "eslint_d" },
   vue = { "eslint_d" },
-  yaml = { get_yaml_linter(bufnr) },
+  yaml = { "actionlint" },
 }
 
 local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })

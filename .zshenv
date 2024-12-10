@@ -42,5 +42,6 @@ export CPPFLAGS="-I/opt/homebrew/opt/mysql@5.7/include"
 export REQUESTS_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
 export NODE_EXTRA_CA_CERTS="/etc/ssl/certs/netskope-cert-bundle.pem"
 export CURL_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
+export ASDF_GOLANG_MOD_VERSION_ENABLED=true
 
 . "$HOME/.cargo/env"

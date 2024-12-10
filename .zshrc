@@ -1,9 +1,9 @@
 eval "$(sheldon source)"
 eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
+eval "$(mise activate zsh)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$GOPATH/bin

@@ -13,7 +13,7 @@ export GPG_TTY=$(tty) # commit signing
 export PNPM_HOME=$HOME/.config/pnpm/5/node_modules/.bin
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PNPM_HOME:$PATH"
-
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 export PATH="$(brew --prefix mysql@5.7)/bin:$PATH"
 export PATH="/opt/homebrew/opt/bison/bin:$PATH"
 export PATH="/opt/homebrew/opt/libxml2/bin:$PATH"
@@ -42,6 +42,5 @@ export CPPFLAGS="-I/opt/homebrew/opt/mysql@5.7/include"
 export REQUESTS_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
 export NODE_EXTRA_CA_CERTS="/etc/ssl/certs/netskope-cert-bundle.pem"
 export CURL_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
-export ASDF_GOLANG_MOD_VERSION_ENABLED=true
 
 . "$HOME/.cargo/env"

@@ -1,13 +1,15 @@
-vim.cmd([[
-	function! ToggleGStatus()
-			if buflisted(bufname('.git'))
-					bd .git
-			else
-					Git
-			endif
-	endfunction
-	command ToggleGStatus :call ToggleGStatus()
-]])
+function ToggleGStatus()
+  local fugitive_buf_no = vim.fn.bufnr('^fugitive:')
+  local buf_win_id = vim.fn.bufwinid(fugitive_buf_no)
+  if fugitive_buf_no >= 0 and buf_win_id >= 0 then
+    print('closing fugitive window')
+    vim.api.nvim_win_close(buf_win_id, false)
+  else
+    vim.cmd(":G")
+  end
+end
+
+vim.api.nvim_create_user_command('ToggleGStatus', ToggleGStatus, {})
 
 local opts = {noremap = true, silent = true}
 vim.api.nvim_set_keymap('n', '<leader>a', ':Git add %<CR>', opts)

@@ -88,6 +88,7 @@ if OS.mac?
   cask "discord"
   cask "firefox"
   cask "font-jetbrains-mono-nerd-font"
+  cask "ghostty"
   cask "google-japanese-ime"
   cask "google-chrome"
   cask "gyazo"

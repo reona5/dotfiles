@@ -185,70 +185,77 @@ require("lazy").setup({
       require("plugins.nvim-autopairs")
     end
   },
-  -- {
-  --   "zbirenbaum/copilot.lua",
-  --   cmd = "Copilot",
-  --   event = "InsertEnter",
-  --   dependencies = { "zbirenbaum/copilot-cmp", lazy = true },
-  --   config = function()
-  --     require("plugins.copilot")
-  --   end,
-  -- },
-  -- {
-  --   "zbirenbaum/copilot-cmp",
-  --   dependencies = { "hrsh7th/nvim-cmp", lazy = true },
-  --   config = function()
-  --     require("plugins.copilot-cmp")
-  --   end
-  -- },
-  -- {
-  --   "CopilotC-Nvim/CopilotChat.nvim",
-  --   event = { "BufRead" },
-  --   branch = "main",
-  --   dependencies = {
-  --     { "zbirenbaum/copilot.lua",        lazy = true },
-  --     { "nvim-lua/plenary.nvim",         lazy = true },
-  --     { "nvim-telescope/telescope.nvim", lazy = true },
-  --   },
-  --   config = function()
-  --     require("plugins.copilot-chat")
-  --   end,
-  --   keys = {
-  --     {
-  --       ",cp",
-  --       function()
-  --         local actions = require("CopilotChat.actions")
-  --         require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-  --       end,
-  --       desc = "CopilotChat - Prompt actions",
-  --       mode = { "n", "v" }
-  --     },
-  --     {
-  --       ",ca",
-  --       function()
-  --         local input = vim.fn.input("Quick Chat: ")
-  --         if input ~= "" then
-  --           require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
-  --         end
-  --       end,
-  --       desc = "CopilotChat - Quick chat",
-  --       mode = { "n", "v" }
-  --     },
-  --   }
-  -- },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    dependencies = { "zbirenbaum/copilot-cmp", lazy = true },
+    config = function()
+      require("plugins.copilot")
+    end,
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    dependencies = { "hrsh7th/nvim-cmp", lazy = true },
+    config = function()
+      require("plugins.copilot-cmp")
+    end
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    event = { "BufRead" },
+    branch = "main",
+    dependencies = {
+      { "zbirenbaum/copilot.lua",        lazy = true },
+      { "nvim-lua/plenary.nvim",         lazy = true },
+      { "nvim-telescope/telescope.nvim", lazy = true },
+    },
+    config = function()
+      require("plugins.copilot-chat")
+    end,
+    keys = {
+      {
+        ",cp",
+        function()
+          local actions = require("CopilotChat.actions")
+          require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
+        end,
+        desc = "CopilotChat - Prompt actions",
+        mode = { "n", "v" }
+      },
+      {
+        ",ca",
+        function()
+          local input = vim.fn.input("Quick Chat: ")
+          if input ~= "" then
+            require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
+          end
+        end,
+        desc = "CopilotChat - Quick chat",
+        mode = { "n", "v" }
+      },
+    }
+  },
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
     lazy = false,
     version = "*",
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
+    opts = {
+      provider = "copilot",
+      auto_suggestions_provider = "copilot",
+      behaviour = {
+        support_paste_from_clipboard = true,
+      },
+    },
     dependencies = {
       "stevearc/dressing.nvim",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "hrsh7th/nvim-cmp",
       "nvim-tree/nvim-web-devicons",
+      "zbirenbaum/copilot.lua",
       {
         "HakonHarnes/img-clip.nvim",
         event = "VeryLazy",

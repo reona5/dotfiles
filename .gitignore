@@ -13,6 +13,8 @@
 !/.config/gh/
 !/.config/gh/state.yml
 !/.config/gh/config.yml
+!/.config/ghostty
+!/.config/ghostty/config
 !/.config/git/
 !/.config/git/ignore
 !/.config/iterm2/

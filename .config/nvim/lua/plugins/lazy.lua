@@ -81,6 +81,13 @@ require("lazy").setup({
         end
       },
       { "onsails/lspkind-nvim", event = { "InsertEnter" } },
+      {
+        "zbirenbaum/copilot-cmp",
+        event = { "InsertEnter" },
+        config = function()
+          require("plugins.copilot-cmp")
+        end
+      },
     },
     config = function()
       require("plugins.nvim-cmp")
@@ -193,13 +200,6 @@ require("lazy").setup({
     config = function()
       require("plugins.copilot")
     end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    dependencies = { "hrsh7th/nvim-cmp", lazy = true },
-    config = function()
-      require("plugins.copilot-cmp")
-    end
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",

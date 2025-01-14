@@ -3,12 +3,11 @@ local lspkind = require('lspkind')
 
 if (not status) then return end
 
-vim.opt.completeopt = "menu,menuone,noselect"
-
 local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+  if vim.bo.buftype == "prompt" then return false end
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
+  local text_before_cursor = vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]
+  return col ~= 0 and text_before_cursor:match("^%s*$") == nil
 end
 
 cmp.setup({
@@ -20,6 +19,10 @@ cmp.setup({
       symbol_map = { Copilot = '' },
       ellipsis_char = '...',
     })
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
   },
   snippet = {
     expand = function(args)
@@ -55,19 +58,22 @@ cmp.setup({
     -- { name = 'copilot' },
   }, {
     { name = 'buffer' },
-  })
+  }),
 })
 
-cmp.setup.cmdline('/', {
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = {
     { name = 'buffer' }
   }
 })
 
 cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
     { name = 'path' }
   }, {
     { name = 'cmdline' }
-  })
+  }),
+  matching = { disallow_symbol_nonprefix_matching = false }
 })

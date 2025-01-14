@@ -11,7 +11,7 @@ end
 
 vim.api.nvim_create_user_command('ToggleGStatus', ToggleGStatus, {})
 
-local opts = {noremap = true, silent = true}
+local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>a', ':Git add %<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>c', ':Git commit<CR>', opts)
 vim.api.nvim_set_keymap('n', '<leader>b', ':GBrowse<CR>', opts)

@@ -8,6 +8,7 @@
         "@textlint/textlint-plugin-markdown": "^13.4.1",
         "astro": "^4.1.1",
         "diagnostic-languageserver": "^1.15.0",
+        "emmet-ls": "^0.4.2",
         "eslint": "^8.56.0",
         "eslint_d": "^12.2.1",
         "git-cz": "^4.9.0",

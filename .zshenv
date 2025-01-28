@@ -21,3 +21,12 @@ export NODE_EXTRA_CA_CERTS="/etc/ssl/certs/netskope-cert-bundle.pem"
 export CURL_CA_BUNDLE="/etc/ssl/certs/netskope-cert-bundle.pem"
 
 . "$HOME/.cargo/env"
+
+# Netskope Certificate for Cloud
+export REQUESTS_CA_BUNDLE=/etc/ssl/certs/netskope-cert-bundle.pem
+
+# Netskope Certificate for nodejs
+export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/netskope-cert-bundle.pem
+
+# Netskope Certificate for curl
+export CURL_CA_BUNDLE=/etc/ssl/certs/netskope-cert-bundle.pem

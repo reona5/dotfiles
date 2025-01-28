@@ -244,7 +244,6 @@ require("lazy").setup({
     build = "make",
     opts = {
       provider = "copilot",
-      auto_suggestions_provider = "copilot",
       behaviour = {
         support_paste_from_clipboard = true,
       },

@@ -237,6 +237,11 @@ require("lazy").setup({
     }
   },
   {
+    "sphamba/smear-cursor.nvim",
+    event = "VeryLazy",
+    opts = {}
+  },
+  {
     "yetone/avante.nvim",
     event = "VeryLazy",
     lazy = false,
@@ -244,37 +249,31 @@ require("lazy").setup({
     build = "make",
     opts = {
       provider = "copilot",
+      auto_suggestions_provider = "copilot",
       behaviour = {
+        auto_suggestions = true,
+        auto_set_highlight_group = true,
+        auto_set_keymaps = true,
+        auto_apply_diff_after_generation = true,
         support_paste_from_clipboard = true,
       },
+      repo_map = {
+        ignore_patterns = { "%.git", "%.worktree", "__pycache__", "node_modules" },
+        negate_patterns = {},
+      },
+      file_selector = {
+        provider = "telescope",
+        provider_opts = {}
+      }
     },
     dependencies = {
-      "stevearc/dressing.nvim",
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "hrsh7th/nvim-cmp",
-      "nvim-tree/nvim-web-devicons",
-      "zbirenbaum/copilot.lua",
-      {
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-          },
-        },
-      },
-      {
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { "markdown", "Avante" },
-        },
-        ft = { "markdown", "Avante" },
-      },
+      { "stevearc/dressing.nvim",        lazy = true },
+      { "nvim-lua/plenary.nvim",         lazy = true },
+      { "MunifTanjim/nui.nvim",          lazy = true },
+      { "nvim-telescope/telescope.nvim", lazy = true },
+      { "hrsh7th/nvim-cmp",              lazy = true },
+      { "nvim-tree/nvim-web-devicons",   lazy = true },
+      { "zbirenbaum/copilot.lua",        lazy = true },
     },
   }
 })

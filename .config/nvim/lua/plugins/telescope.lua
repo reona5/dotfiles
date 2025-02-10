@@ -42,7 +42,6 @@ telescope.setup {
     },
     file_ignore_patterns = {
       'node_modules',
-      'channel.html',
       'ctags'
     },
   }

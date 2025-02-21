@@ -15,7 +15,7 @@ vim.o.updatetime = 100
 vim.o.laststatus = 3
 vim.o.whichwrap = "b,s,h,l,[,],<,>"
 vim.o.signcolumn = "yes"
-vim.o.fileformats="unix,dos,mac"
+vim.o.fileformats = "unix,dos,mac"
 
 local has_clipboard = vim.fn.has("clipboard") == 1
 local has_unnamedplus = vim.fn.has("unnamedplus") == 1
@@ -30,32 +30,47 @@ end
 
 vim.filetype.add({ extension = { mdx = 'mdx' } })
 
-vim.cmd([[
-	" Full-width Space highlight
-	function! Space()
-		highlight Space cterm=underline ctermfg=lightblue guibg=darkgray
-	endfunction
+-- Create the autocommand group
+local whitespace_group = vim.api.nvim_create_augroup('extra-whitespace', { clear = true })
 
-	if has('syntax')
-		augroup Space
-			autocmd!
-			autocmd ColorScheme * call Space()
-			autocmd VimEnter,WinEnter,BufRead * let w:m1=matchadd('Space', '　')
-		augroup END
-		call Space()
-	endif
+-- Set up autocommands
+vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter' }, {
+  group = whitespace_group,
+  callback = function()
+    vim.fn.matchadd('ExtraWhitespace', '[\\u00A0\\u2000-\\u200B\\u3000]')
+  end,
+})
 
-  " autosave
-  function s:AutoWriteIfPossible()
-    if &modified && !&readonly && bufname('%') !=# '' && &buftype ==# '' && expand("%") !=# ''
-      write
-    endif
-  endfunction
-  augroup AutoWrite
-    autocmd!
-    autocmd CursorHold * call s:AutoWriteIfPossible()
-    autocmd CursorHoldI * call s:AutoWriteIfPossible()
-    " settings for golang
-    autocmd FileType go setlocal sw=4 ts=4 sts=4 noet
-  augroup END
-]])
+vim.api.nvim_create_autocmd('ColorScheme', {
+  group = whitespace_group,
+  callback = function()
+    vim.api.nvim_set_hl(0, 'ExtraWhitespace', {
+      default = true,
+      underline = true,
+      ctermfg = 'lightblue',
+      bg = 'darkgray',
+    })
+  end,
+})
+
+-- Auto save
+local function clear_cmdarea()
+  vim.defer_fn(function()
+    vim.api.nvim_echo({}, false, {})
+  end, 800)
+end
+
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+  callback = function()
+    if #vim.api.nvim_buf_get_name(0) ~= 0 and vim.bo.buflisted then
+      vim.cmd "silent w"
+
+      local time = os.date "%I:%M %p"
+
+      vim.api.nvim_set_hl(0, 'LazyProgressDone', { fg = '#00FF00' })
+      vim.api.nvim_echo({ { "󰄳", "LazyProgressDone" }, { " file autosaved at " .. time } }, false, {})
+
+      clear_cmdarea()
+    end
+  end,
+})

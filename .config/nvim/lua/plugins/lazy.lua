@@ -241,39 +241,39 @@ require("lazy").setup({
     event = "VeryLazy",
     opts = {}
   },
-  {
-    "yetone/avante.nvim",
-    event = "VeryLazy",
-    lazy = false,
-    version = "*",
-    build = "make",
-    opts = {
-      provider = "copilot",
-      auto_suggestions_provider = "copilot",
-      behaviour = {
-        auto_suggestions = true,
-        auto_set_highlight_group = true,
-        auto_set_keymaps = true,
-        auto_apply_diff_after_generation = true,
-        support_paste_from_clipboard = true,
-      },
-      repo_map = {
-        ignore_patterns = { "%.git", "%.worktree", "__pycache__", "node_modules" },
-        negate_patterns = {},
-      },
-      file_selector = {
-        provider = "telescope",
-        provider_opts = {}
-      }
-    },
-    dependencies = {
-      { "stevearc/dressing.nvim",        lazy = true },
-      { "nvim-lua/plenary.nvim",         lazy = true },
-      { "MunifTanjim/nui.nvim",          lazy = true },
-      { "nvim-telescope/telescope.nvim", lazy = true },
-      { "hrsh7th/nvim-cmp",              lazy = true },
-      { "nvim-tree/nvim-web-devicons",   lazy = true },
-      { "zbirenbaum/copilot.lua",        lazy = true },
-    },
-  }
+  -- {
+  --   "yetone/avante.nvim",
+  --   event = "VeryLazy",
+  --   lazy = false,
+  --   version = "*",
+  --   build = "make",
+  --   opts = {
+  --     provider = "copilot",
+  --     auto_suggestions_provider = "copilot",
+  --     behaviour = {
+  --       auto_suggestions = true,
+  --       auto_set_highlight_group = true,
+  --       auto_set_keymaps = true,
+  --       auto_apply_diff_after_generation = true,
+  --       support_paste_from_clipboard = true,
+  --     },
+  --     repo_map = {
+  --       ignore_patterns = { "%.git", "%.worktree", "__pycache__", "node_modules" },
+  --       negate_patterns = {},
+  --     },
+  --     file_selector = {
+  --       provider = "telescope",
+  --       provider_opts = {}
+  --     }
+  --   },
+  --   dependencies = {
+  --     { "stevearc/dressing.nvim",        lazy = true },
+  --     { "nvim-lua/plenary.nvim",         lazy = true },
+  --     { "MunifTanjim/nui.nvim",          lazy = true },
+  --     { "nvim-telescope/telescope.nvim", lazy = true },
+  --     { "hrsh7th/nvim-cmp",              lazy = true },
+  --     { "nvim-tree/nvim-web-devicons",   lazy = true },
+  --     { "zbirenbaum/copilot.lua",        lazy = true },
+  --   },
+  -- }
 })

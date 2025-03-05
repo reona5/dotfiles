@@ -1,7 +1,6 @@
 require('base.option')
 require('base.maps')
-if vim.g.vscode then
-else
+if not vim.g.vscode then
   require('plugins.lazy')
 end
 

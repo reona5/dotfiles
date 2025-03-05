@@ -6,6 +6,8 @@
 !/.bin/
 !/.bin/**
 !/.bin.local
+!/.bundle/
+!/.bundle/config
 !/.config/
 !/.config/alacritty/
 !/.config/alacritty/alacritty.toml
@@ -13,8 +15,6 @@
 !/.config/gh/
 !/.config/gh/state.yml
 !/.config/gh/config.yml
-!/.config/ghostty
-!/.config/ghostty/config
 !/.config/git/
 !/.config/git/ignore
 !/.config/iterm2/

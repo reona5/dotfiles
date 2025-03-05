@@ -1,18 +1,21 @@
-.PHONY: all
-all: init link defaults brew mas
+.PHONY: all init link defaults brew nothing
 
-.PHONY: init
+PASSWORD := $(shell read -s -p "Password: " pass; echo $$pass)
+
+all: init link defaults brew nothing
+	@echo all: $(PASSWORD)
+
 init:
 	.bin/init.sh
 
-.PHONY: link
 link:
 	.bin/link.sh
 
-.PHONY: defaults
 defaults:
 	.bin/defaults.sh
 
-.PHONY: brew
 brew:
 	.bin/brew.sh
+
+nothing:
+	@echo nothing: $(PASSWORD)

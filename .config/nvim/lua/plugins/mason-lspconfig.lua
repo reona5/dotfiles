@@ -9,7 +9,6 @@ mason_lspconfig.setup {
     'gopls',
     'intelephense',
     'lua_ls',
-    'rubocop',
     'ruby_lsp',
     'stylelint_lsp',
     'tailwindcss',

@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "@antfu/ni": "^0.21.12",
+        "@anthropic-ai/claude-code": "^0.2.9",
         "@biomejs/biome": "^1.9.4",
         "@fsouza/prettierd": "^0.24.2",
         "@proofdict/textlint-rule-proofdict": "^3.1.2",

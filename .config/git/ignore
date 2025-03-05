@@ -1,4 +1,4 @@
-*~
+\*~
 .DS_Store
 node_modules/
 bower_components/
@@ -10,3 +10,4 @@ GRTAGS
 GTAGS
 .cache/
 .cursor/
+.github/copilot-instructions.md

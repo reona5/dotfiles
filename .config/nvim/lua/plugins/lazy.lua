@@ -25,8 +25,11 @@ require("lazy").setup({
   },
   {
     "neovim/nvim-lspconfig",
-    event = { "BufRead" },
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
+      {
+        "hrsh7th/cmp-nvim-lsp", lazy = true
+      },
       {
         "williamboman/mason.nvim",
         lazy = true,
@@ -121,6 +124,7 @@ require("lazy").setup({
   },
   {
     "kyazdani42/nvim-tree.lua",
+    event = "VeryLazy",
     dependencies = { "kyazdani42/nvim-web-devicons", lazy = true },
     config = function()
       require("plugins.nvim-tree")
@@ -203,12 +207,15 @@ require("lazy").setup({
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
-    event = { "BufRead" },
+    event = { "VeryLazy" },
     branch = "main",
     dependencies = {
       { "zbirenbaum/copilot.lua",        lazy = true },
       { "nvim-lua/plenary.nvim",         lazy = true },
       { "nvim-telescope/telescope.nvim", lazy = true },
+    },
+    opts = {
+      debug = true,
     },
     config = function()
       require("plugins.copilot-chat")

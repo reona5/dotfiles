@@ -269,16 +269,21 @@ lspconfig.lua_ls.setup({
   },
 })
 
--- rubocop
-lspconfig.rubocop.setup({
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
 -- ruby_lsp
 lspconfig.ruby_lsp.setup({
   on_attach = on_attach,
   capabilities = capabilities,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  settings = {
+    rubyLsp = {
+      formatter = true,
+      diagnostics = {
+        enabled = true,
+      },
+    },
+  },
 })
 
 -- stylelint

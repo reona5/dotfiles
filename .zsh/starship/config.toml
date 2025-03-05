@@ -22,3 +22,12 @@ disabled = true
 disabled = false
 format = '[🕙 $time]($style) '
 time_format = "%T"
+
+[cmd_duration]
+min_time = 10_000
+show_milliseconds = true
+show_notifications = true
+format = 'underwent [$duration](bold yellow)'
+
+[git_status]
+disabled = true

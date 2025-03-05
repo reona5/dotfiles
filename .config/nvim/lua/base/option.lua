@@ -1,3 +1,7 @@
+vim.loader.enable()
+
+vim.o.shadafile = "NONE"
+vim.o.lazyredraw = true
 vim.o.expandtab = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
@@ -60,7 +64,7 @@ local function clear_cmdarea()
   end, 800)
 end
 
-vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "BufLeave" }, {
   callback = function()
     if #vim.api.nvim_buf_get_name(0) ~= 0 and vim.bo.buflisted then
       vim.cmd "silent w"

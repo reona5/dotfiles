@@ -21,6 +21,8 @@
 !/.config/iterm2/AppSupport
 !/.config/lazygit
 !/.config/lazygit/config.yml
+!/.config/mise/
+!/.config/mise/config.toml
 !/.config/neofetch
 !/.config/neofetch/**
 !/.config/nvim/

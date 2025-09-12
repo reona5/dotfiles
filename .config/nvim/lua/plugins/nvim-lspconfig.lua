@@ -299,15 +299,19 @@ lspconfig.stylelint_lsp.setup({
 })
 
 -- ts_ls
+local vue_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
 lspconfig.ts_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
   init_options = {
     plugins = {
       {
+        name = '@vue/typescript-plugin',
+        languages = { 'vue' },
+      },
+      {
         name = "@vue/typescript-plugin",
-        location = require("mason-registry").get_package("vue-language-server"):get_install_path() ..
-            "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
+        location = vue_path,
         languages = { "javascript", "typescript", "vue" },
       },
     },

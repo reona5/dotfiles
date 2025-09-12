@@ -1,0 +1,13 @@
+[tools]
+bun = "latest"
+cargo-binstall = "latest"
+"cargo:cargo-edit" = "latest"
+"cargo:cargo-insta" = "latest"
+"cargo:cargo-release" = "latest"
+"cargo:git-cliff" = "latest"
+"cargo:toml-cli" = "latest"
+"cargo:usage-cli" = { version = "latest", os = ["linux", "macos"] }
+golang = 'latest'
+node = 'latest'
+ruby = 'latest'
+rust = 'latest'

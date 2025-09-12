@@ -1,8 +1,8 @@
-local status, _ = pcall(require, "nvim-treesitter")
+local status, treesitter = pcall(require, "nvim-treesitter")
 if (not status) then return end
 
 -- NOTE: https://github.com/nvim-treesitter/nvim-treesitter/issues/270#issuecomment-725883316jI
-require 'nvim-treesitter.configs'.setup {
+treesitter.setup {
   ensure_installed = 'all',
   sync_install = false,
   auto_install = true,

@@ -1,7 +1,7 @@
 [user]
   email = shimada.reona@gmail.com
 	name = reona5
-	signingkey = 30E080ABC9A7FCB1
+	signingkey = 03164D612CE72E52
 [core]
 	editor = nvim
 [merge]

@@ -118,6 +118,7 @@ require("lazy").setup({
     dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
     build = ":TSUpdate",
     event = "BufRead",
+    branch = "main",
     config = function()
       require("plugins.nvim-treesitter")
     end
@@ -139,7 +140,7 @@ require("lazy").setup({
   },
   {
     "lukas-reineke/indent-blankline.nvim",
-    version = "2.20.8",
+    main = "ibl",
     event = "BufRead",
     config = function()
       require("plugins.indent-blankline")
@@ -245,6 +246,11 @@ require("lazy").setup({
   },
   {
     "sphamba/smear-cursor.nvim",
+    event = "VeryLazy",
+    opts = {}
+  },
+  {
+    "pocco81/auto-save.nvim",
     event = "VeryLazy",
     opts = {}
   },

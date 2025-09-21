@@ -4,7 +4,7 @@
 # Reona's dotfiles
 
 The dotfiles updated from time to time.
-Editor: Neovim; Shell: zsh; Terminal: Alacritty, tmux; OS: MacOS Monterey
+Editor: Neovim; Shell: zsh; Terminal: Ghostty, tmux; OS: MacOS
 
 ## Usage
 
@@ -15,4 +15,4 @@ $ make all
 ```
 
 ## Screenshot
-<img width="1674" alt="image" src="https://user-images.githubusercontent.com/46399968/168483186-ce4de2cc-4405-4177-b819-c66352d27bd4.png">
+<img width="5120" height="2880" alt="CleanShot 2025-09-21 at 22 56 27@2x" src="https://github.com/user-attachments/assets/debcd661-8918-4c9f-a34e-a9ce03d1c60f" />

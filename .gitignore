@@ -12,11 +12,13 @@
 !/.config/alacritty/
 !/.config/alacritty/alacritty.toml
 !/.config/alacritty/catppuccin-mocha.toml
+!/.config/ghostty/
+!/.config/ghostty/**
 !/.config/gh/
 !/.config/gh/state.yml
 !/.config/gh/config.yml
 !/.config/git/
-!/.config/git/ignore
+!/.config/git/**
 !/.config/iterm2/
 !/.config/iterm2/AppSupport
 !/.config/lazygit

@@ -1,1 +1,9 @@
+command = /bin/zsh -l -c 'tmux a -t default || tmux new -s default'
+confirm-close-surface = false
+font-family = "JetBrainsMono Nerd Font"
+fullscreen = true
+macos-non-native-fullscreen = true
+quit-after-last-window-closed = false
+shell-integration = zsh
 theme = catppuccin-mocha.conf
+window-save-state = always

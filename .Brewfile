@@ -6,8 +6,6 @@ tap "eugenmayer/dockersync"
 tap "github/gh"
 tap "hashicorp/tap"
 tap "heroku/brew"
-tap "homebrew/bundle"
-tap "homebrew/services"
 tap "jesseduffield/lazygit"
 tap "osx-cross/arm"
 tap "osx-cross/avr"
@@ -57,7 +55,6 @@ brew "neovim"
 brew "nghttp2"
 brew "ninja"
 brew "npm"
-brew "openssl@1.1"
 brew "pango"
 brew "pngpaste"
 brew "pnpm"
@@ -96,7 +93,6 @@ if OS.mac?
   cask "gyazo"
   cask "imageoptim"
   cask "iterm2"
-  cask "kindle"
   cask "muzzle"
   cask "raycast"
   cask "sequel-ace"
@@ -106,7 +102,6 @@ if OS.mac?
   cask "zoom"
 
   # Mac App Store Applications
-  mas "Contrast", id: 1254981365
   mas "LINE", id: 539883307
   mas "RunCat", id: 1429033973
   mas "Xcode", id: 497799835

@@ -21,3 +21,8 @@ fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+if [[ -n "$AWS_VAULT" ]]; then
+  export AWS_VAULT_PROMPT="[aws-vault:$AWS_VAULT]"
+  export PS1="${AWS_VAULT_PROMPT} ${PS1}"
+fi

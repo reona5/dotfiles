@@ -254,6 +254,19 @@ require("lazy").setup({
     event = "VeryLazy",
     opts = {}
   },
+  {
+    -- "amitds1997/remote-nvim.nvim", https://github.com/amitds1997/remote-nvim.nvim/pull/204 がマージされたら戻す
+    "johannes-graner/remote-nvim.nvim",
+    version = "*",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+    config = function()
+      require("plugins.remote-nvim")
+    end,
+  },
   -- {
   --   "yetone/avante.nvim",
   --   event = "VeryLazy",

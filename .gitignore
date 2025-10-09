@@ -60,6 +60,7 @@
 !/.Brewfile
 !/.Masfile
 
+!/AGENTS.md
 !/changelog.config.js
 !/LICENSE
 !/Makefile

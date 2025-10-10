@@ -250,11 +250,6 @@ require("lazy").setup({
     opts = {}
   },
   {
-    "pocco81/auto-save.nvim",
-    event = "VeryLazy",
-    opts = {}
-  },
-  {
     -- "amitds1997/remote-nvim.nvim", https://github.com/amitds1997/remote-nvim.nvim/pull/204 がマージされたら戻す
     "johannes-graner/remote-nvim.nvim",
     version = "*",
@@ -267,39 +262,59 @@ require("lazy").setup({
       require("plugins.remote-nvim")
     end,
   },
-  -- {
-  --   "yetone/avante.nvim",
-  --   event = "VeryLazy",
-  --   lazy = false,
-  --   version = "*",
-  --   build = "make",
-  --   opts = {
-  --     provider = "copilot",
-  --     auto_suggestions_provider = "copilot",
-  --     behaviour = {
-  --       auto_suggestions = true,
-  --       auto_set_highlight_group = true,
-  --       auto_set_keymaps = true,
-  --       auto_apply_diff_after_generation = true,
-  --       support_paste_from_clipboard = true,
-  --     },
-  --     repo_map = {
-  --       ignore_patterns = { "%.git", "%.worktree", "__pycache__", "node_modules" },
-  --       negate_patterns = {},
-  --     },
-  --     file_selector = {
-  --       provider = "telescope",
-  --       provider_opts = {}
-  --     }
-  --   },
-  --   dependencies = {
-  --     { "stevearc/dressing.nvim",        lazy = true },
-  --     { "nvim-lua/plenary.nvim",         lazy = true },
-  --     { "MunifTanjim/nui.nvim",          lazy = true },
-  --     { "nvim-telescope/telescope.nvim", lazy = true },
-  --     { "hrsh7th/nvim-cmp",              lazy = true },
-  --     { "nvim-tree/nvim-web-devicons",   lazy = true },
-  --     { "zbirenbaum/copilot.lua",        lazy = true },
-  --   },
-  -- }
-})
+--   {
+--     "yetone/avante.nvim",
+--     build = vim.fn.has("win32") ~= 0
+--         and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+--         or "make",
+--     event = "VeryLazy",
+--     version = false,
+--     opts = {
+--       instructions_file = "AGENTS.md",
+--       provider = "openai",
+--       providers = {
+--         openai = {
+--           endpoint = "http://localhost:3010/v1",
+--           model = "gpt-5",
+--           timeout = 30000,
+--           extra_request_body = {
+--             temperature = 0.75,
+--             max_tokens = 20480,
+--           },
+--         },
+--       }
+--     },
+--     dependencies = {
+--       "nvim-lua/plenary.nvim",
+--       "MunifTanjim/nui.nvim",
+--       "nvim-telescope/telescope.nvim",
+--       "hrsh7th/nvim-cmp",
+--       "folke/snacks.nvim",
+--       "nvim-tree/nvim-web-devicons",
+--       {
+--         -- support for image pasting
+--         "HakonHarnes/img-clip.nvim",
+--         event = "VeryLazy",
+--         opts = {
+--           -- recommended settings
+--           default = {
+--             embed_image_as_base64 = false,
+--             prompt_for_file_name = false,
+--             drag_and_drop = {
+--               insert_mode = true,
+--             },
+--             -- required for Windows users
+--             use_absolute_path = true,
+--           },
+--         },
+--       },
+--       {
+--         'MeanderingProgrammer/render-markdown.nvim',
+--         opts = {
+--           file_types = { "markdown", "Avante" },
+--         },
+--         ft = { "markdown", "Avante" },
+--       },
+--     },
+--   }
+-- })

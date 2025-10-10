@@ -56,3 +56,24 @@ vim.api.nvim_create_autocmd('ColorScheme', {
     })
   end,
 })
+
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+  pattern = "*",
+  callback = function()
+    -- 無名バッファ、読み取り専用、変更不可は除外
+    if vim.fn.expand("%") == "" or not vim.bo.modifiable or vim.bo.readonly then
+      return
+    end
+
+    -- 特定のファイルタイプを除外
+    local excluded_filetypes = { "gitcommit", "gitrebase" }
+    if vim.tbl_contains(excluded_filetypes, vim.bo.filetype) then
+      return
+    end
+
+    vim.cmd("silent! write")
+
+    print("💾 " .. os.date("%H:%M:%S"))
+    vim.cmd(string.format('echo "Saved at %s"', os.date("%H:%M:%S")))
+  end,
+})

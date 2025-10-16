@@ -23,4 +23,4 @@ export CURL_CA_BUNDLE=/etc/ssl/certs/netskope-cert-bundle.pem
 # For Cursor CLI
 export PATH="$HOME/.local/bin:$PATH"
 
-. "$HOME/.cargo/env"
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

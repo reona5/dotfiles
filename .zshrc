@@ -3,10 +3,13 @@ eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 eval "$(mise activate zsh)"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$GOPATH/bin
+
+for file in $HOME/.zsh/*.zsh
+do
+    [[ -f "$file" ]] && source "$file"
+done
 
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
   zcompile ~/.zshrc

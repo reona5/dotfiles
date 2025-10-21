@@ -19,7 +19,6 @@ elif [ "$(uname)" = "Linux" ]; then
             tmux \
             ripgrep \
             fd-find \
-            fzf \
             jq \
             golang \
             tree \
@@ -44,6 +43,16 @@ elif [ "$(uname)" = "Linux" ]; then
 
     cargo install sheldon
 
+    echo "Installing latest fzf..."
+    if [ ! -d "$HOME/.fzf" ]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+        "$HOME/.fzf/install" --key-bindings --completion --no-update-rc --no-bash --no-fish
+    else
+        echo "fzf already installed, updating..."
+        cd "$HOME/.fzf" && git pull && ./install --key-bindings --completion --no-update-rc --no-bash --no-fish
+        cd "$DOTFILES_DIR"
+    fi
+
     if [ -f ".bin/link.sh" ]; then
         bash .bin/link.sh
     fi
@@ -51,6 +60,7 @@ elif [ "$(uname)" = "Linux" ]; then
     chsh -s /bin/zsh
     export SHELL=/bin/zsh
     exec $SHELL -l
+    source $HOME/.fzf.zsh
 else
     echo "Unsupported OS: $(uname)"
     exit 1

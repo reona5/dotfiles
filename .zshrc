@@ -3,6 +3,8 @@ eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 eval "$(mise activate zsh)"
 
+[[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
+
 export GOPATH=$(go env GOPATH)
 export PATH=$PATH:$GOPATH/bin
 

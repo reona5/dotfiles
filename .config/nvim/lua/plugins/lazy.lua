@@ -24,32 +24,11 @@ require("lazy").setup({
     end
   },
   {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      {
-        "hrsh7th/cmp-nvim-lsp", lazy = true
-      },
-      {
-        "williamboman/mason.nvim",
-        lazy = true,
-        cmd = "Mason",
-        config = function()
-          require("plugins.mason")
-        end,
-      },
-      {
-        "williamboman/mason-lspconfig.nvim",
-        lazy = true,
-        config = function()
-          require("plugins.mason-lspconfig")
-        end
-      },
-      { "hrsh7th/cmp-nvim-lsp", lazy = true },
-    },
+    "williamboman/mason.nvim",
+    lazy = false,
     config = function()
-      require("plugins.nvim-lspconfig")
-    end
+      require("plugins.mason")
+    end,
   },
   {
     "mfussenegger/nvim-lint",
@@ -72,6 +51,7 @@ require("lazy").setup({
     "hrsh7th/nvim-cmp",
     event = { "InsertEnter" },
     dependencies = {
+      { "hrsh7th/cmp-nvim-lsp", event = { "InsertEnter" } },
       { "hrsh7th/cmp-buffer",  event = { "InsertEnter" } },
       { "hrsh7th/cmp-path",    event = { "InsertEnter" } },
       { "hrsh7th/cmp-cmdline", event = { "InsertEnter" } },

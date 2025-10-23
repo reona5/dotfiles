@@ -66,6 +66,7 @@ brew "python@3.9"
 brew "reattach-to-user-namespace"
 brew "readline", link: true
 brew "ripgrep"
+brew "ruby-lsp"
 brew "rustup-init"
 brew "sheldon"
 brew "starship"

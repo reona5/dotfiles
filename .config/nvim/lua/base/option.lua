@@ -34,10 +34,11 @@ end
 
 vim.filetype.add({ extension = { mdx = 'mdx' } })
 
--- Create the autocommand group
+-- Create the autocommand groups
 local whitespace_group = vim.api.nvim_create_augroup('extra-whitespace', { clear = true })
+local autosave_group = vim.api.nvim_create_augroup('auto-save', { clear = true })
 
--- Set up autocommands
+-- Set up whitespace autocommands
 vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter' }, {
   group = whitespace_group,
   callback = function()
@@ -58,6 +59,7 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 })
 
 vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+  group = autosave_group,
   pattern = "*",
   callback = function()
     -- 無名バッファ、読み取り専用、変更不可は除外

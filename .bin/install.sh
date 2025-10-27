@@ -12,7 +12,7 @@ elif [ "$(uname)" = "Linux" ]; then
 
     if command -v apt &> /dev/null; then
         echo "Installing packages via apt..."
-        apt install -y \
+        apt update && apt install -y \
             git \
             vim \
             tmux \
@@ -28,8 +28,14 @@ elif [ "$(uname)" = "Linux" ]; then
             unzip \
             direnv \
             zsh \
-            gh \
             silversearcher-ag || echo "Some packages failed to install, continuing..."
+
+        echo "Installing GitHub CLI..."
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        apt update
+        apt install -y gh
 
         echo "Packages installed successfully!"
     else
@@ -41,38 +47,38 @@ elif [ "$(uname)" = "Linux" ]; then
     echo "Latest Neovim version: $NVIM_VERSION"
     
     if [ "$(uname -m)" = "x86_64" ]; then
-        NVIM_ARCH="linux64"
+        NVIM_ARCH="x86_64"
     elif [ "$(uname -m)" = "aarch64" ]; then
-        NVIM_ARCH="linux64"
+        NVIM_ARCH="arm64"
     else
         echo "Unsupported architecture: $(uname -m)"
         exit 1
     fi
     
-    curl -LO "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-${NVIM_ARCH}.tar.gz"
-    tar xzf "nvim-${NVIM_ARCH}.tar.gz"
+    NVIM_URL="https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux-${NVIM_ARCH}.appimage"
+    echo "Downloading Neovim AppImage from: $NVIM_URL"
+    curl -Lo /usr/local/bin/nvim "$NVIM_URL"
+    chmod +x /usr/local/bin/nvim
     
-    if [ -d "/usr/local/nvim" ]; then
-        rm -rf /usr/local/nvim
-    fi
-    
-    mv "nvim-${NVIM_ARCH}" /usr/local/nvim
-    rm "nvim-${NVIM_ARCH}.tar.gz"
-    
-    if ! grep -q '/usr/local/nvim/bin' "$HOME/.zshrc" 2>/dev/null; then
-        echo 'export PATH="/usr/local/nvim/bin:$PATH"' >> "$HOME/.zshrc"
-    fi
-    
-    export PATH="/usr/local/nvim/bin:$PATH"
     echo "Neovim installed successfully!"
     nvim --version
 
+    echo "Installing Starship..."
     curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    
+    echo "Installing Rust..."
     curl https://sh.rustup.rs -sSf | sh -s -- -y
     source "$HOME/.cargo/env"
+    
+    echo "Installing mise..."
     curl https://mise.run | sh
 
-    cargo install sheldon
+    echo "Installing sheldon..."
+    if ! command -v sheldon &> /dev/null; then
+        cargo install sheldon
+    else
+        echo "sheldon already installed, skipping..."
+    fi
 
     echo "Installing latest fzf..."
     if [ ! -d "$HOME/.fzf" ]; then
@@ -88,14 +94,13 @@ elif [ "$(uname)" = "Linux" ]; then
         bash .bin/link.sh
     fi
 
-    chsh -s /bin/zsh
-    export SHELL=/bin/zsh
-    exec $SHELL -l
-    source $HOME/.fzf.zsh
+    echo "Changing default shell to zsh..."
+    if [ "$SHELL" != "/bin/zsh" ]; then
+        chsh -s /bin/zsh || echo "Could not change shell, continuing..."
+    fi
 else
     echo "Unsupported OS: $(uname)"
     exit 1
 fi
 
 echo "Dotfiles installation completed!"
-exit 0

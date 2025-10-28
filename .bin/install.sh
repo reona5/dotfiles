@@ -55,10 +55,31 @@ elif [ "$(uname)" = "Linux" ]; then
         exit 1
     fi
     
-    NVIM_URL="https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux-${NVIM_ARCH}.appimage"
-    echo "Downloading Neovim AppImage from: $NVIM_URL"
-    curl -Lo /usr/local/bin/nvim "$NVIM_URL"
-    chmod +x /usr/local/bin/nvim
+    NVIM_URL="https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux-${NVIM_ARCH}.tar.gz"
+    echo "Downloading Neovim tarball from: $NVIM_URL"
+    
+    # Download and extract tarball
+    TEMP_DIR=$(mktemp -d)
+    cd "$TEMP_DIR"
+    curl -LO "$NVIM_URL"
+    tar xzf "nvim-linux-${NVIM_ARCH}.tar.gz"
+    
+    # Remove old installation if exists
+    if [ -d "/usr/local/nvim" ]; then
+        echo "Removing old Neovim installation..."
+        rm -rf /usr/local/nvim
+    fi
+    
+    # Move extracted files to /usr/local/nvim
+    echo "Installing to /usr/local/nvim..."
+    mv "nvim-linux-${NVIM_ARCH}" /usr/local/nvim
+    
+    # Create symlink
+    ln -sf /usr/local/nvim/bin/nvim /usr/local/bin/nvim
+    
+    # Cleanup
+    cd -
+    rm -rf "$TEMP_DIR"
     
     echo "Neovim installed successfully!"
     nvim --version

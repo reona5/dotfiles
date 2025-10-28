@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - es5-ext
+  - esbuild
+  - protobufjs
+  - sharp
+  - vue-demi
+  - yarn

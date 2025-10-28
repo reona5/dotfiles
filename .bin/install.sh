@@ -25,18 +25,23 @@ elif [ "$(uname)" = "Linux" ]; then
   if [ -f ".bin/link.sh" ]; then
     bash .bin/link.sh
   fi
-
-  echo "Changing default shell to zsh..."
-  if [ "$SHELL" != "/bin/zsh" ]; then
-    chsh -s /bin/zsh || echo "Could not change shell, continuing..."
-  fi
 else
   echo "Unsupported OS: $(uname)"
   exit 1
 fi
 
+if command -v mise &> /dev/null; then
+  mise --yes use -g usage
+  mise --yes install
+fi
+
 if command -v pnpm &> /dev/null; then
   pnpm -g i
+fi
+
+echo "Changing default shell to zsh..."
+if [ "$SHELL" != "/bin/zsh" ]; then
+  chsh -s /bin/zsh || echo "Could not change shell, continuing..."
 fi
 
 echo "Dotfiles installation completed!"

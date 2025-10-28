@@ -1,0 +1,31 @@
+#!/bin/bash
+
+rebuild_flag=""
+if [[ "$1" == "-r" || "$1" == "--rebuild" ]]; then
+  rebuild_flag="--remove-existing-container"
+fi
+
+command="devcontainer up $rebuild_flag \
+  --additional-features='{ \
+  \"ghcr.io/duduribeiro/devcontainer-features/neovim:1\": { \"version\": \"stable\" }, \
+  \"ghcr.io/devcontainers/features/common-utils:2\": { \"installZsh\": true, \"installOhMyZsh\": false, \"upgradePackages\": true, \"username\": \"root\" }, \
+  \"ghcr.io/devcontainers/features/git:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers/features/github-cli:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers/features/go:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers/features/node:1\": { \"version\": \"lts\" }, \
+  \"ghcr.io/devcontainers/features/rust:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers-contrib/features/mise:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers-contrib/features/starship:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers-contrib/features/fzf:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers-contrib/features/ripgrep:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/jsburckhardt/devcontainer-features/bat:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/eitsupi/devcontainer-features/jq-likes:2\": { \"version\": \"latest\" }, \
+  \"ghcr.io/duduribeiro/devcontainer-features/tmux:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/devcontainers-extra/features/fd:1\": { \"version\": \"latest\" }, \
+  \"ghcr.io/christophermacgown/devcontainer-features/direnv:1\": { \"version\": \"latest\" } \
+}' \
+--workspace-folder . \
+--dotfiles-repository 'reona5/dotfiles' \
+--dotfiles-install-command '.bin/install.sh'"
+
+eval "$command"

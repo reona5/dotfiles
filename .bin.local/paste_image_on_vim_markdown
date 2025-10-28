@@ -1,0 +1,47 @@
+#!/bin/bash
+ 
+if [[ ! $+commands[pngpaste] ]]; then
+  echo
+  - pngpaste: command not found >&2
+  exit 1
+fi
+ 
+IMAGE_DIR=
+  - public/
+ 
+# 画像の保存先が存在するかチェックをする。
+# 存在しない場合は、エラーで処理を終了する。
+if [[ ! -e
+  - $IMAGE_DIR ]]; then
+  echo
+  - No image Directory
+  exit 1
+fi
+ 
+IMAGE_NAME=`date
+  - +%Y-%m-%d-%H-%M-%S.png`
+IMAGE_PATH=
+  - $IMAGE_DIR$IMAGE_NAME
+ 
+# 保存するファイル名と同一のものが存在する場合は、エラーで処理を終了する。
+if [[ -e
+  - $IMAGE_PATH ]]; then
+  echo
+  - File already existed
+  exit 1
+fi
+ 
+pngpaste $IMAGE_PATH
+RESULT=$?
+ 
+# 画像が保存できた場合はMarkdownに画像を展開する。
+if [ $RESULT = 0 ]; then
+  MARKDOWN_IMAGE_SYNTAX=
+  - ![]($IMAGE_PATH)
+  echo $MARKDOWN_IMAGE_SYNTAX
+fi
+ 
+ 
+IMAGEOPTIM=
+  - open -a ImageOptim
+`${IMAGEOPTIM} ${IMAGE_PATH}`

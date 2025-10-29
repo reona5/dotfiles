@@ -31,6 +31,7 @@ else
 fi
 
 if command -v mise &> /dev/null; then
+  mise trust
   mise --yes use -g usage
   mise --yes install
 fi

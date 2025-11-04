@@ -1,7 +1,10 @@
-eval "$(sheldon source)"
-eval "$(starship init zsh)"
-eval "$(direnv hook zsh)"
-eval "$(mise activate zsh)"
+# TTY がなければ実行しない
+if [[ -t 0 ]]; then
+  eval "$(sheldon source)"
+  eval "$(starship init zsh)"
+  eval "$(direnv hook zsh)"
+  eval "$(mise activate zsh)"
+fi
 
 [[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
 

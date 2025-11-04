@@ -13,11 +13,8 @@ elif [ "$(uname)" = "Linux" ]; then
   # Install sheldon (zsh plugin manager)
   echo "Installing sheldon..."
   if ! command -v sheldon &> /dev/null; then
-    if command -v cargo &> /dev/null; then
-      cargo install sheldon
-    else
-      echo "Cargo not found, skipping sheldon installation"
-    fi
+    curl --proto '=https' -fLsS https://rossmacarthur.github.io/install/crate.sh | bash -s -- --repo rossmacarthur/sheldon --to ~/.local/bin
+    export SHELDON_CONFIG_FILE="$DOTFILES_DIR/.config/sheldon/plugins.toml"
   else
     echo "sheldon already installed, skipping..."
   fi
@@ -32,8 +29,7 @@ fi
 
 if command -v mise &> /dev/null; then
   mise trust
-  mise --yes use -g usage
-  mise --yes install
+  # mise --yes install
 fi
 
 if command -v pnpm &> /dev/null; then

@@ -12,7 +12,7 @@ command="devcontainer up $flag \
   --mount type=bind,source=$HOME/.gitconfig,target=/root/.gitconfig \
   --additional-features='{ \
   \"ghcr.io/duduribeiro/devcontainer-features/neovim:1\": { \"version\": \"stable\" }, \
-  \"ghcr.io/devcontainers/features/common-utils:2\": { \"installZsh\": true, \"installOhMyZsh\": false, \"upgradePackages\": true, \"username\": \"root\" }, \
+  \"ghcr.io/nils-geistmann/devcontainers-features/zsh:0\": { \"version\": \"latest\" }, \
   \"ghcr.io/devcontainers/features/git:1\": { \"version\": \"latest\" }, \
   \"ghcr.io/devcontainers/features/github-cli:1\": { \"version\": \"latest\" }, \
   \"ghcr.io/devcontainers/features/go:1\": { \"version\": \"latest\" }, \

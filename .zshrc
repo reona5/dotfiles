@@ -34,3 +34,6 @@ if [[ -n "$AWS_VAULT" ]]; then
   export AWS_VAULT_PROMPT="[aws-vault:$AWS_VAULT]"
   export PS1="${AWS_VAULT_PROMPT} ${PS1}"
 fi
+
+# For uv
+. "$HOME/.local/share/../bin/env"

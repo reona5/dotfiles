@@ -24,7 +24,6 @@ command="devcontainer up $flag \
   \"ghcr.io/devcontainers-contrib/features/ripgrep:1\": { \"version\": \"latest\" }, \
   \"ghcr.io/jsburckhardt/devcontainer-features/bat:1\": { \"version\": \"latest\" }, \
   \"ghcr.io/eitsupi/devcontainer-features/jq-likes:2\": { \"version\": \"latest\" }, \
-  \"ghcr.io/duduribeiro/devcontainer-features/tmux:1\": { \"version\": \"latest\" }, \
   \"ghcr.io/devcontainers-extra/features/fd:1\": { \"version\": \"latest\" }, \
   \"ghcr.io/christophermacgown/devcontainer-features/direnv:1\": { \"version\": \"latest\" } \
 }' \

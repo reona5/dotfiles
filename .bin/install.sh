@@ -27,6 +27,10 @@ else
   exit 1
 fi
 
+# Install uv (python package manager)
+echo "Installing uv..."
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 if command -v mise &> /dev/null; then
   mise trust
   # mise --yes install

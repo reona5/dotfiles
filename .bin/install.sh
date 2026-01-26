@@ -40,6 +40,10 @@ if command -v pnpm &> /dev/null; then
   pnpm -g i
 fi
 
+if command -v go &> /dev/null; then
+  go install github.com/k1LoW/git-wt@latest
+fi
+
 # Change default shell to zsh (skip in DevContainer or if already zsh)
 current_shell=$(basename "$SHELL")
 if [ "$current_shell" != "zsh" ]; then

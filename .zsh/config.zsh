@@ -53,6 +53,11 @@ fbrm() {
   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
+# refs: https://github.com/k1LoW/git-wt?tab=readme-ov-file#bashzsh
+wt() {
+  cd $(git-wt | fzf | awk '{print $1}')
+}
+
 # fzf history search
 if (( $+commands[fzf] )); then
   source <(fzf --zsh)

@@ -4,6 +4,7 @@ if [[ -t 0 ]]; then
   eval "$(starship init zsh)"
   eval "$(direnv hook zsh)"
   eval "$(mise activate zsh)"
+  eval "$(git wt --init zsh)"
 fi
 
 [[ -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
@@ -37,3 +38,7 @@ fi
 
 # For uv
 . "$HOME/.local/share/../bin/env"
+
+# Added by Antigravity
+export PATH="/Users/r.shimada/.antigravity/antigravity/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"

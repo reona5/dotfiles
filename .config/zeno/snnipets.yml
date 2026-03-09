@@ -1,42 +1,31 @@
 snippets:
-  # --- グローバルエイリアス (行の途中でも展開させる) ---
   - name: Global rg
     keyword: "@g"
     snippet: "| rg"
     context:
       lbuffer: '.+\s'
-
   - name: Global less
     keyword: "@l"
     snippet: "| less"
     context:
       lbuffer: '.+\s'
-
   - name: Global force with lease
     keyword: "@f"
     snippet: "--force-with-lease --force-if-includes"
     context:
       lbuffer: '.+\s'
-
-  # --- Docker ---
   - name: docker compose
     keyword: dc
     snippet: docker compose
   - name: docker attach
     keyword: da
     snippet: docker attach
-
-  # --- エディタ・便利コマンド ---
   - name: nvim
     keyword: vi
     snippet: nvim
-
   - name: vanish (Delete merged branches)
     keyword: vanish
-    # 展開して内容を確認してから実行できるので、誤爆を防げます！
     snippet: 'git branch | grep -v "main" | grep -v "develop" | xargs git branch -D'
-
-  # --- Git 基本 ---
   - name: git status
     keyword: gst
     snippet: git status
@@ -61,8 +50,6 @@ snippets:
   - name: git switch create
     keyword: gswc
     snippet: git switch -c
-
-  # --- Git 追加・コミット・ログ ---
   - name: git add all
     keyword: ga
     snippet: git add .
@@ -74,7 +61,7 @@ snippets:
     snippet: git commit --amend
   - name: git commit message
     keyword: gcm
-    snippet: git commit -m
+    snippet: git commit -m '{{commit_message}}'
   - name: git diff
     keyword: gd
     snippet: git diff
@@ -87,11 +74,12 @@ snippets:
   - name: git cherry-pick
     keyword: gcherry
     snippet: git cherry-pick
-
-  # --- Git 同期 (Fetch/Pull/Push) ---
   - name: git fetch
     keyword: gf
     snippet: git fetch
+  - name: git fetch origin
+    keyword: gfo
+    snippet: git fetch origin
   - name: git merge
     keyword: gm
     snippet: git merge
@@ -122,8 +110,6 @@ snippets:
   - name: git push origin HEAD
     keyword: gpoh
     snippet: git push origin HEAD
-
-  # --- Git Rebase ---
   - name: git rebase main
     keyword: grm
     snippet: git rebase main
@@ -145,8 +131,6 @@ snippets:
   - name: git rebase skip
     keyword: grs
     snippet: git rebase --skip
-
-  # --- Git Stash ---
   - name: git stash
     keyword: gs
     snippet: git stash -u
@@ -165,8 +149,6 @@ snippets:
   - name: git stash clear
     keyword: gsc
     snippet: git stash clear
-
-  # --- Git Reset / Restore ---
   - name: git reset soft
     keyword: grsh
     snippet: git reset --soft HEAD^

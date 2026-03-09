@@ -32,11 +32,28 @@ github = 'yuki-yano/zeno.zsh'
 inline = '''
 export ZENO_HOME="$HOME/.config/zeno"
 export ZENO_ENABLE_SOCK=1
+export ZENO_COMPLETION_FALLBACK=expand-or-complete
 
+function zeno-ghq-cd-post-hook-impl() {
+  local dir="$ZENO_GHQ_CD_DIR"
+  if [[ -n $TMUX ]]; then
+    local repository=${dir:t}
+    local session=${repository//./-}
+    tmux rename-session "${session}"
+  fi
+}
+
+zle -N zeno-ghq-cd-post-hook zeno-ghq-cd-post-hook-impl
 if [[ -n $ZENO_LOADED ]]; then
   bindkey ' '  zeno-auto-snippet
   bindkey '^m' zeno-auto-snippet-and-accept-line
   bindkey '^i' zeno-completion
+  bindkey '^y' zeno-insert-snippet
+  bindkey '^x '  zeno-insert-space
+  bindkey '^x^m' accept-line
+  bindkey '^x^z' zeno-toggle-auto-snippet
+  bindkey '^xp' zeno-preprompt
+  bindkey '^xs' zeno-preprompt-snippet
   bindkey '^r' zeno-history-selection
 fi
 '''
@@ -53,7 +70,7 @@ apply = ['source']
 
 [plugins.zsh-syntax-highlighting]
 github = 'zsh-users/zsh-syntax-highlighting'
-apply = ['defer']
+apply = ['source']
 
 [templates]
 defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"

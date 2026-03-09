@@ -23,5 +23,7 @@ export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/netskope-cert-bundle.pem
 export CURL_CA_BUNDLE=/etc/ssl/certs/netskope-cert-bundle.pem
 # For Cursor CLI
 export PATH="$HOME/.local/bin:$PATH"
+# Install JSR dependencies for zeno.zsh
+export DENO_TLS_CA_STORE=system
 
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

@@ -35,6 +35,8 @@
 !/.config/pnpm/5/*
 !/.config/sheldon/
 !/.config/sheldon/**
+!/.config/zeno/
+!/.config/zeno/**
 !/.ctags.d/
 !/.ctags.d/config.ctags
 !/.fzf.zsh

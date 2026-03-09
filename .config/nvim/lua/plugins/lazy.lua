@@ -52,10 +52,10 @@ require("lazy").setup({
     event = { "InsertEnter" },
     dependencies = {
       { "hrsh7th/cmp-nvim-lsp", event = { "InsertEnter" } },
-      { "hrsh7th/cmp-buffer",  event = { "InsertEnter" } },
-      { "hrsh7th/cmp-path",    event = { "InsertEnter" } },
-      { "hrsh7th/cmp-cmdline", event = { "InsertEnter" } },
-      { "hrsh7th/cmp-vsnip",   event = { "InsertEnter" } },
+      { "hrsh7th/cmp-buffer",   event = { "InsertEnter" } },
+      { "hrsh7th/cmp-path",     event = { "InsertEnter" } },
+      { "hrsh7th/cmp-cmdline",  event = { "InsertEnter" } },
+      { "hrsh7th/cmp-vsnip",    event = { "InsertEnter" } },
       {
         "hrsh7th/vim-vsnip",
         event = { "InsertEnter" },
@@ -147,13 +147,25 @@ require("lazy").setup({
       vim.fn["mkdp#util#install"]()
     end
   },
+  -- {
+  --   "nvim-telescope/telescope.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim", lazy = true },
+  --   event = "VimEnter",
+  --   config = function()
+  --     require("plugins.telescope")
+  --   end
+  -- },
+  -- Lazy.nvim
   {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", lazy = true },
-    event = "VimEnter",
-    config = function()
-      require("plugins.telescope")
-    end
+    '2kabhishek/seeker.nvim',
+    dependencies = { 'folke/snacks.nvim' },
+    cmd = { 'Seeker' },
+    keys = {
+      { '<leader>f',        ':Seeker files<CR>',     desc = 'Seek Files' },
+      { '<leader><leader>', ':Seeker git_files<CR>', desc = 'Seek Git Files' },
+      { '<leader>g',        ':Seeker grep<CR>',      desc = 'Seek Grep' },
+    },
+    opts = {},
   },
   {
     "vim-test/vim-test",
@@ -242,59 +254,59 @@ require("lazy").setup({
       require("plugins.remote-nvim")
     end,
   },
---   {
---     "yetone/avante.nvim",
---     build = vim.fn.has("win32") ~= 0
---         and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
---         or "make",
---     event = "VeryLazy",
---     version = false,
---     opts = {
---       instructions_file = "AGENTS.md",
---       provider = "openai",
---       providers = {
---         openai = {
---           endpoint = "http://localhost:3010/v1",
---           model = "gpt-5",
---           timeout = 30000,
---           extra_request_body = {
---             temperature = 0.75,
---             max_tokens = 20480,
---           },
---         },
---       }
---     },
---     dependencies = {
---       "nvim-lua/plenary.nvim",
---       "MunifTanjim/nui.nvim",
---       "nvim-telescope/telescope.nvim",
---       "hrsh7th/nvim-cmp",
---       "folke/snacks.nvim",
---       "nvim-tree/nvim-web-devicons",
---       {
---         -- support for image pasting
---         "HakonHarnes/img-clip.nvim",
---         event = "VeryLazy",
---         opts = {
---           -- recommended settings
---           default = {
---             embed_image_as_base64 = false,
---             prompt_for_file_name = false,
---             drag_and_drop = {
---               insert_mode = true,
---             },
---             -- required for Windows users
---             use_absolute_path = true,
---           },
---         },
---       },
---       {
---         'MeanderingProgrammer/render-markdown.nvim',
---         opts = {
---           file_types = { "markdown", "Avante" },
---         },
---         ft = { "markdown", "Avante" },
---       },
---     },
---   }
+  --   {
+  --     "yetone/avante.nvim",
+  --     build = vim.fn.has("win32") ~= 0
+  --         and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+  --         or "make",
+  --     event = "VeryLazy",
+  --     version = false,
+  --     opts = {
+  --       instructions_file = "AGENTS.md",
+  --       provider = "openai",
+  --       providers = {
+  --         openai = {
+  --           endpoint = "http://localhost:3010/v1",
+  --           model = "gpt-5",
+  --           timeout = 30000,
+  --           extra_request_body = {
+  --             temperature = 0.75,
+  --             max_tokens = 20480,
+  --           },
+  --         },
+  --       }
+  --     },
+  --     dependencies = {
+  --       "nvim-lua/plenary.nvim",
+  --       "MunifTanjim/nui.nvim",
+  --       "nvim-telescope/telescope.nvim",
+  --       "hrsh7th/nvim-cmp",
+  --       "folke/snacks.nvim",
+  --       "nvim-tree/nvim-web-devicons",
+  --       {
+  --         -- support for image pasting
+  --         "HakonHarnes/img-clip.nvim",
+  --         event = "VeryLazy",
+  --         opts = {
+  --           -- recommended settings
+  --           default = {
+  --             embed_image_as_base64 = false,
+  --             prompt_for_file_name = false,
+  --             drag_and_drop = {
+  --               insert_mode = true,
+  --             },
+  --             -- required for Windows users
+  --             use_absolute_path = true,
+  --           },
+  --         },
+  --       },
+  --       {
+  --         'MeanderingProgrammer/render-markdown.nvim',
+  --         opts = {
+  --           file_types = { "markdown", "Avante" },
+  --         },
+  --         ft = { "markdown", "Avante" },
+  --       },
+  --     },
+  --   }
 })

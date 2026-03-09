@@ -1,0 +1,178 @@
+snippets:
+  # --- グローバルエイリアス (行の途中でも展開させる) ---
+  - name: Global rg
+    keyword: "@g"
+    snippet: "| rg"
+    context:
+      lbuffer: '.+\s'
+
+  - name: Global less
+    keyword: "@l"
+    snippet: "| less"
+    context:
+      lbuffer: '.+\s'
+
+  - name: Global force with lease
+    keyword: "@f"
+    snippet: "--force-with-lease --force-if-includes"
+    context:
+      lbuffer: '.+\s'
+
+  # --- Docker ---
+  - name: docker compose
+    keyword: dc
+    snippet: docker compose
+  - name: docker attach
+    keyword: da
+    snippet: docker attach
+
+  # --- エディタ・便利コマンド ---
+  - name: nvim
+    keyword: vi
+    snippet: nvim
+
+  - name: vanish (Delete merged branches)
+    keyword: vanish
+    # 展開して内容を確認してから実行できるので、誤爆を防げます！
+    snippet: 'git branch | grep -v "main" | grep -v "develop" | xargs git branch -D'
+
+  # --- Git 基本 ---
+  - name: git status
+    keyword: gst
+    snippet: git status
+  - name: git branch
+    keyword: gb
+    snippet: git branch
+  - name: git branch rename
+    keyword: gbm
+    snippet: git branch -m
+  - name: git branch delete
+    keyword: gbd
+    snippet: git branch -D
+  - name: git checkout
+    keyword: gco
+    snippet: git checkout
+  - name: git checkout new
+    keyword: gcb
+    snippet: git checkout -b
+  - name: git switch
+    keyword: gsw
+    snippet: git switch
+  - name: git switch create
+    keyword: gswc
+    snippet: git switch -c
+
+  # --- Git 追加・コミット・ログ ---
+  - name: git add all
+    keyword: ga
+    snippet: git add .
+  - name: git commit
+    keyword: gc
+    snippet: git commit
+  - name: git commit amend
+    keyword: gca
+    snippet: git commit --amend
+  - name: git commit message
+    keyword: gcm
+    snippet: git commit -m
+  - name: git diff
+    keyword: gd
+    snippet: git diff
+  - name: git log
+    keyword: gl
+    snippet: git log
+  - name: git log oneline
+    keyword: glo
+    snippet: git log --oneline
+  - name: git cherry-pick
+    keyword: gcherry
+    snippet: git cherry-pick
+
+  # --- Git 同期 (Fetch/Pull/Push) ---
+  - name: git fetch
+    keyword: gf
+    snippet: git fetch
+  - name: git merge
+    keyword: gm
+    snippet: git merge
+  - name: git pull
+    keyword: gpl
+    snippet: git pull
+  - name: git pull origin
+    keyword: gplo
+    snippet: git pull origin
+  - name: git pull origin main
+    keyword: gplom
+    snippet: git pull origin main
+  - name: git pull origin master
+    keyword: gplod
+    snippet: git pull origin master
+  - name: git push
+    keyword: gp
+    snippet: git push
+  - name: git push origin
+    keyword: gpo
+    snippet: git push origin
+  - name: git push origin main
+    keyword: gpom
+    snippet: git push origin main
+  - name: git push origin master
+    keyword: gpod
+    snippet: git push origin master
+  - name: git push origin HEAD
+    keyword: gpoh
+    snippet: git push origin HEAD
+
+  # --- Git Rebase ---
+  - name: git rebase main
+    keyword: grm
+    snippet: git rebase main
+  - name: git rebase master
+    keyword: grd
+    snippet: git rebase master
+  - name: git rebase i main
+    keyword: grim
+    snippet: git rebase -i main
+  - name: git rebase i master
+    keyword: grid
+    snippet: git rebase -i master
+  - name: git rebase continue
+    keyword: grc
+    snippet: git rebase --continue
+  - name: git rebase abort
+    keyword: gra
+    snippet: git rebase --abort
+  - name: git rebase skip
+    keyword: grs
+    snippet: git rebase --skip
+
+  # --- Git Stash ---
+  - name: git stash
+    keyword: gs
+    snippet: git stash -u
+  - name: git stash list
+    keyword: gsl
+    snippet: git stash list
+  - name: git stash pop
+    keyword: gsp
+    snippet: git stash pop
+  - name: git stash save
+    keyword: gss
+    snippet: git stash save
+  - name: git stash drop
+    keyword: gsd
+    snippet: git stash drop
+  - name: git stash clear
+    keyword: gsc
+    snippet: git stash clear
+
+  # --- Git Reset / Restore ---
+  - name: git reset soft
+    keyword: grsh
+    snippet: git reset --soft HEAD^
+  - name: git reset hard
+    keyword: grhh
+    snippet: git reset --hard HEAD^
+  - name: git restore
+    keyword: gre
+    snippet: git restore

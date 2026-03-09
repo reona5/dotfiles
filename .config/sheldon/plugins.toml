@@ -14,30 +14,46 @@ shell = "zsh"
 
 [plugins.zsh-defer]
 github = 'romkatv/zsh-defer'
-apply = ['source']
+
+[plugins.zsh-completions]
+github = 'zsh-users/zsh-completions'
+apply = ['fpath']
 
 [plugins.compinit]
-inline = 'autoload -Uz compinit && compinit'
+inline = 'autoload -Uz compinit && compinit -C'
 
 [plugins.colors]
 inline = 'autoload -Uz colors && colors'
 
-[plugins.zsh-completions]
-github = 'zsh-users/zsh-completions'
-apply = ['defer']
+[plugins.zeno]
+github = 'yuki-yano/zeno.zsh'
+
+[plugins.zeno-bindings]
+inline = '''
+export ZENO_HOME="$HOME/.config/zeno"
+export ZENO_ENABLE_SOCK=1
+
+if [[ -n $ZENO_LOADED ]]; then
+  bindkey ' '  zeno-auto-snippet
+  bindkey '^m' zeno-auto-snippet-and-accept-line
+  bindkey '^i' zeno-completion
+  bindkey '^r' zeno-history-selection
+fi
+'''
+# -----------------------
 
 [plugins.zsh-autosuggestions]
 github = 'zsh-users/zsh-autosuggestions'
-apply = ['defer']
-
-[plugins.zsh-syntax-highlighting]
-github = 'zsh-users/zsh-syntax-highlighting'
 apply = ['defer']
 
 [plugins.dotfiles-sync]
 local = '~/.zsh'
 use = ['*.zsh']
 apply = ['source']
+
+[plugins.zsh-syntax-highlighting]
+github = 'zsh-users/zsh-syntax-highlighting'
+apply = ['defer']
 
 [templates]
 defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"

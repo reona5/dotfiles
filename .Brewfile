@@ -94,7 +94,6 @@ if OS.mac?
   cask "docker-desktop"
   cask "firefox"
   cask "font-jetbrains-mono-nerd-font"
-  cask "ghostty"
   cask "google-chrome"
   cask "google-japanese-ime"
   cask "gyazo"

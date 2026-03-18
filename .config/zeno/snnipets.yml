@@ -158,3 +158,18 @@ snippets:
   - name: git restore
     keyword: gre
     snippet: git restore
+  - name: claude
+    keyword: cl
+    snippet: claude
+  - name: claude dangerously skip permissions
+    keyword: cld
+    snippet: claude --dangerously-skip-permissions
+  - name: claude dangerously skip permissions continue
+    keyword: cldc
+    snippet: claude --dangerously-skip-permissions --continue
+  - name: cursor
+    keyword: cu
+    snippet: cursor
+  - name: codex
+    keyword: cx
+    snippet: codex

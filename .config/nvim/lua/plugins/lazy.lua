@@ -147,26 +147,25 @@ require("lazy").setup({
       vim.fn["mkdp#util#install"]()
     end
   },
-  -- {
-  --   "nvim-telescope/telescope.nvim",
-  --   dependencies = { "nvim-lua/plenary.nvim", lazy = true },
-  --   event = "VimEnter",
-  --   config = function()
-  --     require("plugins.telescope")
-  --   end
-  -- },
-  -- Lazy.nvim
   {
-    '2kabhishek/seeker.nvim',
-    dependencies = { 'folke/snacks.nvim' },
-    cmd = { 'Seeker' },
-    keys = {
-      { '<leader>f',        ':Seeker files<CR>',     desc = 'Seek Files' },
-      { '<leader><leader>', ':Seeker git_files<CR>', desc = 'Seek Git Files' },
-      { '<leader>g',        ':Seeker grep<CR>',      desc = 'Seek Grep' },
-    },
-    opts = {},
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", lazy = true },
+    event = "VimEnter",
+    config = function()
+      require("plugins.telescope")
+    end
   },
+  -- {
+  --   '2kabhishek/seeker.nvim',
+  --   dependencies = { 'folke/snacks.nvim' },
+  --   cmd = { 'Seeker' },
+  --   keys = {
+  --     { '<leader>f',        ':Seeker files<CR>',     desc = 'Seek Files' },
+  --     { '<leader><leader>', ':Seeker git_files<CR>', desc = 'Seek Git Files' },
+  --     { '<leader>g',        ':Seeker grep<CR>',      desc = 'Seek Grep' },
+  --   },
+  --   opts = {},
+  -- },
   {
     "vim-test/vim-test",
     event = "BufRead",

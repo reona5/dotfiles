@@ -9,6 +9,8 @@
 !/.bin.local/**
 !/.bundle/
 !/.bundle/config
+!/.claude/
+!/.claude/**
 !/.config/
 !/.config/alacritty/
 !/.config/alacritty/alacritty.toml

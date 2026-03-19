@@ -1,3 +1,17 @@
 {
   "language": "japanese"
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:dev.classmethod.jp)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./config/credentials.json)",
+      "Bash(sudo:*)"
+    ],
+    "ask": []
+  }
 }

@@ -36,9 +36,6 @@ if [[ -n "$AWS_VAULT" ]]; then
   export PS1="${AWS_VAULT_PROMPT} ${PS1}"
 fi
 
-# For uv
-. "$HOME/.local/share/../bin/env"
-
 # Added by Antigravity
 export PATH="/Users/r.shimada/.antigravity/antigravity/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"

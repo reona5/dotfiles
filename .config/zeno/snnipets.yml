@@ -14,6 +14,9 @@ snippets:
     snippet: "--force-with-lease --force-if-includes"
     context:
       lbuffer: '.+\s'
+  - name: exec zsh
+    keyword: ez
+    snippet: exec zsh
   - name: docker compose
     keyword: dc
     snippet: docker compose

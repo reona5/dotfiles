@@ -88,6 +88,7 @@ if OS.mac?
   cask "alacritty"
   cask "chromedriver"
   cask "claude-code"
+  cask "cleanshot"
   cask "cursor"
   cask "deepl"
   cask "devpod"

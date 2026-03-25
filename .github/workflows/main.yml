@@ -20,7 +20,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # make commands without mas
+      # make commands without mas and problematic casks
       - name: Set MacOS.
         run: |
           make init
@@ -28,4 +28,5 @@ jobs:
           make defaults
           MAS_APPS="$(grep -o 'mas "[^"]*"' .Brewfile | awk -F'"' '{ print $2 }' | tr '\n' ' ')"
           export HOMEBREW_BUNDLE_MAS_SKIP="$MAS_APPS"
+          export HOMEBREW_BUNDLE_CASK_SKIP="codex gyazo"
           make brew

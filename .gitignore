@@ -11,6 +11,7 @@
 !/.bundle/config
 !/.claude/
 !/.claude/**
+/.claude/settings.local.json
 !/.config/
 !/.config/alacritty/
 !/.config/alacritty/alacritty.toml

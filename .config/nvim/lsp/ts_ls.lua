@@ -28,12 +28,8 @@ return {
     plugins = {
       {
         name = "@vue/typescript-plugin",
-        languages = { "vue" },
-      },
-      {
-        name = "@vue/typescript-plugin",
         location = vue_path,
-        languages = { "javascript", "typescript", "vue" },
+        languages = { "vue" },
       },
     },
   },

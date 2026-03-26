@@ -1,6 +1,12 @@
 local status, treesitter = pcall(require, "nvim-treesitter")
 if (not status) then return end
 
+-- main ブランチは queries が runtime/queries/ に配置されているため rtp に追加
+local ts_runtime = vim.fn.stdpath("data") .. "/lazy/nvim-treesitter/runtime"
+if vim.fn.isdirectory(ts_runtime) == 1 then
+  vim.opt.rtp:prepend(ts_runtime)
+end
+
 -- main ブランチでは setup 関数のオプションは install_dir のみ
 treesitter.setup({})
 

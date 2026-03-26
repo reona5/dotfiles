@@ -1,7 +1,6 @@
 vim.loader.enable()
 
 vim.o.shadafile = "NONE"
-vim.o.lazyredraw = true
 vim.o.expandtab = true
 vim.o.ignorecase = true
 vim.o.smartcase = true

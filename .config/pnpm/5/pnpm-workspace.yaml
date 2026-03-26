@@ -1,5 +1,6 @@
 onlyBuiltDependencies:
   - '@biomejs/biome'
+  - '@pnpm/exe'
   - es5-ext
   - esbuild
   - protobufjs

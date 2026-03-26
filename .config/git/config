@@ -25,5 +25,3 @@
 	autostash = true
 	abbreviateCommands = true
 	autosquash = true
-[wt]
-	basedir = .worktrees

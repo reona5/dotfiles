@@ -15,14 +15,6 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PNPM_HOME:$PATH"
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 export PATH="$HOME/.bin.local:$PATH"
-# Netskope Certificate for Cloud
-export REQUESTS_CA_BUNDLE=/etc/ssl/certs/netskope-cert-bundle.pem
-# Netskope Certificate for nodejs
-export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/netskope-cert-bundle.pem
-# Netskope Certificate for curl
-export CURL_CA_BUNDLE=/etc/ssl/certs/netskope-cert-bundle.pem
-# For Cursor CLI
-export PATH="$HOME/.local/bin:$PATH"
 # Install JSR dependencies for zeno.zsh
 export DENO_TLS_CA_STORE=system
 

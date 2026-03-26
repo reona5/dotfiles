@@ -1,9 +1,9 @@
 {
-  "language": "japanese"
+  "language": "japanese",
   "permissions": {
     "allow": [
       "WebSearch",
-      "WebFetch(domain:dev.classmethod.jp)"
+      "WebFetch"
     ],
     "deny": [
       "Read(./.env)",

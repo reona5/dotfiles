@@ -1,5 +1,4 @@
 {
-  "language": "japanese",
   "permissions": {
     "allow": [
       "WebSearch",
@@ -13,5 +12,7 @@
       "Bash(sudo:*)"
     ],
     "ask": []
-  }
+  },
+  "language": "japanese",
+  "skipDangerousModePermissionPrompt": true
 }

@@ -10,8 +10,9 @@
 !/.bundle/
 !/.bundle/config
 !/.claude/
-!/.claude/**
-/.claude/settings.local.json
+!/.claude/settings.json
+!/.claude/skills/
+!/.claude/skills/**
 !/.config/
 !/.config/alacritty/
 !/.config/alacritty/alacritty.toml

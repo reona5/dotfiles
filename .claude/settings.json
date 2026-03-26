@@ -14,5 +14,9 @@
     "ask": []
   },
   "language": "japanese",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "statusLine": {
+    "type": "command",
+    "command": "python3 ~/.claude/statusline-pattern5.py"
+  }
 }

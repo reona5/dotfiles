@@ -53,6 +53,8 @@ brew "luajit", args: ["HEAD"]
 brew "luarocks"
 brew "mas"
 brew "mise"
+brew "mosh"
+brew "moshi-hook"
 brew "neofetch"
 brew "neovim"
 brew "nghttp2"

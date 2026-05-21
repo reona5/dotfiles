@@ -9,13 +9,10 @@
 !/.bin.local/**
 !/.bundle/
 !/.bundle/config
-!/.claude/
 !/.claude/settings.json
 !/.claude/skills/
 !/.claude/skills/**
 !/.claude/statusline.py
-!/.config/
-!/.config/alacritty/
 !/.config/alacritty/alacritty.toml
 !/.config/alacritty/catppuccin-mocha.toml
 !/.config/gh/
@@ -35,7 +32,7 @@
 !/.config/nvim/**
 !/.config/pnpm/
 !/.config/pnpm/5/
-!/.config/pnpm/5/*
+!/.config/pnpm/5/package.json
 !/.config/sheldon/
 !/.config/sheldon/**
 !/.config/zeno/

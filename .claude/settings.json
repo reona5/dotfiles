@@ -13,10 +13,12 @@
     ],
     "ask": []
   },
-  "language": "japanese",
-  "skipDangerousModePermissionPrompt": true,
   "statusLine": {
     "type": "command",
     "command": "python3 ~/.claude/statusline-pattern5.py"
-  }
+  },
+  "language": "japanese",
+  "skipDangerousModePermissionPrompt": true,
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true
 }

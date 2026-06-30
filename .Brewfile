@@ -68,6 +68,7 @@ if OS.mac?
   cask "imageoptim"
   cask "iterm2"
   cask "muzzle"
+  cask "nani"
   cask "raycast"
   cask "sequel-ace"
   cask "slack"

@@ -14,7 +14,7 @@ return {
     "astro",
     "mdx",
     "yaml",
-    "txt",
+    "text",
   },
   root_markers = { ".git", "package.json" },
   init_options = {

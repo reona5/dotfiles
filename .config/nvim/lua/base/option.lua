@@ -31,7 +31,16 @@ if has_clipboard then
   end
 end
 
-vim.filetype.add({ extension = { mdx = 'mdx' } })
+vim.filetype.add({
+  extension = {
+    gotmpl = "gotmpl",
+    mdx = "mdx",
+    sss = "sugarss",
+  },
+  pattern = {
+    [".*%.go%.tmpl"] = "gotmpl",
+  },
+})
 
 -- Create the autocommand groups
 local whitespace_group = vim.api.nvim_create_augroup('extra-whitespace', { clear = true })

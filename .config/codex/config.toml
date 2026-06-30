@@ -3,6 +3,9 @@ notify = ["/Users/reona5/.codex/computer-use/Codex Computer Use.app/Contents/Sha
 [projects."/Users/reona5/src/github.com/reona5/dotfiles"]
 trust_level = "trusted"
 
+[projects."/Users/reona5/src/github.com/reona5/workspace"]
+trust_level = "trusted"
+
 [marketplaces.openai-bundled]
 last_updated = "2026-06-30T05:42:43Z"
 source_type = "local"

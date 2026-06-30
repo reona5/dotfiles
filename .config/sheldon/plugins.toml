@@ -72,5 +72,22 @@ apply = ['source']
 github = 'zsh-users/zsh-syntax-highlighting'
 apply = ['source']
 
+# Some ZLE widgets (including zeno widgets) temporarily shadow zsh's special
+# `options` associative array. Skip that single redraw so
+# zsh-syntax-highlighting does not try to copy the shadowing scalar as pairs.
+# The next redraw runs normally after the widget has returned.
+[plugins.zsh-syntax-highlighting-zle-compat]
+inline = '''
+functions[_zsh_highlight_impl]=$functions[_zsh_highlight]
+function _zsh_highlight() {
+  local ret=$?
+  if [[ ${parameters[options]-} != *association* ]]; then
+    return $ret
+  fi
+  _zsh_highlight_impl "$@"
+  return $ret
+}
+'''
+
 [templates]
 defer = "{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}"

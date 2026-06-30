@@ -13,6 +13,10 @@
 !/.claude/skills/
 !/.claude/skills/**
 !/.claude/statusline.py
+!/.config/
+/.config/*
+!/.config/alacritty/
+/.config/alacritty/*
 !/.config/alacritty/alacritty.toml
 !/.config/alacritty/catppuccin-mocha.toml
 !/.config/gh/

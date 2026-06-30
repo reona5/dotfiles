@@ -11,16 +11,13 @@ vim.lsp.config("*", {
   capabilities = capabilities,
 })
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics,
-  {
-    underline = true,
-    virtual_text = {
-      spacing = 4,
-      prefix = "",
-    },
-  }
-)
+vim.diagnostic.config({
+  underline = true,
+  virtual_text = {
+    spacing = 4,
+    prefix = "",
+  },
+})
 
 local format_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
 local go_import_group = vim.api.nvim_create_augroup("LspGoImports", { clear = true })

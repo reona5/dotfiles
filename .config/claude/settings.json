@@ -15,7 +15,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "python3 ~/.claude/statusline-pattern5.py"
+    "command": "python3 ~/.claude/statusline.py"
   },
   "language": "japanese",
   "skipDangerousModePermissionPrompt": true,

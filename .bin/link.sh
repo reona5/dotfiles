@@ -29,7 +29,54 @@ function link_to_homedir() {
       "$f_filename" == ".DS_Store" ]] && continue
       backup_and_link "$f" "$HOME" "$backupdir"
     done
+    link_codex_config "$dotfiles_dir/.config/codex" "${CODEX_HOME:-$HOME/.codex}" "$backupdir"
+    link_claude_config "$dotfiles_dir/.config/claude" "$HOME/.claude" "$backupdir"
+    backup_and_link_path "$dotfiles_dir/.config/zsh" "$HOME/.zsh" "$backupdir"
   fi
+}
+
+function link_codex_config() {
+  local source_dir=$1
+  local codex_home=$2
+  local backupdir=$3
+  local filename
+
+  [[ "$source_dir" == "$codex_home" ]] && return
+  mkdir_not_exist "$codex_home"
+  for filename in config.toml hooks.json; do
+    [[ -f "$source_dir/$filename" ]] || continue
+    backup_and_link "$source_dir/$filename" "$codex_home" "$backupdir"
+  done
+}
+
+function link_claude_config() {
+  local source_dir=$1
+  local claude_home=$2
+  local backupdir=$3
+  local filename
+
+  if [[ -L "$claude_home" && ! -e "$claude_home" ]]; then
+    command rm -f "$claude_home"
+  fi
+  mkdir_not_exist "$claude_home"
+  for filename in settings.json skills statusline.py; do
+    [[ -e "$source_dir/$filename" ]] || continue
+    backup_and_link "$source_dir/$filename" "$claude_home" "$backupdir"
+  done
+}
+
+function backup_and_link_path() {
+  local link_src_file=$1
+  local link_dest_file=$2
+  local backupdir=$3
+
+  if [[ -L "$link_dest_file" ]]; then
+    command rm -f "$link_dest_file"
+  elif [[ -e "$link_dest_file" ]]; then
+    command mv "$link_dest_file" "$backupdir"
+  fi
+  print_default "Creating symlink for $link_src_file -> $link_dest_file"
+  command ln -snf "$link_src_file" "$link_dest_file"
 }
 
 function backup_and_link() {
@@ -109,4 +156,3 @@ if [[ "$IS_INSTALL" = true ]];then
     print_info "#####################################################"
     print_info ""
 fi
-

@@ -52,7 +52,11 @@ require("lazy").setup({
     event = { "InsertEnter" },
     dependencies = {
       { "hrsh7th/cmp-nvim-lsp", event = { "InsertEnter" } },
-      { "hrsh7th/cmp-buffer",   event = { "InsertEnter" } },
+      {
+        "hrsh7th/cmp-buffer",
+        commit = "51f42e6ef64e6ec6601f640731a94c524f165d7c",
+        event = { "InsertEnter" },
+      },
       { "hrsh7th/cmp-path",     event = { "InsertEnter" } },
       { "hrsh7th/cmp-cmdline",  event = { "InsertEnter" } },
       { "hrsh7th/cmp-vsnip",    event = { "InsertEnter" } },

@@ -76,3 +76,22 @@ global = "iterm2"
 
 [desktop.open-in-target-preferences.perPath]
 "/Users/reona5/src/github.com/reona5/dotfiles" = "iterm2"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "context-remaining", "five-hour-limit", "weekly-limit", "codex-version"]
+status_line_use_colors = true
+
+[hooks.state]
+
+[hooks.state."/Users/reona5/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:f97d9bbf180a5186984c12f815ad5e4b701ea1aeffd6deef48eba51e7843a8fa"
+enabled = true
+
+[hooks.state."/Users/reona5/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:0c190748d9929379531fdcfca3f822ae2b5b6f08d75d93f5e6b273ef27a901c9"
+
+[hooks.state."/Users/reona5/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:4181e185400e7ab133a68f5680f86a9df6ff48cdd0f43a19aa6409c8a34f793e"
+
+[hooks.state."/Users/reona5/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:d890791159fe0d9507cfec80d9a066c1680bf54be418cee645e51d7205813de3"

@@ -21,7 +21,12 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-require('ts_context_commentstring').setup {}
+-- enable_autocmd = false: CursorHold の autocmd を無効化する。
+-- コメント時の commentstring 更新は nvim-comment の hook で手動実行しているため不要で、
+-- パーサーの無いバッファで CursorHold ごとにエラーになるのを防ぐ。
+require('ts_context_commentstring').setup {
+  enable_autocmd = false,
+}
 vim.g.skip_ts_context_commentstring_module = true
 
 -- refs: https://phelipetls.github.io/posts/mdx-syntax-highlight-treesitter-nvim/

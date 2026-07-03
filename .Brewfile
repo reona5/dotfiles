@@ -3,6 +3,7 @@ cask_args appdir: "/Applications"
 # Taps
 tap "github/gh"
 tap "hashicorp/tap"
+tap "k1LoW/tap"
 tap "suzuki-shunsuke/ghalint"
 
 # CLI Tools & Development Dependencies
@@ -19,8 +20,8 @@ brew "ghq"
 brew "git", link: true, conflicts_with: ["git"]
 brew "git-lfs"
 brew "jq"
-brew "k1LoW/tap/git-wt"
-brew "k1LoW/tap/mo"
+brew "k1LoW/tap/git-wt", trusted: true
+brew "k1LoW/tap/mo", trusted: true
 brew "lazygit"
 brew "lua-language-server"
 brew "luajit", args: ["HEAD"]
@@ -28,8 +29,7 @@ brew "luarocks"
 brew "mas"
 brew "mise"
 brew "mosh"
-brew "moshi-hook"
-brew "neofetch"
+brew "fastfetch"
 brew "neovim"
 brew "npm"
 brew "pngpaste"
@@ -39,7 +39,7 @@ brew "ruby-lsp"
 brew "rustup-init"
 brew "sheldon"
 brew "starship"
-brew "terraform"
+brew "hashicorp/tap/terraform", trusted: true
 brew "tmux"
 brew "tree"
 brew "tree-sitter"

@@ -19,6 +19,10 @@
   },
   "language": "japanese",
   "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true
+  }
 }

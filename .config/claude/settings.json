@@ -1,28 +1,42 @@
 {
+  "agentPushNotifEnabled": true,
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/shimada.reona/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  },
+  "language": "japanese",
   "permissions": {
     "allow": [
       "WebSearch",
       "WebFetch"
     ],
+    "ask": [],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Read(./config/credentials.json)",
       "Bash(sudo:*)"
-    ],
-    "ask": []
+    ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "python3 ~/.claude/statusline.py"
-  },
-  "language": "japanese",
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "dark",
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true,
-  "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true
-  }
+  "skipDangerousModePermissionPrompt": true,
+  "statusLine": {
+    "command": "python3 ~/.claude/statusline.py",
+    "type": "command"
+  },
+  "theme": "dark"
 }

@@ -1,6 +1,7 @@
 # Setup fzf
 # ---------
-if [ "$(uname)" = "Darwin" ]; then
+# uname のプロセス起動を避けるため zsh 組み込みの $OSTYPE で判定する
+if [[ "$OSTYPE" == darwin* ]]; then
   # macOS (Homebrew)
   if [[ ! "$PATH" == */opt/homebrew/opt/fzf/bin* ]]; then
     PATH="${PATH:+${PATH}:}/opt/homebrew/opt/fzf/bin"

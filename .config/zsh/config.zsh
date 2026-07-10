@@ -48,8 +48,7 @@ fbr() {
 fbrm() {
   local branches branch
   branches=$(git branch --all | rg -v HEAD) &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  branch=$(echo "$branches" | fzf +m) &&
   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
@@ -58,10 +57,8 @@ wt() {
   cd $(git-wt | fzf | awk '{print $1}')
 }
 
-# fzf history search
-if (( $+commands[fzf] )); then
-  source <(fzf --zsh)
-fi
+# fzf の補完とキーバインドは ~/.fzf.zsh 側で読み込む
+# (source <(fzf --zsh) はプロセス起動で毎回 100ms 以上かかるため使わない)
 
 # cd by fzf and ghq
 ghq-fzf() {

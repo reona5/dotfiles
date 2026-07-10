@@ -9,6 +9,7 @@ tap "suzuki-shunsuke/ghalint"
 # CLI Tools & Development Dependencies
 brew "act"
 brew "actionlint"
+brew "awscli"
 brew "bat"
 brew "deno"
 brew "devcontainer"
@@ -19,6 +20,7 @@ brew "gh"
 brew "ghq"
 brew "git", link: true, conflicts_with: ["git"]
 brew "git-lfs"
+brew "herdr"
 brew "jq"
 brew "k1LoW/tap/git-wt", trusted: true
 brew "k1LoW/tap/mo", trusted: true
@@ -40,7 +42,6 @@ brew "rustup-init"
 brew "sheldon"
 brew "starship"
 brew "hashicorp/tap/terraform", trusted: true
-brew "tmux"
 brew "tree"
 brew "tree-sitter"
 brew "tree-sitter-cli"
@@ -51,7 +52,9 @@ brew "yarn"
 
 if OS.mac?
   # Applications
+  cask "1password-cli"
   cask "alacritty"
+  cask "aws-vault"
   cask "chromedriver"
   cask "claude-code"
   cask "codex"
@@ -61,7 +64,7 @@ if OS.mac?
   cask "discord"
   cask "docker-desktop"
   cask "firefox"
-  cask "font-jetbrains-mono-nerd-font"
+  cask "font-udev-gothic-nf"
   cask "google-chrome"
   cask "google-japanese-ime"
   cask "gyazo"

@@ -24,6 +24,9 @@
 !/.config/gh/config.yml
 !/.config/git/
 !/.config/git/**
+!/.config/herdr/
+/.config/herdr/*
+!/.config/herdr/config.toml
 !/.config/iterm2/
 !/.config/iterm2/AppSupport
 !/.config/lazygit

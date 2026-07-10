@@ -25,8 +25,11 @@ inline = 'autoload -Uz compinit && compinit -C'
 [plugins.colors]
 inline = 'autoload -Uz colors && colors'
 
+# zeno は source 時に deno cache / deno --version を実行して 1 秒以上かかるため、
+# zsh-defer で初回プロンプト表示後に読み込む
 [plugins.zeno]
 github = 'yuki-yano/zeno.zsh'
+apply = ['defer']
 
 [plugins.zeno-bindings]
 inline = '''
@@ -35,27 +38,30 @@ export ZENO_ENABLE_SOCK=1
 export ZENO_COMPLETION_FALLBACK=expand-or-complete
 
 function zeno-ghq-cd-post-hook-impl() {
-  local dir="$ZENO_GHQ_CD_DIR"
-  if [[ -n $TMUX ]]; then
-    local repository=${dir:t}
-    local session=${repository//./-}
-    tmux rename-session "${session}"
-  fi
+  # 旧実装は tmux セッションをリポジトリ名でリネームしていた。
+  # herdr はワークスペースを cwd から自動でラベリングするため no-op とする。
+  :
 }
 
 zle -N zeno-ghq-cd-post-hook zeno-ghq-cd-post-hook-impl
-if [[ -n $ZENO_LOADED ]]; then
-  bindkey ' '  zeno-auto-snippet
-  bindkey '^m' zeno-auto-snippet-and-accept-line
-  bindkey '^i' zeno-completion
-  bindkey '^y' zeno-insert-snippet
-  bindkey '^x '  zeno-insert-space
-  bindkey '^x^m' accept-line
-  bindkey '^x^z' zeno-toggle-auto-snippet
-  bindkey '^xp' zeno-preprompt
-  bindkey '^xs' zeno-preprompt-snippet
-  bindkey '^r' zeno-history-selection
-fi
+
+# zeno 本体が defer されるため、バインドも zsh-defer で同順に遅延して
+# ZENO_LOADED が設定された後に実行する。
+# ^r と ^i は従来どおり fzf のウィジェット (.fzf.zsh で設定) を使うため、
+# ここでは束縛しない (遅延実行だと fzf を上書きしてしまうため)
+function zeno-bindings-setup() {
+  if [[ -n $ZENO_LOADED ]]; then
+    bindkey ' '  zeno-auto-snippet
+    bindkey '^m' zeno-auto-snippet-and-accept-line
+    bindkey '^y' zeno-insert-snippet
+    bindkey '^x '  zeno-insert-space
+    bindkey '^x^m' accept-line
+    bindkey '^x^z' zeno-toggle-auto-snippet
+    bindkey '^xp' zeno-preprompt
+    bindkey '^xs' zeno-preprompt-snippet
+  fi
+}
+zsh-defer zeno-bindings-setup
 '''
 # -----------------------
 

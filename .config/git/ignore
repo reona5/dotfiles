@@ -11,3 +11,5 @@ GTAGS
 .cache/
 .cursor/
 .github/copilot-instructions.md
+
+**/.claude/settings.local.json

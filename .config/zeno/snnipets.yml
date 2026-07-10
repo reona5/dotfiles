@@ -95,9 +95,6 @@ snippets:
   - name: git pull origin main
     keyword: gplom
     snippet: git pull origin main
-  - name: git pull origin master
-    keyword: gplod
-    snippet: git pull origin master
   - name: git push
     keyword: gp
     snippet: git push
@@ -107,24 +104,15 @@ snippets:
   - name: git push origin main
     keyword: gpom
     snippet: git push origin main
-  - name: git push origin master
-    keyword: gpod
-    snippet: git push origin master
   - name: git push origin HEAD
     keyword: gpoh
     snippet: git push origin HEAD
   - name: git rebase main
     keyword: grm
     snippet: git rebase main
-  - name: git rebase master
-    keyword: grd
-    snippet: git rebase master
   - name: git rebase i main
     keyword: grim
     snippet: git rebase -i main
-  - name: git rebase i master
-    keyword: grid
-    snippet: git rebase -i master
   - name: git rebase continue
     keyword: grc
     snippet: git rebase --continue

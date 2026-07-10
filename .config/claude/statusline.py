@@ -46,6 +46,10 @@ ctx = data.get('context_window', {}).get('used_percentage')
 if ctx is not None:
     parts.append(fmt('ctx', ctx))
 
+cost = data.get('cost', {}).get('total_cost_usd')
+if cost is not None:
+    parts.append(f'{DIM}$ {R}\033[38;2;120;200;255m{cost:.2f}{R}')
+
 five = data.get('rate_limits', {}).get('five_hour', {}).get('used_percentage')
 if five is not None:
     parts.append(fmt('5h', five))

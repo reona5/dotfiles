@@ -59,7 +59,7 @@ function link_claude_config() {
     command rm -f "$claude_home"
   fi
   mkdir_not_exist "$claude_home"
-  for filename in settings.json skills statusline.py; do
+  for filename in settings.json skills statusline.py hooks; do
     [[ -e "$source_dir/$filename" ]] || continue
     backup_and_link "$source_dir/$filename" "$claude_home" "$backupdir"
   done

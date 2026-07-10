@@ -1,0 +1,35 @@
+onboarding = false
+# herdr configuration
+# ~/.config/herdr/config.toml
+# 旧 .tmux.conf からの移植設定。既定値のままの項目は省略している。
+
+[theme]
+# catppuccin（旧 catppuccin mocha 相当のダーク）
+name = "catppuccin"
+
+auto_switch = false
+[terminal]
+# 旧 set -g default-shell /bin/zsh
+default_shell = "/bin/zsh"
+
+[keys]
+# 旧 prefix C-q
+prefix = "ctrl+q"
+
+# ペイン移動 h/j/k/l は既定の prefix+h/j/k/l をそのまま利用する（旧 vim キーバインド）。
+# 分割は既定のまま使う: prefix+v = 左右分割（旧 |）, prefix+minus = 上下分割（旧 -）。
+
+# lazygit を専用ペインで起動する（旧 bind g の popup lazygit 相当）。
+# prefix+g は既定で goto に割り当て済みのため、衝突を避けて prefix+alt+g にする。
+[[keys.command]]
+key = "prefix+alt+g"
+type = "pane"
+command = "lazygit"
+
+[ui]
+# 旧 set-option -g mouse on
+mouse_capture = true
+
+show_agent_labels_on_pane_borders = false
+[ui.toast]
+delivery = "herdr"

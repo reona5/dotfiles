@@ -50,9 +50,15 @@ snippets:
   - name: git switch
     keyword: gsw
     snippet: git switch
+  - name: git switch main
+    keyword: gswm
+    snippet: git switch main
   - name: git switch create
     keyword: gswc
     snippet: git switch -c
+  - name: git switch -
+    keyword: gsw-
+    snippet: git switch -
   - name: git add all
     keyword: ga
     snippet: git add .
@@ -95,6 +101,9 @@ snippets:
   - name: git pull origin main
     keyword: gplom
     snippet: git pull origin main
+  - name: git pull origin HEAD
+    keyword: gploh
+    snippet: git pull origin HEAD
   - name: git push
     keyword: gp
     snippet: git push

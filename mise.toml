@@ -1,0 +1,184 @@
+# dotfiles と環境構築を mise の native bootstrap へ寄せる。
+#
+# `mise bootstrap` が以下を順に、宣言的かつ idempotent に適用する:
+#   1. [bootstrap.packages]     system packages（brew formula / brew-cask / mas）
+#   2. [bootstrap.repos]        git リポジトリ（未使用）
+#   3. [dotfiles]               $HOME への symlink
+#   4. shell activation
+#   5. [bootstrap.macos.defaults] macOS のシステム設定
+#   8. [bootstrap.user]         ログインシェル
+#   9. mise install             [tools] のランタイム（~/.config/mise/config.toml）
+#   10. `bootstrap` タスク        宣言で表せない補助（uv / pnpm global）
+#
+# 実行:  mise bootstrap        （リポジトリ直下で。config は symlink されないため）
+# 確認:  mise bootstrap -n     （dry-run。適用せず差分だけ表示）
+
+# ---------------------------------------------------------------------------
+# system packages（旧 .Brewfile + brew タスク）
+# ---------------------------------------------------------------------------
+# 注: mise の brew backend は brew CLI を呼ばず Homebrew API から直接メタデータを
+# 取得する。API メタデータを公開しないサードパーティ tap（hashicorp/tap, k1LoW/tap
+# など）の formula は install/upgrade できないため、それらは下の bootstrap タスクで
+# `brew install` する（brew 側に置けば `brew upgrade` で面倒を見られる）。
+[bootstrap.packages]
+# CLI formulae
+"brew:act" = "latest"
+"brew:actionlint" = "latest"
+"brew:awscli" = "latest"
+"brew:aws-vault" = "latest"    # 旧 Brewfile は cask 指定だったが実体は formula
+"brew:bat" = "latest"
+"brew:deno" = "latest"
+"brew:devcontainer" = "latest"
+"brew:direnv" = "latest"
+"brew:fastfetch" = "latest"
+"brew:fd" = "latest"
+"brew:fzf" = "latest"
+"brew:gh" = "latest"
+"brew:ghq" = "latest"
+"brew:git" = "latest"
+"brew:git-lfs" = "latest"
+"brew:herdr" = "latest"
+"brew:hunk" = "latest"
+"brew:jq" = "latest"
+"brew:lazygit" = "latest"
+"brew:lua-language-server" = "latest"
+"brew:luajit" = "latest"        # 旧 Brewfile では --HEAD 指定。native では版指定を表現できないため latest
+"brew:luarocks" = "latest"
+"brew:mas" = "latest"           # mas: エントリの導入に必要
+"brew:mosh" = "latest"
+"brew:neovim" = "latest"
+"brew:pngpaste" = "latest"
+"brew:pnpm" = "latest"
+"brew:ripgrep" = "latest"
+"brew:ruby-lsp" = "latest"
+"brew:rustup" = "latest"        # 旧 Brewfile は rustup-init（現在の formula 名は rustup）
+"brew:sheldon" = "latest"
+"brew:starship" = "latest"
+"brew:tree" = "latest"
+"brew:tree-sitter" = "latest"
+"brew:tree-sitter-cli" = "latest"
+"brew:universal-ctags" = "latest"
+"brew:vim" = "latest"
+"brew:yamllint" = "latest"
+"brew:yarn" = "latest"
+# GUI アプリ（cask）
+"brew-cask:1password-cli" = "latest"
+"brew-cask:alacritty" = "latest"
+"brew-cask:chromedriver" = "latest"
+"brew-cask:claude-code" = "latest"
+# CleanShot はここで管理しない。最新版がライセンス対象外のため、
+# 下の bootstrap タスクでライセンス済みの 4.7.7 に固定して入れる。
+"brew-cask:codex" = "latest"
+"brew-cask:cursor" = "latest"
+"brew-cask:deepl" = "latest"
+"brew-cask:discord" = "latest"
+"brew-cask:docker-desktop" = "latest"
+"brew-cask:firefox" = "latest"
+"brew-cask:font-udev-gothic-nf" = "latest"
+"brew-cask:google-chrome" = "latest"
+"brew-cask:google-japanese-ime" = "latest"
+"brew-cask:gyazo" = "latest"
+"brew-cask:imageoptim" = "latest"
+"brew-cask:iterm2" = "latest"
+"brew-cask:muzzle" = "latest"
+"brew-cask:nani" = "latest"
+"brew-cask:raycast" = "latest"
+"brew-cask:sequel-ace" = "latest"
+"brew-cask:slack" = "latest"
+"brew-cask:spotify" = "latest"
+"brew-cask:visual-studio-code" = "latest"
+"brew-cask:zoom" = "latest"
+# Mac App Store（数値は ADAM ID）
+"mas:539883307" = "latest"      # LINE
+"mas:1429033973" = "latest"     # RunCat
+"mas:497799835" = "latest"      # Xcode
+
+# ---------------------------------------------------------------------------
+# dotfiles の symlink（旧 link タスク）
+# source はリポジトリルート（config_root）からの相対
+# 注: ~/.claude は Claude Code 自身の設定で現状の symlink 構成が特殊なため、
+#     事故防止のため declarative 化から除外している（手動管理のまま）。
+# ---------------------------------------------------------------------------
+[dotfiles]
+"~/.bin" = { source = ".bin", mode = "symlink" }
+"~/.bin.local" = { source = ".bin.local", mode = "symlink" }
+"~/.config" = { source = ".config", mode = "symlink" }
+"~/.ctags.d" = { source = ".ctags.d", mode = "symlink" }
+"~/.fzf.zsh" = { source = ".fzf.zsh", mode = "symlink" }
+"~/.gitconfig" = { source = ".gitconfig", mode = "symlink" }
+"~/.gitignore" = { source = ".gitignore", mode = "symlink" }
+"~/.npmrc" = { source = ".npmrc", mode = "symlink" }
+"~/.textlintrc.json" = { source = ".textlintrc.json", mode = "symlink" }
+"~/.xvimrc" = { source = ".xvimrc", mode = "symlink" }
+"~/.zshenv" = { source = ".zshenv", mode = "symlink" }
+"~/.zshrc" = { source = ".zshrc", mode = "symlink" }
+"~/.zsh" = { source = ".config/zsh", mode = "symlink" }
+"~/.codex/config.toml" = { source = ".config/codex/config.toml", mode = "symlink" }
+"~/.codex/hooks.json" = { source = ".config/codex/hooks.json", mode = "symlink" }
+
+# ---------------------------------------------------------------------------
+# macOS のシステム設定（旧 defaults タスク）
+# ドメインごとに key = value。値の型（int / float / bool / string）で自動判別
+# ---------------------------------------------------------------------------
+[bootstrap.macos.defaults]
+"NSGlobalDomain" = { NSAutomaticCapitalizationEnabled = false, AppleInterfaceStyle = "Dark", KeyRepeat = 2, InitialKeyRepeat = 15, "com.apple.trackpad.scaling" = 3.0, AppleShowAllExtensions = true }
+"com.apple.dock" = { launchanim = false, autohide = true, tilesize = 59, magnification = false }
+"com.apple.finder" = { DisableAllAnimations = true, AppleShowAllFiles = true, ShowStatusBar = true, ShowPathbar = true }
+"com.apple.menuextra.clock" = { DateFormat = "EEE d MMM HH:mm" }
+"com.apple.menuextra.battery" = { ShowPercent = "YES" }
+
+# ---------------------------------------------------------------------------
+# ログインシェル（旧 install.sh の chsh）
+# ---------------------------------------------------------------------------
+[bootstrap.user]
+login_shell = "/bin/zsh"
+
+# ---------------------------------------------------------------------------
+# 設定の妥当性検証（CI とローカルで共通、非破壊）
+#   mise run verify
+# ---------------------------------------------------------------------------
+[tasks.verify]
+description = "設定の妥当性を検証する（非破壊。CI と共通）"
+run = [
+  # install.sh の静的解析（shellcheck があれば実行、なければスキップ）
+  '''
+if command -v shellcheck >/dev/null 2>&1; then
+  shellcheck .bin/install.sh
+else
+  echo "shellcheck not found; skipping install.sh lint"
+fi
+''',
+  # bootstrap 全体の dry-run。package トークンの解決、dotfiles の source 存在、
+  # defaults の妥当性、login shell、tools 解決までを一括検証する。
+  # 不正な設定があれば非ゼロで終了するため、CI のゲートとして機能する。
+  "mise bootstrap -n",
+]
+
+# ---------------------------------------------------------------------------
+# 宣言で表せない補助（bootstrap の step 10 で自動実行される escape hatch）
+# ---------------------------------------------------------------------------
+[tasks.bootstrap]
+description = "uv / pnpm global / tap formula / ライセンス版 CleanShot を導入する"
+run = [
+  "curl -LsSf https://astral.sh/uv/install.sh | sh",
+  "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
+  # mise の brew backend で扱えないサードパーティ tap の formula は brew で入れる。
+  # brew 管理下に置くので、以後は `brew upgrade` でまとめてアップグレードできる。
+  "command -v brew >/dev/null 2>&1 && brew install hashicorp/tap/terraform k1LoW/tap/git-wt k1LoW/tap/mo || true",
+  '''
+# CleanShot は Homebrew cask の最新版(4.8.9)が手持ちライセンスの対象外のため、
+# brew-cask では管理せず、公式 CDN の versioned DMG からライセンス済みの
+# 4.7.7 を固定インストールする（Homebrew cask は旧バージョン固定に非対応）。
+# 既に導入済みなら何もしない（冪等）。
+CLEANSHOT_VERSION=4.7.7
+if [ ! -d "/Applications/CleanShot X.app" ]; then
+  tmp="$(mktemp -d)"
+  curl -fsSL -o "$tmp/CleanShot.dmg" "https://updates.getcleanshot.com/v3/CleanShot-X-${CLEANSHOT_VERSION}.dmg"
+  hdiutil attach -nobrowse -quiet "$tmp/CleanShot.dmg" -mountpoint "$tmp/mnt"
+  cp -R "$tmp/mnt/CleanShot X.app" /Applications/
+  hdiutil detach -quiet "$tmp/mnt"
+  xattr -dr com.apple.quarantine "/Applications/CleanShot X.app" 2>/dev/null || true
+  rm -rf "$tmp"
+fi
+''',
+]

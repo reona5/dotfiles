@@ -2,20 +2,20 @@
 
 ## Project Structure & Module Organization
 
-The repository tracks macOS dotfiles and bootstrap scripts. `.bin/` contains provisioning utilities such as `init.sh`, `link.sh`, and shared helpers in `utilfuncs.sh`; these are invoked by the Make targets. Application settings live under `.config/` (e.g. `.config/nvim/` for Neovim, `.config/alacritty/` for terminal profiles, `.config/mise/` for toolchains). Shell tweaks reside in `.zsh/`, `.zshrc`, and `.zshenv`, while global preferences (`.tmux.conf`, `.gitconfig`, `.npmrc`) sit alongside them. Machine-specific helpers belong in `.bin.local/` so they are not symlinked automatically.
+The repository tracks macOS dotfiles and environment setup, driven by mise's native `bootstrap`. `mise.toml` at the repo root holds the declarative config: `[bootstrap.packages]` (brew formulae, `brew-cask` GUI apps, `mas` App Store apps) with `[bootstrap.brew.taps]`, `[dotfiles]` ($HOME symlinks), `[bootstrap.macos.defaults]` (macOS settings), `[bootstrap.user]` (login shell), and a `[tasks.bootstrap]` escape hatch for anything non-declarative (uv, pnpm). `.bin/` keeps only the remote installer `install.sh`. Application settings live under `.config/` (e.g. `.config/nvim/` for Neovim, `.config/alacritty/` for terminal profiles, `.config/mise/config.toml` for the `[tools]` runtimes). Shell tweaks reside in `.config/zsh/` (linked to `~/.zsh`), `.zshrc`, and `.zshenv`. Machine-specific helpers belong in `.bin.local/` so they are not symlinked automatically.
 
 ## Build, Test, and Development Commands
 
-`make all` orchestrates the full setup: Xcode CLI tools, dotfile linking, macOS defaults, and Homebrew bundle installs. Use `make init` to bootstrap system prerequisites only, `make link` to refresh symlinks after editing configs, `make defaults` to reapply macOS preferences, and `make brew` to sync packages declared in `.Brewfile`. On CI (`.github/workflows/main.yml`), the same sequence runs on `macos-latest`.
+`mise bootstrap` orchestrates the full setup declaratively and idempotently: system packages, `$HOME` symlinks, macOS defaults, login shell, and runtimes from `[tools]`. Use `mise bootstrap -n` to preview without applying, or `mise bootstrap --only dotfiles` / `--skip packages` to run parts. Per-section subcommands exist too (`mise bootstrap dotfiles apply`, `mise bootstrap macos defaults apply`, `mise dotfiles status`). On a fresh machine without Homebrew or mise, run `.bin/install.sh`, which seeds Homebrew and mise before handing off to `mise bootstrap`. On CI (`.github/workflows/main.yml`), `mise bootstrap -n` runs on `macos-latest` as a config lint.
 
 ## Coding Style & Naming Conventions
 
-Shell scripts default to `#!/usr/bin/env bash` with `set -ue` for strict mode. Prefer two-space indentation, `snake_case` function names, and `local` variables inside functions. Quote every variable in command substitutions, and route output through the color-aware helpers in `.bin/utilfuncs.sh` when printing status. New config directories should match the upstream app name (e.g. `.config/alacritty/`) so `link.sh` picks them up without extra wiring.
+Keep `mise.toml` grouped by bootstrap section with a comment header per block. Package entries are `"manager:name" = "latest"` (`brew:`, `brew-cask:`, `mas:` by numeric ADAM ID). macOS defaults are `"<domain>" = { key = value }` with the value type (int/float/bool/string) picking the write type. Dotfile sources are repo-relative paths with `mode = "symlink"`. The `install.sh` shell script uses `#!/bin/bash` with `set -e`; prefer two-space indentation and quote every variable. New config directories should match the upstream app name (e.g. `.config/alacritty/`).
 
 ## Testing Guidelines
 
-There is no bespoke test harness; validation equals running the provisioning commands. Dry-run changes by executing `make link` locally and inspecting the backup directory reported under `$HOME/.cache/dotbackup/`. For shell changes, run `shellcheck .bin/*.sh` (provided via Homebrew) to catch regressions and confirm `make defaults` exits cleanly on macOS.
+There is no bespoke test harness; validation equals previewing the bootstrap. Run `mise bootstrap -n` to confirm the config resolves with zero unexpected drift, and per-section dry-runs (`mise bootstrap dotfiles apply -n`, `mise bootstrap macos defaults apply -n`) when editing those blocks. For `install.sh`, run `shellcheck .bin/install.sh` (provided via Homebrew).
 
 ## Commit & Pull Request Guidelines
 
-Recent history favors concise messages like “Update,” but please adopt an imperative summary plus context. Reference related issues or tickets, and include screenshots or terminal captures when tweaking visual configs. For PRs, describe the affected tools, note any manual steps, and confirm which `make` targets you exercised.
+Recent history favors concise messages like “Update,” but please adopt an imperative summary plus context. Reference related issues or tickets, and include screenshots or terminal captures when tweaking visual configs. For PRs, describe the affected tools, note any manual steps, and confirm you ran `mise bootstrap -n` cleanly.

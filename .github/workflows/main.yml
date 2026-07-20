@@ -1,32 +1,34 @@
-# This is a basic workflow to help you get started with Actions
-
 name: install
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  verify:
     runs-on: macos-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # make commands without mas and problematic casks
-      - name: Set MacOS.
+      # mise（検証の実行主体）と shellcheck（install.sh の静的解析）を用意する
+      - name: Install mise and shellcheck
+        run: brew install mise shellcheck
+
+      # ローカルと同じ検証。install.sh の shellcheck と bootstrap 全体の dry-run。
+      # package トークンの解決・dotfiles の source 存在・defaults の妥当性などを
+      # 一括で検証し、不正があれば非ゼロで落ちる。
+      - name: Verify config
         run: |
-          make init
-          make link
-          make defaults
-          MAS_APPS="$(grep -o 'mas "[^"]*"' .Brewfile | awk -F'"' '{ print $2 }' | tr '\n' ' ')"
-          export HOMEBREW_BUNDLE_MAS_SKIP="$MAS_APPS"
-          export HOMEBREW_BUNDLE_CASK_SKIP="codex gyazo"
-          make brew
+          mise trust
+          mise run verify
+
+      # 使い捨てランナー上で、破壊しても安全なセクションだけ実際に適用し、
+      # dry-run では分からない実行時の成否まで確認する（casks/mas/tools は
+      # ランナー上での導入が重い・不安定なため対象外）。
+      - name: Exercise safe apply (fresh runner)
+        run: |
+          mise bootstrap -y --only dotfiles
+          mise bootstrap -y --only macos

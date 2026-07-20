@@ -16,7 +16,9 @@
 !/.config/alacritty/alacritty.toml
 !/.config/alacritty/catppuccin-mocha.toml
 !/.config/claude/
-!/.config/claude/**
+!/.config/claude/hooks/
+/.config/claude/hooks/*
+!/.config/claude/hooks/*.sh
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/
@@ -67,11 +69,8 @@
 !/.zshrc.lazy
 !/.zshenv
 
-!/.Brewfile
-!/.Masfile
-
 !/AGENTS.md
 !/changelog.config.js
 !/LICENSE
-!/Makefile
+!/mise.toml
 !/README.md

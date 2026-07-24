@@ -1,0 +1,25 @@
+#!/bin/sh
+# worktree 作成時に、大本リポジトリの node_modules を worktree ルートへ symlink する。
+# 目的: worktree で再 install 不要にし、依存解決を大本と一致させる（AI も含め追いやすくする）。
+#
+# global core.hooksPath（~/.config/git/hooks, dotfiles 管理）から全 repo で発火する。
+# post-checkout 引数: $1=prev-HEAD $2=new-HEAD $3=flag(1=ブランチ単位 / 0=ファイル単位)
+# `git worktree add` はブランチ単位 checkout として post-checkout を発火する。
+
+# ファイル単位の checkout（例: `git checkout -- file`）では何もしない。
+[ "$3" = "1" ] || exit 0
+
+# 大本 worktree（worktree list の先頭 = メイン）と、今いる worktree のルート。
+# パスに空白が含まれても壊れないよう sed で切り出す。
+main_wt=$(git worktree list --porcelain 2>/dev/null | sed -n 's/^worktree //p' | head -n 1)
+top=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+
+# 大本リポジトリ自身での checkout では何もしない（リンク対象は linked worktree のみ）。
+[ -n "$main_wt" ] || exit 0
+[ "$top" = "$main_wt" ] && exit 0
+
+# 大本に node_modules があり、worktree 側に未作成のときだけ symlink を貼る（冪等）。
+# node_modules を持たない repo（非 JS 等）では何も起きない。
+if [ -d "$main_wt/node_modules" ] && [ ! -e "$top/node_modules" ]; then
+  ln -s "$main_wt/node_modules" "$top/node_modules"
+fi

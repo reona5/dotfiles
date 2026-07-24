@@ -165,7 +165,7 @@ run = [
   "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
   # mise の brew backend で扱えないサードパーティ tap の formula は brew で入れる。
   # brew 管理下に置くので、以後は `brew upgrade` でまとめてアップグレードできる。
-  "command -v brew >/dev/null 2>&1 && brew install hashicorp/tap/terraform k1LoW/tap/git-wt k1LoW/tap/mo || true",
+  "command -v brew >/dev/null 2>&1 && brew install hashicorp/tap/terraform k1LoW/tap/mo || true",
   # docker-desktop cask は binary の link 先を /usr/local/bin 直書きで宣言しており、
   # link 先が /opt/homebrew 配下でないと拒否する mise の brew-cask では扱えない。
   # 本家 brew なら /usr/local への link を問題なく処理するので brew で入れる。

@@ -1,0 +1,10 @@
+id = "reona5.claude-on-worktree"
+name = "Claude on worktree"
+version = "0.1.0"
+min_herdr_version = "0.7.0"
+description = "Run `claude --dangerously-skip-permissions` in a new worktree's initial pane"
+platforms = ["macos", "linux"]
+
+[[events]]
+on = "worktree.created"
+command = ["./on-worktree-created.sh"]

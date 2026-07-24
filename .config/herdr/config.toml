@@ -16,6 +16,11 @@ default_shell = "/bin/zsh"
 # 旧 prefix C-q
 prefix = "ctrl+q"
 
+# git worktree（git-wt から移行。worktree は herdr に集約）。
+# new_worktree は既定 prefix+shift+g のまま。open は既定未バインドなので割り当てる。
+# 削除(remove_worktree)は破壊的なのでキー割当せず、サイドバー/`herdr worktree remove` に任せる。
+open_worktree = "prefix+shift+o"
+
 # ペイン移動 h/j/k/l は既定の prefix+h/j/k/l をそのまま利用する（旧 vim キーバインド）。
 # 分割は既定のまま使う: prefix+v = 左右分割（旧 |）, prefix+minus = 上下分割（旧 -）。
 
@@ -33,3 +38,9 @@ mouse_capture = true
 show_agent_labels_on_pane_borders = false
 [ui.toast]
 delivery = "herdr"
+
+[worktrees]
+# worktree チェックアウトの置き場。<directory>/<repo>/<branch-slug> に作成される。
+# 既定と同じだが、worktree を herdr に集約する方針を明示するため書いておく。
+# ghq ツリー（~/src/...）を汚さず herdr 管理下にまとまる。
+directory = "~/.herdr/worktrees"

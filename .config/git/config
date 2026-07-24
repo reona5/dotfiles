@@ -3,6 +3,7 @@
 	name = reona5
 [core]
 	editor = nvim
+	hooksPath = ~/.config/git/hooks
 [merge]
 	ff = false
 [pull]

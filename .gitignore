@@ -29,6 +29,10 @@
 !/.config/herdr/
 /.config/herdr/*
 !/.config/herdr/config.toml
+!/.config/herdr/plugins/
+/.config/herdr/plugins/*
+!/.config/herdr/plugins/claude-on-worktree/
+!/.config/herdr/plugins/claude-on-worktree/**
 !/.config/iterm2/
 !/.config/iterm2/AppSupport
 !/.config/lazygit

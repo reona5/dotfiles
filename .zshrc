@@ -60,3 +60,5 @@ fi
 [[ -d "$HOME/.antigravity/antigravity/bin" ]] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 [[ -d /opt/homebrew/opt/openjdk@11/bin ]] && export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+. "$HOME/.local/share/../bin/env"

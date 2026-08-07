@@ -8,6 +8,7 @@ cargo-binstall = "latest"
 "cargo:toml-cli" = "latest"
 "cargo:usage-cli" = { version = "latest", os = ["linux", "macos"] }
 deno = 'latest'
+"github:openclaw/gogcli" = { version = "latest", exe = "gog" }
 golang = 'latest'
 node = '24'
 opencode = "latest"

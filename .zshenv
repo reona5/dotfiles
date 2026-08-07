@@ -20,4 +20,11 @@ export PATH="$HOME/.bin.local:$PATH"
 # Install JSR dependencies for zeno.zsh
 export DENO_TLS_CA_STORE=system
 
+# Mac mini は MacBook から herdr 越しに使うので、URL を開く挙動が起きると
+# 手元では見えない Mac mini 側の Chrome が立ち上がってしまう。
+# ブラウザを開かせず URL を端末に出させる ($HOST は zsh 組み込みでプロセス起動不要)
+if [[ ${HOST%%.*} == silen-mac-mini ]]; then
+  export BROWSER=echo
+fi
+
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

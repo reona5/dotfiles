@@ -15,19 +15,26 @@
 /.config/alacritty/*
 !/.config/alacritty/alacritty.toml
 !/.config/alacritty/catppuccin-mocha.toml
+# ~/.claude は実ディレクトリのままにし（Claude Code がランタイムデータを書き込む）、
+# 管理対象だけを ~/.claude/<name> -> ここ、の個別 symlink で張る（mise.toml の [dotfiles]）。
+# 既定で全無視し、追跡するものだけを個別に拾う。
 !/.config/claude/
+/.config/claude/*
+!/.config/claude/settings.json
+!/.config/claude/statusline.py
+# hooks/ は ~/.claude/hooks の実体。hook スクリプトだけを置く。
 !/.config/claude/hooks/
 /.config/claude/hooks/*
 !/.config/claude/hooks/*.sh
-# hooks/ は ~/.claude の実体（歴史的な名前）。配下は履歴・セッション・キャッシュ等の
-# ランタイムデータなので既定で全無視し、設定ファイルだけを個別に拾う。
-!/.config/claude/hooks/settings.json
-!/.config/claude/hooks/statusline.py
 # 自作 skill の実体は /skills/ に置き、ここには symlink だけを置く。
-!/.config/claude/hooks/skills/
-!/.config/claude/hooks/skills/**
+!/.config/claude/skills/
+!/.config/claude/skills/**
+# gog skills は openclaw/gogcli から取得した実体を ~/.agents/skills に置き、
+# ここへは symlink を張るだけ（絶対パスなのでコミットしない）。
+/.config/claude/skills/gog
+/.config/claude/skills/gog-*
 # gh 由来の skill は mise.toml の bootstrap で `gh skill install` する（実体は持たない）。
-/.config/claude/hooks/skills/gh-stack/
+/.config/claude/skills/gh-stack/
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/

@@ -17,6 +17,29 @@ style = "Italic"
 family = "UDEV Gothic NF"
 style = "Regular"
 
+# URL クリックを Alacritty 自身に処理させる。
+# Shift 押下中はアプリ側のマウスキャプチャ（herdr の mouse_capture）が抑制されるため、
+# Mac mini に herdr 越しで繋いでいても手元の MacBook の Chrome で開ける。
+[[hints.enabled]]
+regex = "https?://[^\\s<>\"'`{}|\\^\\[\\]]+"
+command = { program = "open", args = ["-a", "Google Chrome"] }
+hyperlinks = true
+post_processing = true
+persist = false
+mouse = { enabled = true, mods = "Shift" }
+binding = { key = "O", mods = "Control|Shift" }
+
+# hints.enabled を書くと Alacritty 既定のヒントを上書きするので、
+# http(s) 以外のスキームは既定ハンドラ（open）で拾い直す。
+[[hints.enabled]]
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|news:|file:|git://|ssh:|ftp://)[^\\s<>\"'`{}|\\^\\[\\]]+"
+command = "open"
+hyperlinks = true
+post_processing = true
+persist = false
+mouse = { enabled = true, mods = "Shift" }
+binding = { key = "U", mods = "Control|Shift" }
+
 [keyboard]
 bindings = [
   { key = "Return", mods = "Shift", chars = "\n" },

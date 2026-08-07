@@ -47,6 +47,7 @@
 "brew:mas" = "latest"           # mas: エントリの導入に必要
 "brew:mosh" = "latest"
 "brew:neovim" = "latest"
+"brew:pam-reattach" = "latest"  # herdr / tmux 配下でも sudo の Touch ID を効かせる（下の bootstrap タスクで PAM に組み込む）
 "brew:pngpaste" = "latest"
 "brew:pnpm" = "latest"
 "brew:ripgrep" = "latest"
@@ -74,21 +75,20 @@
 "brew-cask:deepl" = "latest"
 "brew-cask:discord" = "latest"
 # docker-desktop は bootstrap タスク側で brew から入れる（下記参照）
-"brew-cask:firefox" = "latest"
+# firefox も同様に bootstrap タスク側で brew から入れる（下記参照）
 "brew-cask:font-udev-gothic-nf" = "latest"
 "brew-cask:google-chrome" = "latest"
-"brew-cask:google-japanese-ime" = "latest"
-"brew-cask:gyazo" = "latest"
+# google-japanese-ime / gyazo も bootstrap タスク側で brew から入れる（下記参照）
 "brew-cask:imageoptim" = "latest"
 "brew-cask:iterm2" = "latest"
 "brew-cask:muzzle" = "latest"
 "brew-cask:nani" = "latest"
-"brew-cask:raycast" = "latest"
+# raycast も bootstrap タスク側で brew から入れる（下記参照）
 "brew-cask:sequel-ace" = "latest"
 "brew-cask:slack" = "latest"
 "brew-cask:spotify" = "latest"
-"brew-cask:visual-studio-code" = "latest"
-"brew-cask:zoom" = "latest"
+# visual-studio-code も bootstrap タスク側で brew から入れる（下記参照）
+# zoom も bootstrap タスク側で brew から入れる（下記参照）
 # Mac App Store（数値は ADAM ID）
 "mas:539883307" = "latest"      # LINE
 "mas:6757801838" = "latest"     # RunCat Neo
@@ -97,22 +97,25 @@
 # ---------------------------------------------------------------------------
 # dotfiles の symlink（旧 link タスク）
 # source はリポジトリルート（config_root）からの相対
-# 注: ~/.claude は Claude Code のホームで、配下に履歴・セッション・キャッシュ等の
-#     ランタイムデータも溜まる。ディレクトリごと .config/claude/hooks に寄せ
-#     （hooks は歴史的な名前）、追跡するのは settings.json / statusline.py /
-#     *.sh だけに .gitignore で絞っている。配下の skills/ に張る自作 skill の
-#     symlink は下の bootstrap タスクで面倒を見る。
-#     Claude Code を一度でも起動すると ~/.claude が実ディレクトリとして作られる
-#     ため、新規マシンでは claude の初回起動より先に bootstrap を流すこと。
+# 注: ~/.claude は Claude Code のホームで、配下に履歴・セッション・プラグイン等の
+#     ランタイムデータが Claude Code 自身によって書き込まれる。ディレクトリごと
+#     symlink にすると初回起動が先行しただけで実ディレクトリが出来て破綻するため、
+#     ~/.claude は実ディレクトリのままにし、管理対象のエントリだけを個別に張る。
+#     実体は .config/claude/ 直下に置き、hooks/ は hook スクリプト専用とする。
+#     skills/ 配下に張る自作 skill の symlink は下の bootstrap タスクで面倒を見る。
 # ---------------------------------------------------------------------------
 [dotfiles]
 "~/.bin" = { source = ".bin", mode = "symlink" }
 "~/.bin.local" = { source = ".bin.local", mode = "symlink" }
-"~/.claude" = { source = ".config/claude/hooks", mode = "symlink" }
+"~/.claude/settings.json" = { source = ".config/claude/settings.json", mode = "symlink" }
+"~/.claude/statusline.py" = { source = ".config/claude/statusline.py", mode = "symlink" }
+"~/.claude/skills" = { source = ".config/claude/skills", mode = "symlink" }
+"~/.claude/hooks" = { source = ".config/claude/hooks", mode = "symlink" }
 "~/.config" = { source = ".config", mode = "symlink" }
 "~/.ctags.d" = { source = ".ctags.d", mode = "symlink" }
 "~/.fzf.zsh" = { source = ".fzf.zsh", mode = "symlink" }
-"~/.gitconfig" = { source = ".gitconfig", mode = "symlink" }
+# git の設定は XDG の .config/git/ に移行済み（~/.config の symlink 経由で読まれる）ため
+# ~/.gitconfig の宣言は持たない。
 "~/.gitignore" = { source = ".gitignore", mode = "symlink" }
 "~/.npmrc" = { source = ".npmrc", mode = "symlink" }
 "~/.textlintrc.json" = { source = ".textlintrc.json", mode = "symlink" }
@@ -179,17 +182,36 @@ run = [
   # 本家 brew なら /usr/local への link を問題なく処理するので brew で入れる。
   # brew 管理下に置くので、以後は `brew upgrade --cask` でアップグレードできる。
   "command -v brew >/dev/null 2>&1 && brew install --cask docker-desktop || true",
+  # mise の brew-cask が未対応のアーティファクト種別を使う cask も brew で入れる。
+  # mise は未知の種別に当たると bootstrap 全体を fail させるため、宣言から外す必要がある。
+  #   firefox: command_wrapper（`firefox` CLI のラッパー）
+  #   zoom:    postflight_steps
+  # brew 管理下に置くので、以後は `brew upgrade --cask` でアップグレードできる。
+  "command -v brew >/dev/null 2>&1 && brew install --cask firefox zoom || true",
+  # pkg インストーラ形式の cask も brew で入れる。mise の brew-cask はこれを
+  # 導入済みと判定できず毎回 `sudo installer` を叩こうとするため、非対話実行では
+  # TTY がなく必ず失敗し、bootstrap 全体が止まる。
+  #   google-japanese-ime: 実体が /Applications でなく /Library/Input Methods/ に入る
+  #   gyazo:               pkg artifact
+  # brew なら導入済みを正しく検出してスキップする（新規導入時のみ sudo を求める）。
+  "command -v brew >/dev/null 2>&1 && brew install --cask google-japanese-ime gyazo || true",
+  # 配布 URL に拡張子がない cask も brew で入れる。mise の brew-cask は URL から
+  # アーカイブ形式を判定するため展開に失敗し、`app artifact ... was not found` で落ちる。
+  #   raycast:            https://releases.raycast.com/releases/<ver>/download?build=arm
+  #   visual-studio-code: https://update.code.visualstudio.com/<ver>/darwin-arm64/stable
+  "command -v brew >/dev/null 2>&1 && brew install --cask raycast visual-studio-code || true",
   # herdr プラグイン（GitHub 配布・dotfiles にはファイルを持たないため bootstrap で導入）。
   # hunk レビュー統合。冪等（導入済みなら再取得のみ）。
   "command -v herdr >/dev/null 2>&1 && herdr plugin install yuucu/herdr-hunk --yes || true",
   '''
 # 自作 agent skill は skills/ を source of truth とし（gh skill publish が探索するレイアウト）、
-# Claude Code が読む ~/.claude/skills/ からは symlink で参照する。
+# Claude Code が読む ~/.claude/skills/（= .config/claude/skills/）からは symlink で参照する。
 # skills/ に新しい skill を足したら、このタスクを流せば link が張られる（冪等）。
 root="${MISE_PROJECT_ROOT:-$PWD}"
+mkdir -p "$root/.config/claude/skills"
 for dir in "$root"/skills/*/; do
   name="$(basename "$dir")"
-  ln -sfn "../../../../skills/$name" "$root/.config/claude/hooks/skills/$name"
+  ln -sfn "../../../skills/$name" "$root/.config/claude/skills/$name"
 done
 ''',
   # gh 由来の skill は dotfiles に実体を持たず（.gitignore 済み）、gh を source of truth にする。
@@ -221,6 +243,29 @@ if [ ! -d "/Applications/Capsomnia.app" ]; then
   curl -fsSL -o "$tmp/Capsomnia.pkg" "https://github.com/fuji-mak/Capsomnia/releases/latest/download/Capsomnia.pkg"
   sudo installer -pkg "$tmp/Capsomnia.pkg" -target /
   rm -rf "$tmp"
+fi
+''',
+  '''
+# sudo の認証を Touch ID で通す。/etc/pam.d/sudo_local は OS アップデートを跨いで
+# 残るローカル設定で、/etc/pam.d/sudo の `auth include sudo_local` から読まれる。
+# /etc 配下なので [dotfiles] の symlink では管理できず、ここで作る（要 sudo）。
+#
+# pam_tid.so だけでは herdr / tmux のペイン内で Touch ID が出ない。multiplexer の
+# セッションは GUI の Aqua セッションから切り離されており、Touch ID のプロンプトを
+# 出せないため。pam_reattach.so が元のセッションに再アタッチしてこれを解消するので、
+# 必ず pam_tid.so より前に置く。ignore_ssh で SSH ログイン時は無効化する
+# （リモートに Touch ID は無く、パスワードにフォールバックさせる）。
+# 内容が一致していれば何もしない（冪等）。
+reattach="$(brew --prefix 2>/dev/null)/lib/pam/pam_reattach.so"
+if [ -f "$reattach" ]; then
+  desired="auth       optional       $reattach ignore_ssh
+auth       sufficient     pam_tid.so"
+else
+  desired="auth       sufficient     pam_tid.so"
+fi
+if [ "$(cat /etc/pam.d/sudo_local 2>/dev/null)" != "$desired" ]; then
+  printf '%s\n' "$desired" | sudo tee /etc/pam.d/sudo_local >/dev/null
+  sudo chmod 644 /etc/pam.d/sudo_local
 fi
 ''',
 ]

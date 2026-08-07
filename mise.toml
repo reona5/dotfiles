@@ -91,8 +91,10 @@
 # zoom も bootstrap タスク側で brew から入れる（下記参照）
 # Mac App Store（数値は ADAM ID）
 "mas:539883307" = "latest"      # LINE
-"mas:6757801838" = "latest"     # RunCat Neo
 "mas:497799835" = "latest"      # Xcode
+# RunCat Neo (6757801838) は宣言しない。未導入の mas エントリを入れようとすると
+# `mas install` が sudo を要求し、非対話実行では TTY がなく bootstrap 全体が落ちる。
+# 導入済みの LINE / Xcode は照合だけで済むので影響しない。App Store から手動で入れること。
 
 # ---------------------------------------------------------------------------
 # dotfiles の symlink（旧 link タスク）
@@ -238,11 +240,17 @@ fi
 # GitHub Releases の pkg 配布のみ。特権ヘルパー（/Library/PrivilegedHelperTools/
 # capsomnia-pmset）を含むため .app コピーでは動かず、installer で入れる（要 sudo）。
 # 既に導入済みなら何もしない（冪等）。
+# sudo が使えない実行（TTY なし・非対話）では導入をスキップする。ここで落とすと
+# bootstrap 全体が失敗するため、案内だけ出して先に進める。
 if [ ! -d "/Applications/Capsomnia.app" ]; then
-  tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/Capsomnia.pkg" "https://github.com/fuji-mak/Capsomnia/releases/latest/download/Capsomnia.pkg"
-  sudo installer -pkg "$tmp/Capsomnia.pkg" -target /
-  rm -rf "$tmp"
+  if sudo -n true 2>/dev/null; then
+    tmp="$(mktemp -d)"
+    curl -fsSL -o "$tmp/Capsomnia.pkg" "https://github.com/fuji-mak/Capsomnia/releases/latest/download/Capsomnia.pkg"
+    sudo installer -pkg "$tmp/Capsomnia.pkg" -target /
+    rm -rf "$tmp"
+  else
+    echo "Capsomnia: skipped (sudo unavailable). Run \`sudo -v && mise run bootstrap\` to install."
+  fi
 fi
 ''',
   '''
@@ -263,9 +271,15 @@ auth       sufficient     pam_tid.so"
 else
   desired="auth       sufficient     pam_tid.so"
 fi
+# sudo が使えない実行（TTY なし・非対話）では書き込みをスキップする。ここで落とすと
+# bootstrap 全体が失敗するため、案内だけ出して先に進める。
 if [ "$(cat /etc/pam.d/sudo_local 2>/dev/null)" != "$desired" ]; then
-  printf '%s\n' "$desired" | sudo tee /etc/pam.d/sudo_local >/dev/null
-  sudo chmod 644 /etc/pam.d/sudo_local
+  if sudo -n true 2>/dev/null; then
+    printf '%s\n' "$desired" | sudo tee /etc/pam.d/sudo_local >/dev/null
+    sudo chmod 644 /etc/pam.d/sudo_local
+  else
+    echo "sudo_local: skipped (sudo unavailable). Run \`sudo -v && mise run bootstrap\` to apply."
+  fi
 fi
 ''',
 ]

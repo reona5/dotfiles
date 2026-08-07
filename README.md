@@ -35,5 +35,33 @@ $ curl -fsSL https://raw.githubusercontent.com/reona5/dotfiles/main/.bin/install
 > and `mas` backends track their own state and will attempt to (re)install
 > them. Preview with `mise bootstrap -n` first.
 
+## Agent skills
+
+`skills/` is the source of truth for my own agent skills, laid out the way
+[`gh skill`](https://cli.github.com/manual/gh_skill) discovers them
+(`skills/<name>/SKILL.md`). `mise bootstrap` symlinks each of them into
+`~/.claude/skills/`, so editing a file under `skills/` takes effect immediately.
+
+```shell
+$ gh skill publish . --dry-run   # validate
+$ gh skill publish . --tag v0.1.0
+```
+
+Skills from elsewhere are installed with `gh skill install` and are not vendored
+here — they are declared in `mise.toml`'s `bootstrap` task and gitignored, so
+`gh skill update` keeps them current.
+
+## Claude Code
+
+`~/.claude` is symlinked to `.config/claude/hooks/` (a historical name — it holds
+the whole Claude home, not just hooks). Claude Code keeps its history, sessions
+and caches there too, so `.gitignore` ignores the directory by default and picks
+out only the configuration: `settings.json`, `statusline.py`, `*.sh`, and the
+`skills/` symlinks.
+
+> Note: launching `claude` even once creates `~/.claude` as a real directory,
+> which blocks the symlink. On a fresh machine run `mise bootstrap` before the
+> first launch.
+
 ## Screenshot
 <img width="5120" height="2880" alt="CleanShot 2025-09-21 at 22 56 27@2x" src="https://github.com/user-attachments/assets/debcd661-8918-4c9f-a34e-a9ce03d1c60f" />

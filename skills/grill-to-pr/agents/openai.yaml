@@ -1,0 +1,5 @@
+interface:
+  display_name: "Grill to PR"
+  short_description: "Grill, spec, implement, PR, review — the full flow"
+policy:
+  allow_implicit_invocation: false

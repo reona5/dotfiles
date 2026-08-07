@@ -9,7 +9,9 @@ cargo-binstall = "latest"
 "cargo:usage-cli" = { version = "latest", os = ["linux", "macos"] }
 deno = 'latest'
 golang = 'latest'
-node = 'latest'
+node = '24'
+opencode = "latest"
+pnpm = '10'
 python = "3.11"
 ruby = 'latest'
 rust = 'latest'

@@ -25,11 +25,16 @@ open_worktree = "prefix+shift+o"
 # 分割は既定のまま使う: prefix+v = 左右分割（旧 |）, prefix+minus = 上下分割（旧 -）。
 
 # lazygit を専用ペインで起動する（旧 bind g の popup lazygit 相当）。
-# prefix+g は既定で goto に割り当て済みのため、衝突を避けて prefix+alt+g にする。
 [[keys.command]]
-key = "prefix+alt+g"
+key = "prefix+shift+s"
 type = "pane"
 command = "lazygit"
+
+# hunk レビュー（herdr-hunk プラグインの open-review をトグル）。
+[[keys.command]]
+key = "prefix+space"
+type = "shell"
+command = "herdr plugin action invoke open-review --plugin yuucu.hunk"
 
 [ui]
 # 旧 set-option -g mouse on
@@ -44,3 +49,8 @@ delivery = "herdr"
 # 既定と同じだが、worktree を herdr に集約する方針を明示するため書いておく。
 # ghq ツリー（~/src/...）を汚さず herdr 管理下にまとまる。
 directory = "~/.herdr/worktrees"
+
+[experimental]
+# herdr のペイン内から `herdr --remote` でリモートサーバーへアタッチするために必要。
+# 会社 MacBook のターミナルは herdr を自動起動するため、入れ子を許可しないと remote attach ができない。
+allow_nested = true

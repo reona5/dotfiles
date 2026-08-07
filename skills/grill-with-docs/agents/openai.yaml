@@ -1,0 +1,5 @@
+interface:
+  display_name: "Grill with Docs"
+  short_description: "Grill a design and post its 設計資料 to the linked issue"
+policy:
+  allow_implicit_invocation: false

@@ -8,7 +8,7 @@
 #   5. [bootstrap.macos.defaults] macOS のシステム設定
 #   8. [bootstrap.user]         ログインシェル
 #   9. mise install             [tools] のランタイム（~/.config/mise/config.toml）
-#   10. `bootstrap` タスク        宣言で表せない補助（uv / pnpm global）
+#   10. `bootstrap` タスク        宣言で表せない補助（uv / pnpm global / agent skill）
 #
 # 実行:  mise bootstrap        （リポジトリ直下で。config は symlink されないため）
 # 確認:  mise bootstrap -n     （dry-run。適用せず差分だけ表示）
@@ -91,18 +91,24 @@
 "brew-cask:zoom" = "latest"
 # Mac App Store（数値は ADAM ID）
 "mas:539883307" = "latest"      # LINE
-"mas:1429033973" = "latest"     # RunCat
+"mas:6757801838" = "latest"     # RunCat Neo
 "mas:497799835" = "latest"      # Xcode
 
 # ---------------------------------------------------------------------------
 # dotfiles の symlink（旧 link タスク）
 # source はリポジトリルート（config_root）からの相対
-# 注: ~/.claude は Claude Code 自身の設定で現状の symlink 構成が特殊なため、
-#     事故防止のため declarative 化から除外している（手動管理のまま）。
+# 注: ~/.claude は Claude Code のホームで、配下に履歴・セッション・キャッシュ等の
+#     ランタイムデータも溜まる。ディレクトリごと .config/claude/hooks に寄せ
+#     （hooks は歴史的な名前）、追跡するのは settings.json / statusline.py /
+#     *.sh だけに .gitignore で絞っている。配下の skills/ に張る自作 skill の
+#     symlink は下の bootstrap タスクで面倒を見る。
+#     Claude Code を一度でも起動すると ~/.claude が実ディレクトリとして作られる
+#     ため、新規マシンでは claude の初回起動より先に bootstrap を流すこと。
 # ---------------------------------------------------------------------------
 [dotfiles]
 "~/.bin" = { source = ".bin", mode = "symlink" }
 "~/.bin.local" = { source = ".bin.local", mode = "symlink" }
+"~/.claude" = { source = ".config/claude/hooks", mode = "symlink" }
 "~/.config" = { source = ".config", mode = "symlink" }
 "~/.ctags.d" = { source = ".ctags.d", mode = "symlink" }
 "~/.fzf.zsh" = { source = ".fzf.zsh", mode = "symlink" }
@@ -159,18 +165,36 @@ fi
 # 宣言で表せない補助（bootstrap の step 10 で自動実行される escape hatch）
 # ---------------------------------------------------------------------------
 [tasks.bootstrap]
-description = "uv / pnpm global / tap formula / ライセンス版 CleanShot を導入する"
+description = "uv / pnpm global / tap formula / herdr プラグイン / agent skill / ライセンス版 CleanShot / Capsomnia を導入する"
 run = [
   "curl -LsSf https://astral.sh/uv/install.sh | sh",
   "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
   # mise の brew backend で扱えないサードパーティ tap の formula は brew で入れる。
   # brew 管理下に置くので、以後は `brew upgrade` でまとめてアップグレードできる。
-  "command -v brew >/dev/null 2>&1 && brew install hashicorp/tap/terraform k1LoW/tap/mo || true",
+  # moshi-hook は iPhone の Moshi アプリから herdr / Claude Code を操作するためのホスト側 daemon。
+  # 導入後のペアリング（moshi-hook host setup）はデバイス固有かつ対話的なので bootstrap には含めない。
+  "command -v brew >/dev/null 2>&1 && brew install hashicorp/tap/terraform k1LoW/tap/mo rjyo/moshi/moshi-hook || true",
   # docker-desktop cask は binary の link 先を /usr/local/bin 直書きで宣言しており、
   # link 先が /opt/homebrew 配下でないと拒否する mise の brew-cask では扱えない。
   # 本家 brew なら /usr/local への link を問題なく処理するので brew で入れる。
   # brew 管理下に置くので、以後は `brew upgrade --cask` でアップグレードできる。
   "command -v brew >/dev/null 2>&1 && brew install --cask docker-desktop || true",
+  # herdr プラグイン（GitHub 配布・dotfiles にはファイルを持たないため bootstrap で導入）。
+  # hunk レビュー統合。冪等（導入済みなら再取得のみ）。
+  "command -v herdr >/dev/null 2>&1 && herdr plugin install yuucu/herdr-hunk --yes || true",
+  '''
+# 自作 agent skill は skills/ を source of truth とし（gh skill publish が探索するレイアウト）、
+# Claude Code が読む ~/.claude/skills/ からは symlink で参照する。
+# skills/ に新しい skill を足したら、このタスクを流せば link が張られる（冪等）。
+root="${MISE_PROJECT_ROOT:-$PWD}"
+for dir in "$root"/skills/*/; do
+  name="$(basename "$dir")"
+  ln -sfn "../../../../skills/$name" "$root/.config/claude/hooks/skills/$name"
+done
+''',
+  # gh 由来の skill は dotfiles に実体を持たず（.gitignore 済み）、gh を source of truth にする。
+  # 更新は `gh skill update`。冪等（--force で既存を上書き）。
+  "command -v gh >/dev/null 2>&1 && gh skill install github/gh-stack gh-stack --agent claude-code --scope user --force || true",
   '''
 # CleanShot は Homebrew cask の最新版(4.8.9)が手持ちライセンスの対象外のため、
 # brew-cask では管理せず、公式 CDN の versioned DMG からライセンス済みの
@@ -184,6 +208,18 @@ if [ ! -d "/Applications/CleanShot X.app" ]; then
   cp -R "$tmp/mnt/CleanShot X.app" /Applications/
   hdiutil detach -quiet "$tmp/mnt"
   xattr -dr com.apple.quarantine "/Applications/CleanShot X.app" 2>/dev/null || true
+  rm -rf "$tmp"
+fi
+''',
+  '''
+# Capsomnia（Caps Lock で蓋を閉じてもスリープさせない）は Homebrew cask が無く、
+# GitHub Releases の pkg 配布のみ。特権ヘルパー（/Library/PrivilegedHelperTools/
+# capsomnia-pmset）を含むため .app コピーでは動かず、installer で入れる（要 sudo）。
+# 既に導入済みなら何もしない（冪等）。
+if [ ! -d "/Applications/Capsomnia.app" ]; then
+  tmp="$(mktemp -d)"
+  curl -fsSL -o "$tmp/Capsomnia.pkg" "https://github.com/fuji-mak/Capsomnia/releases/latest/download/Capsomnia.pkg"
+  sudo installer -pkg "$tmp/Capsomnia.pkg" -target /
   rm -rf "$tmp"
 fi
 ''',

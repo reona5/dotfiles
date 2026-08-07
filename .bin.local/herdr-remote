@@ -1,0 +1,43 @@
+#!/bin/sh
+# herdr CLI をリモートの herdr サーバーへ向けて実行するラッパー。
+#
+# herdr の CLI は Unix ドメインソケット越しにサーバーを操作する。ソケットの位置は
+# HERDR_SOCKET_PATH で差し替えられるので、SSH でリモートのソケットを手元へ転送すれば
+# 手元の herdr コマンドがそのままリモートのサーバーを操作できる。
+#
+# Raycast の Herdr 拡張は Herdr Binary(herdrPath) プリファレンスで実行ファイルを
+# 指定できるため、そこにこのスクリプトを指すとワークスペースや worktree の管理が
+# リモートのサーバーに対して行われる。
+#
+# 接続先はこのファイルに書かず、dotfiles 管理外の設定ファイルから読む。
+#
+#   ~/.config/herdr/remote.env
+#     HERDR_REMOTE_HOST=<~/.ssh/config で定義した Host エイリアス>
+#     HERDR_REMOTE_SOCK=/tmp/herdr-remote.sock   # 任意
+#
+# リモート側のソケットのパスは $HOME を問い合わせて組み立てるので、ユーザー名が
+# 手元と違っていても設定不要。
+
+set -eu
+
+env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
+[ -f "$env_file" ] && . "$env_file"
+
+if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
+  echo "herdr-remote: HERDR_REMOTE_HOST が未設定です ($env_file に書いてください)" >&2
+  exit 1
+fi
+
+sock="${HERDR_REMOTE_SOCK:-/tmp/herdr-remote.sock}"
+herdr_bin="${HERDR_REMOTE_BIN:-/opt/homebrew/bin/herdr}"
+
+# ソケットが無い、または応答しない場合はトンネルを張り直す。
+if [ ! -S "$sock" ] || ! HERDR_SOCKET_PATH="$sock" "$herdr_bin" status server >/dev/null 2>&1; then
+  rm -f "$sock"
+  remote_home=$(ssh -o BatchMode=yes "$HERDR_REMOTE_HOST" 'printf %s "$HOME"')
+  ssh -o BatchMode=yes -fnNT \
+    -L "$sock:$remote_home/.config/herdr/herdr.sock" \
+    "$HERDR_REMOTE_HOST"
+fi
+
+HERDR_SOCKET_PATH="$sock" exec "$herdr_bin" "$@"

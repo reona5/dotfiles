@@ -1,0 +1,29 @@
+#!/bin/sh
+# リモートの herdr サーバーへアタッチする専用のターミナルウィンドウを開く。
+#
+# ふだんのターミナルは起動時に herdr をアタッチするため、そこから `herdr --remote`
+# を実行すると herdr のペインの中で herdr を動かすことになる。この入れ子では、
+# プレフィックス(ctrl+q)を手前の herdr が先に受け取ってしまい、リモート側の
+# ペイン操作ができない。`--remote-keybindings server` はアタッチ側がどちらの設定の
+# キーバインドを使うかを選ぶだけなので、この衝突は解消しない。
+#
+# そこで herdr を起動していないウィンドウを新しく開き、そこで直接リモートへ
+# アタッチする。手前に herdr が居ないので、プレフィックスはすべてリモートへ届く。
+#
+# 接続先は dotfiles 管理外の設定ファイルから読む。
+#
+#   ~/.config/herdr/remote.env
+#     HERDR_REMOTE_HOST=<~/.ssh/config で定義した Host エイリアス>
+
+set -eu
+
+env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
+[ -f "$env_file" ] && . "$env_file"
+
+if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
+  echo "herdr-remote-attach: HERDR_REMOTE_HOST が未設定です ($env_file に書いてください)" >&2
+  exit 1
+fi
+
+# -e はターミナル側の shell 設定(herdr の自動起動)を上書きする。
+exec open -na Alacritty --args -e /bin/zsh -lc "herdr --remote '$HERDR_REMOTE_HOST'"

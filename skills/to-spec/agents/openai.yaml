@@ -1,0 +1,5 @@
+interface:
+  display_name: "To Spec"
+  short_description: "Distill the discussion into a 仕様"
+policy:
+  allow_implicit_invocation: false

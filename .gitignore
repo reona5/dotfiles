@@ -19,6 +19,15 @@
 !/.config/claude/hooks/
 /.config/claude/hooks/*
 !/.config/claude/hooks/*.sh
+# hooks/ は ~/.claude の実体（歴史的な名前）。配下は履歴・セッション・キャッシュ等の
+# ランタイムデータなので既定で全無視し、設定ファイルだけを個別に拾う。
+!/.config/claude/hooks/settings.json
+!/.config/claude/hooks/statusline.py
+# 自作 skill の実体は /skills/ に置き、ここには symlink だけを置く。
+!/.config/claude/hooks/skills/
+!/.config/claude/hooks/skills/**
+# gh 由来の skill は mise.toml の bootstrap で `gh skill install` する（実体は持たない）。
+/.config/claude/hooks/skills/gh-stack/
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/
@@ -72,6 +81,10 @@
 !/.zshrc
 !/.zshrc.lazy
 !/.zshenv
+
+# 自作 agent skill の source of truth（gh skill publish が探索するレイアウト）
+!/skills/
+!/skills/**
 
 !/AGENTS.md
 !/changelog.config.js

@@ -49,6 +49,8 @@
 /.config/herdr/plugins/*
 !/.config/herdr/plugins/claude-on-worktree/
 !/.config/herdr/plugins/claude-on-worktree/**
+!/.config/herdr/plugins/open-url-on-client/
+!/.config/herdr/plugins/open-url-on-client/**
 !/.config/iterm2/
 !/.config/iterm2/AppSupport
 !/.config/lazygit

@@ -10,10 +10,17 @@
 # そこで herdr を起動していないウィンドウを新しく開き、そこで直接リモートへ
 # アタッチする。手前に herdr が居ないので、プレフィックスはすべてリモートへ届く。
 #
+# あわせて、ペイン内の URL を Ctrl+click したときに手元の Chrome で開くための配管も
+# 用意する。herdr が open を実行するのはサーバーのある側なので、何もしないとリモートの
+# Chrome が立ち上がってしまう。リモートのプラグイン(reona5.open-url-on-client)が
+# Unix ソケットへ URL を書き、reverse トンネルを通って手元の herdr-url-listener に
+# 届く、という経路を作る。
+#
 # 接続先は dotfiles 管理外の設定ファイルから読む。
 #
 #   ~/.config/herdr/remote.env
 #     HERDR_REMOTE_HOST=<~/.ssh/config で定義した Host エイリアス>
+#     HERDR_URL_SOCK=/tmp/herdr-url-relay.sock   # 任意。変える場合は両側で揃える
 
 set -eu
 
@@ -23,6 +30,23 @@ env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
 if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
   echo "herdr-remote-attach: HERDR_REMOTE_HOST が未設定です ($env_file に書いてください)" >&2
   exit 1
+fi
+
+bin_dir=$(cd "$(dirname "$0")" && pwd)
+sock="${HERDR_URL_SOCK:-/tmp/herdr-url-relay.sock}"
+
+# リスナーとトンネルはアタッチ用ウィンドウより長生きさせたいので、
+# このスクリプトの終了に巻き込まれないよう切り離して起動する。
+if ! { [ -S "$sock" ] && nc -U "$sock" < /dev/null > /dev/null 2>&1; }; then
+  HERDR_URL_SOCK="$sock" nohup "$bin_dir/herdr-url-listener" > /dev/null 2>&1 &
+fi
+
+if ! pgrep -f "ssh .*-R $sock:$sock" > /dev/null 2>&1; then
+  # リモート側にソケットが残っていると転送だけ黙って無効になるため、
+  # 残骸は StreamLocalBindUnlink に消させ、失敗は ExitOnForwardFailure で表に出す。
+  ssh -fnNT -o ExitOnForwardFailure=yes -o StreamLocalBindUnlink=yes \
+    -R "$sock:$sock" "$HERDR_REMOTE_HOST" ||
+    echo "herdr-remote-attach: URL 転送トンネルを張れませんでした（URL はリモート側で開きます）" >&2
 fi
 
 # -e はターミナル側の shell 設定(herdr の自動起動)を上書きする。

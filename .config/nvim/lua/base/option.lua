@@ -20,10 +20,56 @@ vim.o.whichwrap = "b,s,h,l,[,],<,>"
 vim.o.signcolumn = "yes"
 vim.o.fileformats = "unix,dos,mac"
 
+-- herdr のペイン内では clipboard を OSC 52 で渡す。
+-- 既定のままだと nvim は pbcopy を掴むので、yank は herdr サーバーのある側
+-- （Mac mini）の clipboard に入ってしまい、MacBook から `herdr --remote` で
+-- 見ているときに手元へ取り出せない。OSC 52 なら herdr が「見ている側」の
+-- クライアントへ渡すため、ローカルで開いていても remote attach でも
+-- clipboard が手元に付いてくる。
+--
+-- 必ず 'clipboard' オプションより前に置くこと。オプションを設定した時点で
+-- nvim が provider を解決してキャッシュするため、後から g:clipboard を
+-- 差し替えても pbcopy のまま使われ続ける。
+local in_herdr = vim.env.HERDR_ENV == "1"
+
+if in_herdr then
+  local osc52 = require("vim.ui.clipboard.osc52")
+
+  -- OSC 52 の読み出しクエリには端末が応答しない（応答を待って固まる）ため、
+  -- 問い合わせずに直前の無名レジスタを返す。手元から貼るのは端末側の
+  -- ペースト操作で足りるので、これで困らない。
+  local function paste_from_register()
+    return vim.split(vim.fn.getreg('"'), "\n")
+  end
+
+  local copy_to_clipboard = osc52.copy("+")
+
+  vim.g.clipboard = {
+    name = "herdr-osc52",
+    copy = { ["+"] = copy_to_clipboard, ["*"] = osc52.copy("*") },
+    paste = { ["+"] = paste_from_register, ["*"] = paste_from_register },
+  }
+
+  -- 'clipboard' に unnamed/unnamedplus を入れると d/x/c の削除内容まで
+  -- クリップボードへ流れ、yank したものが直後の編集で上書きされてしまう。
+  -- 自動同期は使わず、yank のときだけ明示的に送る。
+  vim.opt.clipboard = ""
+
+  vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("herdr-clipboard", { clear = true }),
+    callback = function()
+      if vim.v.event.operator ~= "y" then
+        return
+      end
+      copy_to_clipboard(vim.v.event.regcontents)
+    end,
+  })
+end
+
 local has_clipboard = vim.fn.has("clipboard") == 1
 local has_unnamedplus = vim.fn.has("unnamedplus") == 1
 
-if has_clipboard then
+if has_clipboard and not in_herdr then
   if has_unnamedplus then
     vim.opt.clipboard = "unnamed,unnamedplus"
   else

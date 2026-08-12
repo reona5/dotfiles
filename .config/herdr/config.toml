@@ -37,7 +37,9 @@ type = "shell"
 command = "herdr plugin action invoke open-review --plugin yuucu.hunk"
 
 [ui]
-# 旧 set-option -g mouse on
+# 旧 set-option -g mouse on。
+# ペイン内 URL の Ctrl+click（折り返した URL も herdr 側なら正しく拾える）は
+# herdr がマウスを取っていることが前提なので、false にすると効かなくなる。
 mouse_capture = true
 
 show_agent_labels_on_pane_borders = false

@@ -20,6 +20,11 @@ style = "Regular"
 # URL クリックを Alacritty 自身に処理させる。
 # Shift 押下中はアプリ側のマウスキャプチャ（herdr の mouse_capture）が抑制されるため、
 # Mac mini に herdr 越しで繋いでいても手元の MacBook の Chrome で開ける。
+#
+# ただし herdr はペインを 1 セルずつ絶対座標で描き直すので、行が折り返しているという
+# 情報が Alacritty まで届かない。そのため Shift+click で拾えるのは 1 行に収まる URL と、
+# アプリが OSC 8 で出したリンク（これは herdr が素通しするので折り返しても効く）だけ。
+# 折り返した生の URL は herdr 側の Ctrl+click を使う（reona5.open-url-on-client 参照）。
 [[hints.enabled]]
 regex = "https?://[^\\s<>\"'`{}|\\^\\[\\]]+"
 command = { program = "open", args = ["-a", "Google Chrome"] }

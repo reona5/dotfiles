@@ -1,0 +1,65 @@
+#!/bin/sh
+# herdr サーバー側から転送されてきた URL を、手元のブラウザで開く常駐プロセス。
+#
+# herdr はペイン内の URL を自分のバッファで認識するので、何行に折り返していても
+# Ctrl+click で正しい URL 全体を拾える（外側の端末に任せる Shift+click は、herdr が
+# セル単位で描画する都合で折り返しを跨げない）。ただし herdr が open を実行するのは
+# サーバーのある側なので、MacBook から remote attach している間は手元では見えない
+# Mac mini 側の Chrome が立ち上がってしまう。
+#
+# そこで herdr-remote-attach が張る reverse SSH トンネルの出口をここで待ち受け、
+# サーバー側のプラグイン(reona5.open-url-on-client)から届いた URL を手元で開く。
+#
+# 待ち受けに TCP ではなく Unix ドメインソケットを使うのは、ローカルの任意のプロセス
+# ——とりわけブラウザで開いているページ——から到達させないため。TCP で localhost に
+# 待つと、ページ内の fetch から任意の URL を開かせられてしまう。
+#
+# 通常は herdr-remote-attach から起動されるので、手で叩く必要はない。
+
+set -eu
+
+env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
+[ -f "$env_file" ] && . "$env_file"
+
+sock="${HERDR_URL_SOCK:-/tmp/herdr-url-relay.sock}"
+browser="${HERDR_URL_BROWSER:-Google Chrome}"
+
+# Unix ソケットのパスは 104 バイト程度が上限で、超えると nc が黙って失敗し続ける。
+if [ "${#sock}" -ge 100 ]; then
+  echo "herdr-url-listener: ソケットのパスが長すぎます: $sock" >&2
+  exit 1
+fi
+
+# 多重起動するとトンネルの出口を奪い合うので、応答する先客がいたら譲る。
+# 応答しないソケットは前回の残骸なので、消してから待ち受ける。
+if [ -S "$sock" ]; then
+  if nc -U "$sock" < /dev/null > /dev/null 2>&1; then
+    echo "herdr-url-listener: $sock で既に待機中のプロセスがあります" >&2
+    exit 0
+  fi
+  rm -f "$sock"
+fi
+
+echo "herdr-url-listener: $sock で待機します"
+
+while :; do
+  # nc は 1 接続を処理すると終了するため、毎回立て直す。
+  url=$(nc -lU "$sock" 2>/dev/null | head -1 | tr -d '\r\n') || url=""
+  rm -f "$sock"
+
+  if [ -z "$url" ]; then
+    # ソケットを作れないときに全力で回り続けないよう、空振りは少し待つ。
+    sleep 1
+    continue
+  fi
+
+  # 渡す前にスキームを確かめる。file: や javascript: を open に渡さない。
+  case "$url" in
+    http://* | https://*)
+      open -a "$browser" "$url"
+      ;;
+    *)
+      echo "herdr-url-listener: http(s) ではないので無視しました: $url" >&2
+      ;;
+  esac
+done

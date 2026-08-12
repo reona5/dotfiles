@@ -1,0 +1,21 @@
+id = "reona5.open-url-on-client"
+name = "Open URL on client"
+version = "0.1.0"
+min_herdr_version = "0.7.0"
+description = "Ctrl+click したペイン内の URL を、remote attach 元のマシンで開く"
+platforms = ["macos"]
+
+[[actions]]
+id = "open"
+title = "Open URL on the attached client"
+contexts = ["global"]
+command = ["./open-url.sh"]
+
+# ペイン内の http(s) URL の Ctrl+click をすべてこのプラグインへ回す。
+# herdr 標準の「サーバー側で open」は、remote attach 中に手元では見えない
+# リモートの Chrome を立ち上げてしまうため。
+[[link_handlers]]
+id = "http"
+title = "Open on client"
+pattern = "^https?://"
+action = "open"

@@ -7,7 +7,8 @@
 #
 # Raycast の Herdr 拡張は Herdr Binary(herdrPath) プリファレンスで実行ファイルを
 # 指定できるため、そこにこのスクリプトを指すとワークスペースや worktree の管理が
-# リモートのサーバーに対して行われる。
+# リモートのサーバーに対して行われる。拡張は 5 秒間隔でポーリングするので、
+# 同時に呼ばれてもトンネルを壊し合わないようロックを取る。
 #
 # 接続先はこのファイルに書かず、dotfiles 管理外の設定ファイルから読む。
 #
@@ -17,11 +18,16 @@
 #
 # リモート側のソケットのパスは $HOME を問い合わせて組み立てるので、ユーザー名が
 # 手元と違っていても設定不要。
+#
+# HERDR_REMOTE_DEBUG=1 を渡すと実行内容を HERDR_REMOTE_LOG(既定 /tmp/herdr-remote.log)
+# に記録する。Raycast のように env が細い呼び出し元を調べるとき用。
 
 set -eu
 
 env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
-[ -f "$env_file" ] && . "$env_file"
+if [ -f "$env_file" ]; then
+  . "$env_file"
+fi
 
 if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
   echo "herdr-remote: HERDR_REMOTE_HOST が未設定です ($env_file に書いてください)" >&2
@@ -30,14 +36,88 @@ fi
 
 sock="${HERDR_REMOTE_SOCK:-/tmp/herdr-remote.sock}"
 herdr_bin="${HERDR_REMOTE_BIN:-/opt/homebrew/bin/herdr}"
+lock="$sock.lock"
+log_file="${HERDR_REMOTE_LOG:-/tmp/herdr-remote.log}"
 
-# ソケットが無い、または応答しない場合はトンネルを張り直す。
-if [ ! -S "$sock" ] || ! HERDR_SOCKET_PATH="$sock" "$herdr_bin" status server >/dev/null 2>&1; then
-  rm -f "$sock"
-  remote_home=$(ssh -o BatchMode=yes "$HERDR_REMOTE_HOST" 'printf %s "$HOME"')
-  ssh -o BatchMode=yes -fnNT \
-    -L "$sock:$remote_home/.config/herdr/herdr.sock" \
-    "$HERDR_REMOTE_HOST"
+log() {
+  [ -n "${HERDR_REMOTE_DEBUG:-}" ] || return 0
+  echo "$(date -Iseconds) $*" >>"$log_file"
+}
+
+# ソケットの存在だけでは足りない。SSH が sleep や回線切り替えで死ぬとソケットの
+# ファイルだけが残り、接続すると ConnectionRefused になる。herdr status server は
+# その状態でも exit 0 で not_running を報告するだけなので、終了コードではなく
+# JSON の running を見る。
+tunnel_alive() {
+  [ -S "$sock" ] || return 1
+  HERDR_SOCKET_PATH="$sock" "$herdr_bin" status server --json 2>/dev/null |
+    grep -q '"running":[[:space:]]*true'
+}
+
+release_lock() {
+  rmdir "$lock" 2>/dev/null || :
+}
+
+ensure_tunnel() {
+  if tunnel_alive; then
+    return 0
+  fi
+
+  # 先に張っている呼び出しがいれば待つ。待っている間に張り終わったらそれを使う。
+  waited=0
+  while ! mkdir "$lock" 2>/dev/null; do
+    if tunnel_alive; then
+      log "tunnel established by another invocation"
+      return 0
+    fi
+    waited=$((waited + 1))
+    if [ "$waited" -ge 100 ]; then
+      # 10 秒解放されないロックは死んだ呼び出しの置き土産とみなして奪う。
+      log "stealing stale lock $lock"
+      release_lock
+      continue
+    fi
+    sleep 0.1
+  done
+  trap 'release_lock' EXIT INT TERM
+
+  if ! tunnel_alive; then
+    log "re-establishing tunnel to $HERDR_REMOTE_HOST via $sock"
+    rm -f "$sock"
+    remote_home=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$HERDR_REMOTE_HOST" 'printf %s "$HOME"')
+    # ExitOnForwardFailure: forward に失敗した ssh が背景に残って「ソケットが無いのに
+    # 成功扱い」になるのを防ぐ。ServerAlive*: 死んだトンネルを ssh 自身に片付けさせる。
+    ssh -o BatchMode=yes -o ConnectTimeout=5 -o ExitOnForwardFailure=yes \
+      -o ServerAliveInterval=15 -o ServerAliveCountMax=3 \
+      -fnNT -L "$sock:$remote_home/.config/herdr/herdr.sock" \
+      "$HERDR_REMOTE_HOST"
+
+    waited=0
+    until tunnel_alive; do
+      waited=$((waited + 1))
+      if [ "$waited" -ge 50 ]; then
+        release_lock
+        echo "herdr-remote: $HERDR_REMOTE_HOST へのトンネルを張れませんでした ($sock)" >&2
+        exit 1
+      fi
+      sleep 0.1
+    done
+    log "tunnel ready"
+  fi
+
+  release_lock
+  trap - EXIT INT TERM
+}
+
+ensure_tunnel
+log "run: $*"
+
+if [ -n "${HERDR_REMOTE_DEBUG:-}" ]; then
+  set +e
+  HERDR_SOCKET_PATH="$sock" "$herdr_bin" "$@"
+  rc=$?
+  log "exit=$rc"
+  exit $rc
 fi
 
 HERDR_SOCKET_PATH="$sock" exec "$herdr_bin" "$@"

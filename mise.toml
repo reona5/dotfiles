@@ -38,6 +38,7 @@
 "brew:git" = "latest"
 "brew:git-lfs" = "latest"
 "brew:herdr" = "latest"
+"brew:hermes-agent" = "latest"
 "brew:hunk" = "latest"
 "brew:jq" = "latest"
 "brew:lazygit" = "latest"
@@ -205,6 +206,17 @@ run = [
   # herdr プラグイン（GitHub 配布・dotfiles にはファイルを持たないため bootstrap で導入）。
   # hunk レビュー統合。冪等（導入済みなら再取得のみ）。
   "command -v herdr >/dev/null 2>&1 && herdr plugin install yuucu/herdr-hunk --yes || true",
+  '''
+# hermes-agent の Slack gateway は slack extra（slack-bolt / slack-sdk / aiohttp）を必要と
+# するが、formula はこれを同梱しない。公式インストーラなら `.[slack]` extra で解決される
+# 部分で、formula 経由では venv へ直接入れるしかない。venv は Cellar 配下にあるため
+# `brew upgrade hermes-agent` で消える。ここで復元する（未導入時のみ実行するので冪等）。
+# バージョンは Hermes 側の LAZY_DEPS["platform.slack"] の固定値に合わせる。
+py=/opt/homebrew/opt/hermes-agent/libexec/bin/python3
+if [ -x "$py" ] && ! "$py" -c 'import slack_bolt' >/dev/null 2>&1; then
+  "$py" -m pip install --quiet 'slack-bolt==1.29.0' 'slack-sdk==3.43.0' 'aiohttp==3.14.1'
+fi
+''',
   '''
 # 自作 agent skill は skills/ を source of truth とし（gh skill publish が探索するレイアウト）、
 # Claude Code が読む ~/.claude/skills/（= .config/claude/skills/）からは symlink で参照する。

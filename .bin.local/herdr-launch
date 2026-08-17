@@ -36,8 +36,32 @@ fi
 # 意図的な detach は正常終了なのでループを抜ける。
 # sleep の中断(Ctrl-C)も抜ける経路にして、Mac mini が落ちているときに無限に
 # 再試行し続けないようにしておく。
-until "$herdr_bin" --remote "$HERDR_REMOTE_HOST"; do
-  printf 'herdr-launch: %s への接続が切れました。3 秒後に再接続します (Ctrl-C で中断)\n' \
-    "$HERDR_REMOTE_HOST" >&2
+max_attempts="${HERDR_LAUNCH_RETRIES:-10}"
+attempts=0
+
+while :; do
+  started=$(date +%s)
+  "$herdr_bin" --remote "$HERDR_REMOTE_HOST" && break
+
+  # 一度でも接続が続いていたなら、切断はスリープや Wi-Fi 切り替えによる一時的な
+  # ものとみなして試行回数を戻す。すぐ落ちる場合だけ連続失敗として数える。
+  [ "$(($(date +%s) - started))" -ge 10 ] && attempts=0
+  attempts=$((attempts + 1))
+
+  # Mac mini が落ちているときに永久に再試行し続けないよう上限を設ける。
+  if [ "$attempts" -ge "$max_attempts" ]; then
+    printf 'herdr-launch: %s へ %d 回続けて接続できませんでした。ローカルのシェルに降ります。\n' \
+      "$HERDR_REMOTE_HOST" "$attempts" >&2
+    break
+  fi
+
+  printf 'herdr-launch: %s への接続が切れました。3 秒後に再接続します (%d/%d, Ctrl-C で中断)\n' \
+    "$HERDR_REMOTE_HOST" "$attempts" "$max_attempts" >&2
   sleep 3 || break
 done
+
+# ここに来るのは意図的な detach(prefix+q)か、再接続を Ctrl-C で中断したとき。
+# そのまま終了するとウィンドウごと閉じてしまい、ローカルの環境へ降りる手段が
+# 無くなる。ログインシェルに置き換えて、`herdr` でローカルのセッションを開ける
+# ようにしておく。
+exec "${SHELL:-/bin/zsh}" -l

@@ -10,11 +10,20 @@
 # リモートのサーバーに対して行われる。拡張は 5 秒間隔でポーリングするので、
 # 同時に呼ばれてもトンネルを壊し合わないようロックを取る。
 #
+# ただし worktree の作成・削除はふだん手元の MacBook で行うため、既定はローカル
+# 接続とし、リモートを見るのは HERDR_REMOTE_CLI を明示的に有効にしたときだけにする。
+# こうしておくと Raycast 側の設定は本スクリプトを指したまま固定でよく、切り替えは
+# remote.env の 1 行で済む。
+#
 # 接続先はこのファイルに書かず、dotfiles 管理外の設定ファイルから読む。
 #
 #   ~/.config/herdr/remote.env
 #     HERDR_REMOTE_HOST=<~/.ssh/config で定義した Host エイリアス>
+#     HERDR_REMOTE_CLI=1                         # 任意。CLI/Raycast をリモートへ向ける
 #     HERDR_REMOTE_SOCK=/tmp/herdr-remote.sock   # 任意
+#
+# HERDR_REMOTE_HOST は herdr-remote-attach も参照する。あちらは接続先が必須なので、
+# 本スクリプトのローカル/リモート切り替えは HERDR_REMOTE_CLI で独立させている。
 #
 # リモート側のソケットのパスは $HOME を問い合わせて組み立てるので、ユーザー名が
 # 手元と違っていても設定不要。
@@ -25,17 +34,30 @@
 set -eu
 
 env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
-if [ -f "$env_file" ]; then
-  . "$env_file"
-fi
+
+# env_file は既定値の供給源であって、呼び出し側の環境変数より強くない。単純に
+# source すると代入が上書きしてしまうので、先に退避して後から書き戻す。これで
+# `HERDR_REMOTE_CLI=1 herdr-remote ...` のような一回限りの切り替えができる。
+_cli="${HERDR_REMOTE_CLI:-}"
+_host="${HERDR_REMOTE_HOST:-}"
+[ -f "$env_file" ] && . "$env_file"
+[ -n "$_cli" ] && HERDR_REMOTE_CLI="$_cli"
+[ -n "$_host" ] && HERDR_REMOTE_HOST="$_host"
+
+herdr_bin="${HERDR_REMOTE_BIN:-/opt/homebrew/bin/herdr}"
+
+# 既定は手元の MacBook。HERDR_SOCKET_PATH を渡さないので通常のローカルソケットを使う。
+case "${HERDR_REMOTE_CLI:-0}" in
+  1 | true | yes | on) ;;
+  *) exec "$herdr_bin" "$@" ;;
+esac
 
 if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
-  echo "herdr-remote: HERDR_REMOTE_HOST が未設定です ($env_file に書いてください)" >&2
+  echo "herdr-remote: HERDR_REMOTE_CLI が有効だが HERDR_REMOTE_HOST が未設定です ($env_file に書いてください)" >&2
   exit 1
 fi
 
 sock="${HERDR_REMOTE_SOCK:-/tmp/herdr-remote.sock}"
-herdr_bin="${HERDR_REMOTE_BIN:-/opt/homebrew/bin/herdr}"
 lock="$sock.lock"
 log_file="${HERDR_REMOTE_LOG:-/tmp/herdr-remote.log}"
 

@@ -1,0 +1,43 @@
+#!/bin/sh
+# ターミナル起動時に herdr を立ち上げる。alacritty.toml の shell から呼ばれる。
+#
+# ふだんの作業はリモート(Mac mini)の herdr サーバー上で行うため、接続先が設定
+# されていればそちらへアタッチする。仕事のプロジェクトは Cursor の統合ターミナル
+# (herdr を自動起動しない素の login zsh)で開くので、Alacritty はリモート専用に
+# 倒してよい。
+#
+# 接続先はこのファイルに書かず、dotfiles 管理外の設定ファイルから読む。未設定なら
+# ローカルの herdr にフォールバックするので、remote.env を置いていないマシンでも
+# そのまま動く。
+#
+#   ~/.config/herdr/remote.env
+#     HERDR_REMOTE_HOST=<~/.ssh/config で定義した Host エイリアス>
+#
+# HERDR_REMOTE_HOST は herdr-remote / herdr-remote-attach も参照する。
+
+set -eu
+
+env_file="${XDG_CONFIG_HOME:-$HOME/.config}/herdr/remote.env"
+
+# 呼び出し側の環境変数を env_file の代入で潰さないようにする(herdr-remote と同じ作法)。
+_host="${HERDR_REMOTE_HOST:-}"
+[ -f "$env_file" ] && . "$env_file"
+[ -n "$_host" ] && HERDR_REMOTE_HOST="$_host"
+
+herdr_bin="${HERDR_LAUNCH_BIN:-/opt/homebrew/bin/herdr}"
+
+if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
+  exec "$herdr_bin"
+fi
+
+# `herdr --remote` に再接続の仕組みは無く、スリープや Wi-Fi の切り替えで SSH が
+# 落ちるとそのまま終了する。alacritty からは shell の -c で起動しているため、
+# 素通しにするとウィンドウごと閉じてしまう。そこで異常終了だけ張り直す。
+# 意図的な detach は正常終了なのでループを抜ける。
+# sleep の中断(Ctrl-C)も抜ける経路にして、Mac mini が落ちているときに無限に
+# 再試行し続けないようにしておく。
+until "$herdr_bin" --remote "$HERDR_REMOTE_HOST"; do
+  printf 'herdr-launch: %s への接続が切れました。3 秒後に再接続します (Ctrl-C で中断)\n' \
+    "$HERDR_REMOTE_HOST" >&2
+  sleep 3 || break
+done

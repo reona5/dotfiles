@@ -58,6 +58,12 @@ if [ -z "${HERDR_REMOTE_HOST:-}" ]; then
 fi
 
 sock="${HERDR_REMOTE_SOCK:-/tmp/herdr-remote.sock}"
+# herdr はソケットを 2 本使う。JSON の socket API は herdr.sock だが、
+# `agent attach` / `terminal attach` のような PTY を張る操作は herdr-client.sock を
+# 使う。後者のパスは HERDR_SOCKET_PATH から `.sock` を `-client.sock` に置き換えて
+# 導出されるため、こちらの命名もそれに合わせておく。API 側だけ転送していると
+# attach 系が "failed to connect to server" で落ちる。
+client_sock="${sock%.sock}-client.sock"
 lock="$sock.lock"
 log_file="${HERDR_REMOTE_LOG:-/tmp/herdr-remote.log}"
 
@@ -72,6 +78,8 @@ log() {
 # JSON の running を見る。
 tunnel_alive() {
   [ -S "$sock" ] || return 1
+  # 2 本は同じ ssh に相乗りしているので、片方だけ残っている状態も張り直させる。
+  [ -S "$client_sock" ] || return 1
   HERDR_SOCKET_PATH="$sock" "$herdr_bin" status server --json 2>/dev/null |
     grep -q '"running":[[:space:]]*true'
 }
@@ -105,13 +113,14 @@ ensure_tunnel() {
 
   if ! tunnel_alive; then
     log "re-establishing tunnel to $HERDR_REMOTE_HOST via $sock"
-    rm -f "$sock"
+    rm -f "$sock" "$client_sock"
     remote_home=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$HERDR_REMOTE_HOST" 'printf %s "$HOME"')
     # ExitOnForwardFailure: forward に失敗した ssh が背景に残って「ソケットが無いのに
     # 成功扱い」になるのを防ぐ。ServerAlive*: 死んだトンネルを ssh 自身に片付けさせる。
     ssh -o BatchMode=yes -o ConnectTimeout=5 -o ExitOnForwardFailure=yes \
       -o ServerAliveInterval=15 -o ServerAliveCountMax=3 \
       -fnNT -L "$sock:$remote_home/.config/herdr/herdr.sock" \
+      -L "$client_sock:$remote_home/.config/herdr/herdr-client.sock" \
       "$HERDR_REMOTE_HOST"
 
     waited=0

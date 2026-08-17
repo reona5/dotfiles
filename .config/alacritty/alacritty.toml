@@ -52,7 +52,9 @@ bindings = [
 ]
 
 [terminal.shell]
-args = ["-l", "-c", "herdr"]
+# 接続先が設定されていればリモートの herdr へ、無ければローカルの herdr へ。
+# 詳細は .bin.local/herdr-launch を参照。
+args = ["-l", "-c", "herdr-launch"]
 program = "/bin/zsh"
 
 [window]

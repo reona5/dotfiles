@@ -8,6 +8,15 @@ onboarding = false
 name = "catppuccin"
 
 auto_switch = false
+
+# パネル背景はホストターミナルの既定背景に任せる。
+# herdr はペイン内の未描画セルをホスト側の背景に透かすため、catppuccin の
+# panel_bg (#1e1e2e) を塗ると Alacritty (同じ #1e1e2e) 以外では背景だけ浮く。
+# 例: Cursor の統合ターミナルは terminal.background = #141414。
+# reset にすればどのターミナルでも背景が一致する（アクセント色は catppuccin のまま）。
+[theme.custom]
+panel_bg = "reset"
+
 [terminal]
 # 旧 set -g default-shell /bin/zsh
 default_shell = "/bin/zsh"

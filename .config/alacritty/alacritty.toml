@@ -51,6 +51,11 @@ bindings = [
   { chars = "\u0011", key = "Q", mods = "Control" }
 ]
 
+# 起動時にシェルの代わりに herdr を立ち上げる（既存セッションがあればアタッチ）。
+# ログインシェル経由にして .zprofile の PATH 等を引き継ぐ。herdr 終了でウィンドウも閉じる。
+[terminal]
+shell = { program = "/bin/zsh", args = ["-lc", "exec herdr"] }
+
 [window]
 startup_mode = "SimpleFullscreen"
 

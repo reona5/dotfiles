@@ -31,4 +31,4 @@ jobs:
       - name: Exercise safe apply (fresh runner)
         run: |
           mise bootstrap -y --force-dotfiles --only dotfiles
-          mise bootstrap -y --only macos
+          mise bootstrap -y --only macos-defaults

@@ -63,5 +63,5 @@ directory = "~/.herdr/worktrees"
 
 [experimental]
 # herdr のペイン内から `herdr --remote` でリモートサーバーへアタッチするために必要。
-# 会社 MacBook のターミナルは herdr を自動起動するため、入れ子を許可しないと remote attach ができない。
+# ローカルの herdr を手動で起動したあと、ペインの中から remote attach するので入れ子を許可する。
 allow_nested = true

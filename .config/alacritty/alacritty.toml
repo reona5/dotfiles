@@ -51,12 +51,6 @@ bindings = [
   { chars = "\u0011", key = "Q", mods = "Control" }
 ]
 
-[terminal.shell]
-# 接続先が設定されていればリモートの herdr へ、無ければローカルの herdr へ。
-# 詳細は .bin.local/herdr-launch を参照。
-args = ["-l", "-c", "herdr-launch"]
-program = "/bin/zsh"
-
 [window]
 startup_mode = "SimpleFullscreen"
 

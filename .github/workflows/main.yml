@@ -30,5 +30,5 @@ jobs:
       # ランナー上での導入が重い・不安定なため対象外）。
       - name: Exercise safe apply (fresh runner)
         run: |
-          mise bootstrap -y --only dotfiles
+          mise bootstrap -y --force-dotfiles --only dotfiles
           mise bootstrap -y --only macos

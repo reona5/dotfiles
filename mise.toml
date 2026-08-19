@@ -164,7 +164,13 @@ fi
   # bootstrap 全体の dry-run。package トークンの解決、dotfiles の source 存在、
   # defaults の妥当性、login shell、tools 解決までを一括検証する。
   # 不正な設定があれば非ゼロで終了するため、CI のゲートとして機能する。
-  "mise bootstrap -n",
+  #
+  # --force-dotfiles は「既存ファイルを壊す」検査を黙らせるためではなく、その検査が
+  # 環境依存で偽陽性になるため付けている。~/.config は実ディレクトリとして存在しがちで
+  # （mise 自身が ~/.config/mise/ を作る）、素の環境では必ず衝突として報告される。
+  # ここで検証したいのは設定の妥当性であって実行環境の状態ではない。dry-run なので
+  # 実際には何も書き換わらない。
+  "mise bootstrap -n --force-dotfiles",
 ]
 
 # ---------------------------------------------------------------------------
@@ -219,13 +225,16 @@ fi
 ''',
   '''
 # 自作 agent skill は skills/ を source of truth とし（gh skill publish が探索するレイアウト）、
-# Claude Code が読む ~/.claude/skills/（= .config/claude/skills/）からは symlink で参照する。
+# 各エージェントが読む skills ディレクトリへ symlink で参照させる。
+#   - ~/.claude/skills/（= .config/claude/skills/）: Claude Code
+#   - ~/.agents/skills/:                        Agent Skills 標準ディレクトリ（opencode / pi などが読む）
 # skills/ に新しい skill を足したら、このタスクを流せば link が張られる（冪等）。
 root="${MISE_PROJECT_ROOT:-$PWD}"
-mkdir -p "$root/.config/claude/skills"
+mkdir -p "$root/.config/claude/skills" "$HOME/.agents/skills"
 for dir in "$root"/skills/*/; do
   name="$(basename "$dir")"
   ln -sfn "../../../skills/$name" "$root/.config/claude/skills/$name"
+  ln -sfn "$root/skills/$name" "$HOME/.agents/skills/$name"
 done
 ''',
   # gh 由来の skill は dotfiles に実体を持たず（.gitignore 済み）、gh を source of truth にする。

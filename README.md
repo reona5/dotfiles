@@ -39,8 +39,10 @@ $ curl -fsSL https://raw.githubusercontent.com/reona5/dotfiles/main/.bin/install
 
 `skills/` is the source of truth for my own agent skills, laid out the way
 [`gh skill`](https://cli.github.com/manual/gh_skill) discovers them
-(`skills/<name>/SKILL.md`). `mise bootstrap` symlinks each of them into
-`~/.claude/skills/`, so editing a file under `skills/` takes effect immediately.
+(`skills/<name>/SKILL.md`). `mise bootstrap` symlinks each of them into both
+`~/.claude/skills/` (Claude Code) and `~/.agents/skills/` (the Agent Skills
+standard directory read by opencode and pi), so editing a file under `skills/`
+takes effect immediately across all agents.
 
 ```shell
 $ gh skill publish . --dry-run   # validate

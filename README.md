@@ -17,9 +17,10 @@ $ mise bootstrap
 
 `mise bootstrap` applies, declaratively and idempotently, the system packages
 (`[bootstrap.packages]`: brew formulae, casks, and Mac App Store apps), the
-`$HOME` symlinks (`[dotfiles]`), the macOS system settings
-(`[bootstrap.macos.defaults]`), the login shell (`[bootstrap.user]`), and the
-runtimes from `[tools]`. Use `mise bootstrap -n` to preview without applying.
+side repos it needs checked out (`[bootstrap.repos]`), the `$HOME` symlinks
+(`[dotfiles]`), the macOS system settings (`[bootstrap.macos.defaults]`), the
+login shell (`[bootstrap.user]`), and the runtimes from `[tools]`. Use
+`mise bootstrap -n` to preview without applying.
 
 On a fresh machine, run the one-liner below. It clones this repo into the ghq
 layout (`~/src/github.com/reona5/dotfiles`), seeds Homebrew and mise, then hands
@@ -34,6 +35,19 @@ $ curl -fsSL https://raw.githubusercontent.com/reona5/dotfiles/main/.bin/install
 > Note: on a machine where GUI apps are already installed, mise's `brew-cask`
 > and `mas` backends track their own state and will attempt to (re)install
 > them. Preview with `mise bootstrap -n` first.
+
+One thing the one-liner cannot finish by itself: the Switchyard image. Building
+it needs a running Docker daemon, and the `docker-desktop` cask has only just
+been installed at that point, so `bootstrap` prints what to do and moves on.
+Launch Docker Desktop once, then:
+
+```shell
+$ switchyard-serve build
+```
+
+Re-running `mise bootstrap` does the same thing. Everything else — cloning the
+router definition, symlinking the config, reinstalling pi's extensions — is
+already done by then.
 
 ## Agent skills
 

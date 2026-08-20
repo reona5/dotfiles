@@ -198,24 +198,6 @@ run = [
   "curl -LsSf https://astral.sh/uv/install.sh | sh",
   "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
   '''
-# pi の呼び先を振り分ける Switchyard のルータはコンテナで動かす。定義は dotfiles では
-# なく reona5/switchyard-bundle にあり、ここではイメージを用意するだけ。PyPI の Python 版
-# CLI は使わない（ルーティングの実体は Rust 側に移り、Python の native path は upstream で
-# deprecated）。clone 自体は上の [bootstrap.repos] が step 2 で済ませている。
-#
-# イメージは crates.io から switchyard-server をビルドするので初回は数分かかる。
-# 既にあれば何もしない。定義が無い・Docker が動いていない環境では案内だけ出して先へ進む
-# （ここで落とすと bootstrap 全体が止まる）。
-serve="$HOME/.bin.local/switchyard-serve"
-if [ ! -f "$HOME/src/github.com/reona5/switchyard-bundle/docker-compose.yml" ]; then
-  echo "switchyard: skipped (bundle not cloned). Clone reona5/switchyard-bundle, then run \\`switchyard-serve build\\`."
-elif ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; then
-  echo "switchyard: skipped image build (docker unavailable). Run \\`switchyard-serve build\\` later."
-elif ! docker image inspect switchyard-switchyard >/dev/null 2>&1; then
-  "$serve" build
-fi
-''',
-  '''
 # pi の拡張は .config/pi/settings.json の packages が source of truth。実体は
 # ~/.pi/agent/{npm,git} に落ちるもので dotfiles には含めないため、新しいマシンでは
 # 取り直す必要がある。リストを settings.json から読むことで二重管理を避ける。
@@ -237,6 +219,25 @@ fi
   # 本家 brew なら /usr/local への link を問題なく処理するので brew で入れる。
   # brew 管理下に置くので、以後は `brew upgrade --cask` でアップグレードできる。
   "command -v brew >/dev/null 2>&1 && brew install --cask docker-desktop || true",
+  '''
+# pi の呼び先を振り分ける Switchyard のルータはコンテナで動かす。定義は dotfiles では
+# なく reona5/switchyard-bundle にあり、ここではイメージを用意するだけ。PyPI の Python 版
+# CLI は使わない（ルーティングの実体は Rust 側に移り、Python の native path は upstream で
+# deprecated）。clone 自体は上の [bootstrap.repos] が step 2 で済ませている。
+# docker-desktop の導入より後に置いてあるのは、その順でないと参照できないため。
+#
+# イメージは crates.io から switchyard-server をビルドするので初回は数分かかる。
+# 既にあれば何もしない。定義が無い・Docker が動いていない環境では案内だけ出して先へ進む
+# （ここで落とすと bootstrap 全体が止まる）。新規マシンでは cask を入れた直後に
+# Docker Desktop が起動しているとは限らないので、ここは素通りするのが普通。
+if [ ! -f "$HOME/src/github.com/reona5/switchyard-bundle/docker-compose.yml" ]; then
+  echo "switchyard: bundle not cloned; skipped. Re-run \\`mise bootstrap\\` once it is there."
+elif ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; then
+  echo "switchyard: docker not running; image not built. Launch Docker Desktop, then \\`switchyard-serve build\\`."
+elif ! docker image inspect switchyard-switchyard >/dev/null 2>&1; then
+  "$HOME/.bin.local/switchyard-serve" build
+fi
+''',
   # mise の brew-cask が未対応のアーティファクト種別を使う cask も brew で入れる。
   # mise は未知の種別に当たると bootstrap 全体を fail させるため、宣言から外す必要がある。
   #   firefox: command_wrapper（`firefox` CLI のラッパー）

@@ -1,0 +1,25 @@
+#!/bin/sh
+# Switchyard を pi 用の設定で起動するラッパー。
+#
+# pi の provider "switchyard"（.config/pi/models.json）は 127.0.0.1:4100 を決め打ちで
+# 叩くので、ポートは Switchyard 既定の 4000 ではなく 4100 に合わせる。ここを変えるなら
+# models.json の baseUrl も一緒に変えること。
+#
+# 呼び先 Fireworks の API キーは公開リポジトリに置けないので 1Password から注入する。
+# op run は環境変数の値が op:// 参照ならそれを解決して子プロセスに渡すため、
+# routes.yaml 側は ${FIREWORKS_API_KEY} と書いておけばよく、平文はどこにも残らない。
+#
+# 参照先の項目名は Vault 構成で変わるので上書きできるようにしてある:
+#   FIREWORKS_API_KEY_REF="op://Work/Fireworks/credential" switchyard-serve
+set -eu
+
+: "${FIREWORKS_API_KEY_REF:=op://Private/Fireworks AI/credential}"
+: "${SWITCHYARD_PORT:=4100}"
+
+export FIREWORKS_API_KEY="$FIREWORKS_API_KEY_REF"
+
+exec op run -- switchyard serve \
+  --routing-profiles "$HOME/.config/switchyard/routes.yaml" \
+  --host 127.0.0.1 \
+  --port "$SWITCHYARD_PORT" \
+  "$@"

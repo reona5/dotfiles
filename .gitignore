@@ -61,11 +61,22 @@
 !/.config/neofetch/**
 !/.config/nvim/
 !/.config/nvim/**
+# pi の設定は ~/.pi/agent/<name> への個別 symlink で張る（mise.toml の [dotfiles]）。
+# ~/.pi/agent/ には auth.json（provider の資格情報）と models-store.json も同居する
+# ため、既定で全無視し追跡するものだけを拾う。
+!/.config/pi/
+/.config/pi/*
+!/.config/pi/models.json
+!/.config/pi/settings.json
+!/.config/pi/turn-recap.json
 !/.config/pnpm/
 !/.config/pnpm/5/
 !/.config/pnpm/5/package.json
 !/.config/sheldon/
 !/.config/sheldon/**
+# Switchyard のルーティング定義。API キーは ${FIREWORKS_API_KEY} 参照なので平文は入らない。
+!/.config/switchyard/
+!/.config/switchyard/routes.yaml
 !/.config/zeno/
 !/.config/zeno/**
 !/.config/zsh/

@@ -1,0 +1,24 @@
+{
+  "defaultProvider": "switchyard",
+  "defaultModel": "auto",
+  "enableInstallTelemetry": false,
+  "enableAnalytics": false,
+  "subagents": {
+    "defaultModel": "switchyard/weak-only",
+    "agentOverrides": {
+      "reviewer": {
+        "model": "switchyard/strong-only"
+      },
+      "oracle": {
+        "model": "switchyard/k3-only"
+      }
+    }
+  },
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:pi-subagents",
+    "npm:@gotgenes/pi-permission-system",
+    "npm:@narumitw/pi-btw",
+    "git:github.com/himorishige/pi-coding-agent-extensions"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "providers": {
+    "switchyard": {
+      "baseUrl": "http://127.0.0.1:4100/v1",
+      "api": "openai-completions",
+      "apiKey": "local-dummy",
+      "models": [
+        { "id": "auto", "input": ["text"], "contextWindow": 262144, "maxOutputTokens": 16384 },
+        { "id": "weak-only", "input": ["text"], "contextWindow": 262144, "maxOutputTokens": 16384 },
+        { "id": "strong-only", "input": ["text"], "contextWindow": 262144, "maxOutputTokens": 16384 },
+        { "id": "k3-only", "reasoning": true, "input": ["text", "image"], "contextWindow": 262144, "maxOutputTokens": 16384 }
+      ]
+    }
+  }
+}

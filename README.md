@@ -65,5 +65,41 @@ out only the configuration: `settings.json`, `statusline.py`, `*.sh`, and the
 > which blocks the symlink. On a fresh machine run `mise bootstrap` before the
 > first launch.
 
+## pi and Switchyard
+
+[pi](https://github.com/earendil-works/pi) is managed by mise like any other
+tool. It talks to open-weight models through
+[NeMo Switchyard](https://github.com/NVIDIA-NeMo/Switchyard), a local router that
+speaks the OpenAI API and dispatches each request to a different backend.
+
+`.config/switchyard/routes.yaml` defines the four routes pi can select — `auto`
+(a stage router that picks between the cheap and capable tiers), plus
+`weak-only`, `strong-only` and `k3-only` pinned to a single model each. The route
+keys are the model ids pi sees, so they have to stay in step with
+`.config/pi/models.json`.
+
+Start the router before using pi:
+
+```shell
+$ switchyard-serve            # 127.0.0.1:4100, keeps running in the foreground
+$ pi                          # defaults to switchyard/auto
+```
+
+The routes call Fireworks, so an API key is required. It is never stored in this
+repo: `routes.yaml` refers to `${FIREWORKS_API_KEY}` and `switchyard-serve`
+resolves it from 1Password at launch. Create an item holding the key and point
+the wrapper at it — the default reference is `op://Private/Fireworks AI/credential`,
+overridable per invocation:
+
+```shell
+$ FIREWORKS_API_KEY_REF="op://Work/Fireworks/credential" switchyard-serve
+```
+
+Switchyard itself is not on a mise backend, so `mise.toml`'s `bootstrap` task
+installs it with `uv tool install`. Note that the `[cli]` extra alone cannot run
+`serve` — the task also pulls the `server` extra and PyYAML. pi's extensions are
+listed in `.config/pi/settings.json` and reinstalled from there by the same task,
+since only the manifest is version controlled and not the packages themselves.
+
 ## Screenshot
 <img width="5120" height="2880" alt="CleanShot 2025-09-21 at 22 56 27@2x" src="https://github.com/user-attachments/assets/debcd661-8918-4c9f-a34e-a9ce03d1c60f" />

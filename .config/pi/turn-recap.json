@@ -1,0 +1,6 @@
+{
+  "mode": "smart",
+  "model": "switchyard/weak-only",
+  "thinkingLevel": "low",
+  "timeoutMs": 30000
+}

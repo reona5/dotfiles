@@ -128,6 +128,12 @@
 "~/.zsh" = { source = ".config/zsh", mode = "symlink" }
 "~/.codex/config.toml" = { source = ".config/codex/config.toml", mode = "symlink" }
 "~/.codex/hooks.json" = { source = ".config/codex/hooks.json", mode = "symlink" }
+# pi も ~/.claude と同じ理由でディレクトリごとは張らない。~/.pi/agent/ には
+# auth.json（provider の資格情報）と models-store.json（取得済みモデルカタログ）が
+# 同居しており、どちらもリポジトリに入れてはいけない。管理対象の 3 つだけを張る。
+"~/.pi/agent/models.json" = { source = ".config/pi/models.json", mode = "symlink" }
+"~/.pi/agent/settings.json" = { source = ".config/pi/settings.json", mode = "symlink" }
+"~/.pi/agent/turn-recap.json" = { source = ".config/pi/turn-recap.json", mode = "symlink" }
 
 # ---------------------------------------------------------------------------
 # macOS のシステム設定（旧 defaults タスク）
@@ -177,10 +183,31 @@ fi
 # 宣言で表せない補助（bootstrap の step 10 で自動実行される escape hatch）
 # ---------------------------------------------------------------------------
 [tasks.bootstrap]
-description = "uv / pnpm global / tap formula / herdr プラグイン / agent skill / ライセンス版 CleanShot / Capsomnia を導入する"
+description = "uv / pnpm global / Switchyard / pi 拡張 / tap formula / herdr プラグイン / agent skill / ライセンス版 CleanShot / Capsomnia を導入する"
 run = [
   "curl -LsSf https://astral.sh/uv/install.sh | sh",
   "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
+  '''
+# Switchyard は pi の呼び先を weak/strong/k3 に振り分けるローカルルータ。PyPI 配布で
+# mise の backend には無いので uv tool で入れる。[cli] extra は PyYAML を含まないが
+# `serve --routing-profiles` は YAML を読むため --with pyyaml がないと起動時に落ちる。
+# Python は 3.12 以上必須（README の --python 3.10 は古い）。
+if command -v uv >/dev/null 2>&1 && ! command -v switchyard >/dev/null 2>&1; then
+  uv tool install --python 3.12 --with pyyaml 'nemo-switchyard[cli]'
+fi
+''',
+  '''
+# pi の拡張は .config/pi/settings.json の packages が source of truth。実体は
+# ~/.pi/agent/{npm,git} に落ちるもので dotfiles には含めないため、新しいマシンでは
+# 取り直す必要がある。リストを settings.json から読むことで二重管理を避ける。
+# pi install は冪等。
+root="${MISE_PROJECT_ROOT:-$PWD}"
+if command -v pi >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
+  jq -r '.packages[]?' "$root/.config/pi/settings.json" | while read -r src; do
+    [ -n "$src" ] && pi install "$src" >/dev/null 2>&1 || true
+  done
+fi
+''',
   # mise の brew backend で扱えないサードパーティ tap の formula は brew で入れる。
   # brew 管理下に置くので、以後は `brew upgrade` でまとめてアップグレードできる。
   # moshi-hook は iPhone の Moshi アプリから herdr / Claude Code を操作するためのホスト側 daemon。

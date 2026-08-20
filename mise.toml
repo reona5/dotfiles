@@ -28,7 +28,7 @@
 "brew:aws-vault" = "latest"    # 旧 Brewfile は cask 指定だったが実体は formula
 "brew:bat" = "latest"
 "brew:deno" = "latest"
-"brew:devcontainer" = "latest"
+# devcontainer は下の bootstrap タスク側で brew から入れる（下記参照）
 "brew:direnv" = "latest"
 "brew:fastfetch" = "latest"
 "brew:fd" = "latest"
@@ -38,7 +38,7 @@
 "brew:git" = "latest"
 "brew:git-lfs" = "latest"
 "brew:herdr" = "latest"
-"brew:hermes-agent" = "latest"
+# hermes-agent は下の bootstrap タスク側で brew から入れる（下記参照）
 "brew:hunk" = "latest"
 "brew:jq" = "latest"
 "brew:lazygit" = "latest"
@@ -214,6 +214,15 @@ fi
   # moshi-hook は iPhone の Moshi アプリから herdr / Claude Code を操作するためのホスト側 daemon。
   # 導入後のペアリング（moshi-hook host setup）はデバイス固有かつ対話的なので bootstrap には含めない。
   "command -v brew >/dev/null 2>&1 && brew install hashicorp/tap/terraform k1LoW/tap/mo rjyo/moshi/moshi-hook || true",
+  # node に依存する formula は本家 brew で入れる。formula 自体は mise の brew backend でも
+  # 扱えるが、node はさらに ada-url を引き、そこで既存の brew インストールと衝突する:
+  # brew は ada-url 3.4.4 を /opt/homebrew/lib へリンク済みで、mise は自分が入れた覚えの
+  # ないファイルを上書きしないため 4.0.0 のリンクに失敗し、packages ステップごと落ちる。
+  # brew に任せれば依存解決が brew の中で完結してぶつからない。
+  # 該当するのは devcontainer と hermes-agent（`brew deps <f> | grep ada-url` で判別できる）。
+  # なお node 本体は [tools] の mise 管理（24）が PATH 上の正で、ここで入る brew の node は
+  # これらの依存として Cellar に居るだけ。
+  "command -v brew >/dev/null 2>&1 && brew install devcontainer hermes-agent || true",
   # docker-desktop cask は binary の link 先を /usr/local/bin 直書きで宣言しており、
   # link 先が /opt/homebrew 配下でないと拒否する mise の brew-cask では扱えない。
   # 本家 brew なら /usr/local への link を問題なく処理するので brew で入れる。

@@ -2,7 +2,7 @@
 #
 # `mise bootstrap` が以下を順に、宣言的かつ idempotent に適用する:
 #   1. [bootstrap.packages]     system packages（brew formula / brew-cask / mas）
-#   2. [bootstrap.repos]        git リポジトリ（未使用）
+#   2. [bootstrap.repos]        別リポジトリの clone（switchyard-bundle）
 #   3. [dotfiles]               $HOME への symlink
 #   4. shell activation
 #   5. [bootstrap.macos.defaults] macOS のシステム設定
@@ -96,6 +96,15 @@
 # RunCat Neo (6757801838) は宣言しない。未導入の mas エントリを入れようとすると
 # `mas install` が sudo を要求し、非対話実行では TTY がなく bootstrap 全体が落ちる。
 # 導入済みの LINE / Xcode は照合だけで済むので影響しない。App Store から手動で入れること。
+
+# ---------------------------------------------------------------------------
+# 別リポジトリのチェックアウト
+# dotfiles に同梱しないが環境の一部として要るものを、ghq レイアウトのパスへ clone する。
+# switchyard-bundle は pi の呼び先を振り分けるルータのコンテナ定義。クライアントを
+# 選ばない作りなので dotfiles とは分けてある（実際の起動は .bin.local/switchyard-serve）。
+# ---------------------------------------------------------------------------
+[bootstrap.repos]
+"~/src/github.com/reona5/switchyard-bundle" = { url = "https://github.com/reona5/switchyard-bundle.git" }
 
 # ---------------------------------------------------------------------------
 # dotfiles の symlink（旧 link タスク）
@@ -192,7 +201,7 @@ run = [
 # pi の呼び先を振り分ける Switchyard のルータはコンテナで動かす。定義は dotfiles では
 # なく reona5/switchyard-bundle にあり、ここではイメージを用意するだけ。PyPI の Python 版
 # CLI は使わない（ルーティングの実体は Rust 側に移り、Python の native path は upstream で
-# deprecated）。リポジトリを push したら [bootstrap.repos] で clone まで宣言できる。
+# deprecated）。clone 自体は上の [bootstrap.repos] が step 2 で済ませている。
 #
 # イメージは crates.io から switchyard-server をビルドするので初回は数分かかる。
 # 既にあれば何もしない。定義が無い・Docker が動いていない環境では案内だけ出して先へ進む

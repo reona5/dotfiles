@@ -1,25 +1,76 @@
 #!/bin/sh
-# Switchyard を pi 用の設定で起動するラッパー。
+# Switchyard のルータを起動・停止する。コンテナ定義は別リポジトリに置いてあり、
+# ここはそれを 1Password 付きで呼ぶだけのラッパー。
 #
-# pi の provider "switchyard"（.config/pi/models.json）は 127.0.0.1:4100 を決め打ちで
-# 叩くので、ポートは Switchyard 既定の 4000 ではなく 4100 に合わせる。ここを変えるなら
-# models.json の baseUrl も一緒に変えること。
+#   switchyard-serve            起動（detached。以後は Docker が面倒を見る）
+#   switchyard-serve stop       停止
+#   switchyard-serve status     稼働状態
+#   switchyard-serve logs [-f]  サーバのログ
+#   switchyard-serve validate   routes.toml を検証（起動しない）
+#   switchyard-serve build      イメージを再ビルド
 #
-# 呼び先 Fireworks の API キーは公開リポジトリに置けないので 1Password から注入する。
-# op run は環境変数の値が op:// 参照ならそれを解決して子プロセスに渡すため、
-# routes.yaml 側は ${FIREWORKS_API_KEY} と書いておけばよく、平文はどこにも残らない。
+# ルータは 127.0.0.1:4100 に立つ。.config/pi/models.json の baseUrl がそこを
+# 決め打ちで指しているので、ポートを変えるなら両方直すこと。
 #
-# 参照先の項目名は Vault 構成で変わるので上書きできるようにしてある:
+# 呼び先の API キーはコンテナ定義側では環境変数から読むだけになっている。どの秘密管理を
+# 使うかはこちらの裁量なので、1Password から注入する。op run は環境変数の値が op://
+# 参照ならそれを解決して子プロセスに渡すため、compose には解決済みの値だけが渡り、
+# ディスクには平文が残らない（.env は置かない）。
+# 参照先は Vault 構成で変わるので上書きできる:
 #   FIREWORKS_API_KEY_REF="op://Work/Fireworks/credential" switchyard-serve
+#
+# キーの要らない操作（stop / status / logs / build）では 1Password を呼ばない。
+# compose ファイルが ${FIREWORKS_API_KEY:?} を参照する以上、値が無いと parse 自体が
+# 失敗するので、その場合だけダミーを置いて op を経由しない。
 set -eu
 
 : "${FIREWORKS_API_KEY_REF:=op://Private/Fireworks AI/credential}"
-: "${SWITCHYARD_PORT:=4100}"
+: "${SWITCHYARD_DIR:=$HOME/src/github.com/reona5/switchyard-bundle}"
 
-export FIREWORKS_API_KEY="$FIREWORKS_API_KEY_REF"
+COMPOSE_FILE="$SWITCHYARD_DIR/docker-compose.yml"
 
-exec op run -- switchyard serve \
-  --routing-profiles "$HOME/.config/switchyard/routes.yaml" \
-  --host 127.0.0.1 \
-  --port "$SWITCHYARD_PORT" \
-  "$@"
+if [ ! -f "$COMPOSE_FILE" ]; then
+  echo "switchyard-serve: no compose file at $COMPOSE_FILE" >&2
+  echo "clone the bundle there, or point SWITCHYARD_DIR at it" >&2
+  exit 1
+fi
+
+with_key() {
+  FIREWORKS_API_KEY="$FIREWORKS_API_KEY_REF" \
+    exec op run -- docker compose -f "$COMPOSE_FILE" "$@"
+}
+
+without_key() {
+  FIREWORKS_API_KEY=unused exec docker compose -f "$COMPOSE_FILE" "$@"
+}
+
+cmd="${1:-up}"
+[ $# -gt 0 ] && shift
+
+case "$cmd" in
+  up)
+    with_key up -d "$@"
+    ;;
+  stop | down)
+    without_key down "$@"
+    ;;
+  status)
+    without_key ps "$@"
+    ;;
+  logs)
+    without_key logs "$@"
+    ;;
+  validate)
+    # --dry-run は設定を読んで検証するだけで listen しない。deny_unknown_fields
+    # なので、キー名の打ち間違いもここで落ちる。
+    with_key run --rm switchyard --config /app/routes.toml --dry-run "$@"
+    ;;
+  build)
+    without_key build "$@"
+    ;;
+  *)
+    echo "switchyard-serve: unknown command '$cmd'" >&2
+    echo "usage: switchyard-serve [up|stop|status|logs|validate|build]" >&2
+    exit 2
+    ;;
+esac

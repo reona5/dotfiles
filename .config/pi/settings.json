@@ -1,6 +1,6 @@
 {
   "defaultProvider": "switchyard",
-  "defaultModel": "auto",
+  "defaultModel": "weak-only",
   "enableInstallTelemetry": false,
   "enableAnalytics": false,
   "subagents": {
@@ -20,5 +20,8 @@
     "npm:@gotgenes/pi-permission-system",
     "npm:@narumitw/pi-btw",
     "git:github.com/himorishige/pi-coding-agent-extensions"
-  ]
+  ],
+  "lastChangelogVersion": "0.84.2",
+  "theme": "dark",
+  "tuiMode": "fullscreen"
 }

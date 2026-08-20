@@ -130,7 +130,8 @@
 "~/.codex/hooks.json" = { source = ".config/codex/hooks.json", mode = "symlink" }
 # pi も ~/.claude と同じ理由でディレクトリごとは張らない。~/.pi/agent/ には
 # auth.json（provider の資格情報）と models-store.json（取得済みモデルカタログ）が
-# 同居しており、どちらもリポジトリに入れてはいけない。管理対象の 3 つだけを張る。
+# 同居しており、どちらもリポジトリに入れてはいけない。管理対象の 4 つだけを張る。
+"~/.pi/agent/keybindings.json" = { source = ".config/pi/keybindings.json", mode = "symlink" }
 "~/.pi/agent/models.json" = { source = ".config/pi/models.json", mode = "symlink" }
 "~/.pi/agent/settings.json" = { source = ".config/pi/settings.json", mode = "symlink" }
 "~/.pi/agent/turn-recap.json" = { source = ".config/pi/turn-recap.json", mode = "symlink" }
@@ -188,12 +189,21 @@ run = [
   "curl -LsSf https://astral.sh/uv/install.sh | sh",
   "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
   '''
-# Switchyard は pi の呼び先を weak/strong/k3 に振り分けるローカルルータ。PyPI 配布で
-# mise の backend には無いので uv tool で入れる。[cli] extra は PyYAML を含まないが
-# `serve --routing-profiles` は YAML を読むため --with pyyaml がないと起動時に落ちる。
-# Python は 3.12 以上必須（README の --python 3.10 は古い）。
-if command -v uv >/dev/null 2>&1 && ! command -v switchyard >/dev/null 2>&1; then
-  uv tool install --python 3.12 --with pyyaml 'nemo-switchyard[cli]'
+# pi の呼び先を振り分ける Switchyard のルータはコンテナで動かす。定義は dotfiles では
+# なく reona5/switchyard-bundle にあり、ここではイメージを用意するだけ。PyPI の Python 版
+# CLI は使わない（ルーティングの実体は Rust 側に移り、Python の native path は upstream で
+# deprecated）。リポジトリを push したら [bootstrap.repos] で clone まで宣言できる。
+#
+# イメージは crates.io から switchyard-server をビルドするので初回は数分かかる。
+# 既にあれば何もしない。定義が無い・Docker が動いていない環境では案内だけ出して先へ進む
+# （ここで落とすと bootstrap 全体が止まる）。
+serve="$HOME/.bin.local/switchyard-serve"
+if [ ! -f "$HOME/src/github.com/reona5/switchyard-bundle/docker-compose.yml" ]; then
+  echo "switchyard: skipped (bundle not cloned). Clone reona5/switchyard-bundle, then run \\`switchyard-serve build\\`."
+elif ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; then
+  echo "switchyard: skipped image build (docker unavailable). Run \\`switchyard-serve build\\` later."
+elif ! docker image inspect switchyard-switchyard >/dev/null 2>&1; then
+  "$serve" build
 fi
 ''',
   '''

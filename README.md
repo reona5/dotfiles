@@ -72,34 +72,38 @@ tool. It talks to open-weight models through
 [NeMo Switchyard](https://github.com/NVIDIA-NeMo/Switchyard), a local router that
 speaks the OpenAI API and dispatches each request to a different backend.
 
-`.config/switchyard/routes.yaml` defines the four routes pi can select — `auto`
-(a stage router that picks between the cheap and capable tiers), plus
-`weak-only`, `strong-only` and `k3-only` pinned to a single model each. The route
-keys are the model ids pi sees, so they have to stay in step with
-`.config/pi/models.json`.
+The router runs in a container whose definition lives in its own repo,
+[reona5/switchyard-bundle](https://github.com/reona5/switchyard-bundle) — it is
+client-agnostic, so the pi-side wiring stays here. `.config/pi/models.json` declares
+one entry per route the bundle serves (`auto`, `auto-esc`, `weak-only`,
+`strong-only`, `k3-only`); those ids have to stay in step with the bundle's
+`routes.toml` or pi cannot select them.
 
-Start the router before using pi:
+`switchyard-serve` wraps the bundle's compose file:
 
 ```shell
-$ switchyard-serve            # 127.0.0.1:4100, keeps running in the foreground
-$ pi                          # defaults to switchyard/auto
+$ switchyard-serve            # starts detached on 127.0.0.1:4100
+$ switchyard-serve status     # or stop / logs / validate / build
+$ pi
 ```
 
-The routes call Fireworks, so an API key is required. It is never stored in this
-repo: `routes.yaml` refers to `${FIREWORKS_API_KEY}` and `switchyard-serve`
-resolves it from 1Password at launch. Create an item holding the key and point
-the wrapper at it — the default reference is `op://Private/Fireworks AI/credential`,
-overridable per invocation:
+The routes call Fireworks, so an API key is required. The bundle only reads it
+from the environment, which leaves the choice of secret store here:
+`switchyard-serve` resolves it from 1Password at launch, so no plaintext key and
+no `.env` ever lands on disk. Create an item holding the key — the default
+reference is `op://Private/Fireworks AI/credential`, overridable per invocation:
 
 ```shell
 $ FIREWORKS_API_KEY_REF="op://Work/Fireworks/credential" switchyard-serve
 ```
 
-Switchyard itself is not on a mise backend, so `mise.toml`'s `bootstrap` task
-installs it with `uv tool install`. Note that the `[cli]` extra alone cannot run
-`serve` — the task also pulls the `server` extra and PyYAML. pi's extensions are
-listed in `.config/pi/settings.json` and reinstalled from there by the same task,
-since only the manifest is version controlled and not the packages themselves.
+Note the tradeoff Docker imposes: the resolved key is visible in the container's
+environment via `docker inspect`. Keeping it off disk is as far as this gets.
+
+`mise.toml`'s `bootstrap` task builds the image when it is missing, and
+reinstalls pi's extensions from the `packages` list in
+`.config/pi/settings.json`, since only that manifest is version controlled and
+not the packages themselves.
 
 ## Screenshot
 <img width="5120" height="2880" alt="CleanShot 2025-09-21 at 22 56 27@2x" src="https://github.com/user-attachments/assets/debcd661-8918-4c9f-a34e-a9ce03d1c60f" />

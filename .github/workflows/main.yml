@@ -10,6 +10,14 @@ jobs:
   verify:
     runs-on: macos-latest
 
+    env:
+      # mise は github: backend（gogcli）の版を解決するのに GitHub API を叩く。
+      # 未認証だと 60 req/hr で、しかもランナーの外向き IP は他のジョブと共有される
+      # ため、こちらが何もしていなくても枯れて 403 で落ちる。ワークフローに自動発行
+      # される per-run トークンを渡すと認証済みの枠（1,000 req/hr）になる。
+      # 読み取りしかしないので既定の権限で足りる。
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
 

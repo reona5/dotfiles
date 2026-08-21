@@ -23,7 +23,9 @@
     "npm:pi-web-access",
     "npm:pi-lens",
     "git:github.com/ahm3tj4f/pi-undo",
-    "git:github.com/sting8k/pi-vcc"
+    "git:github.com/sting8k/pi-vcc",
+    "npm:pi-codex-image-gen",
+    "git:github.com/earendil-works/pi-transcribe"
   ],
   "lastChangelogVersion": "0.84.2",
   "theme": "dark",

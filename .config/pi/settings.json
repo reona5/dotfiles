@@ -1,6 +1,6 @@
 {
   "defaultProvider": "switchyard",
-  "defaultModel": "weak-only",
+  "defaultModel": "auto",
   "enableInstallTelemetry": false,
   "enableAnalytics": false,
   "subagents": {

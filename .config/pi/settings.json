@@ -20,7 +20,9 @@
     "npm:@gotgenes/pi-permission-system",
     "npm:@narumitw/pi-btw",
     "git:github.com/himorishige/pi-coding-agent-extensions",
-    "npm:@czottmann/pi-automode"
+    "npm:pi-web-access",
+    "npm:pi-lens",
+    "git:github.com/ahm3tj4f/pi-undo"
   ],
   "lastChangelogVersion": "0.84.2",
   "theme": "dark",

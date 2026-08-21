@@ -24,5 +24,6 @@
   ],
   "lastChangelogVersion": "0.84.2",
   "theme": "dark",
-  "tuiMode": "fullscreen"
+  "tuiMode": "fullscreen",
+  "defaultThinkingLevel": "medium"
 }

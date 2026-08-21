@@ -11,7 +11,11 @@
       "Read(./config/credentials.json)",
       "Bash(sudo:*)"
     ],
-    "ask": [],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git push --force:*)",
+      "Bash(rm -rf:*)"
+    ],
     "defaultMode": "auto"
   },
   "hooks": {
@@ -140,5 +144,44 @@
   "theme": "dark",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "model": "claude-fable-5[1m]"
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash(mise bootstrap:*)",
+      "Bash(actionlint:*)",
+      "Bash(mas list:*)",
+      "Bash(ghq list:*)"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(mise uninstall:*)",
+      "Bash(mas uninstall:*)"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured (personal GitHub account `reona5`; no org remotes observed)",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: PUBLIC — `reona5/dotfiles` (github.com) is public per the authenticated gh check; any push there is publishing. The account also holds private repos; do not assume any other repo's visibility, and check with `gh repo view --json visibility` before treating one as publishable. This file is committed to the public repo, so no repo inventory is recorded here",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: `gpg` and `op` (1Password CLI) appear in usage; treat credential stores as read-only unless the user confirms a write",
+      "**Default / protected branches**: default branch `main`; no rulesets and no classic protected branches listed by gh for `reona5/dotfiles`",
+      "**CI/CD deploy targets**: GitHub Actions workflows in `.github/workflows` (Dotfiles CI); no deploy targets configured",
+      "**Network posture**: `ssh` and `tailscale` appear in usage (Tailscale-style private network plus direct SSH hosts); nothing else configured",
+      "**Source control**: The trusted repo and its remote(s) only (no additional orgs configured) — `https://github.com/reona5/dotfiles` on github.com, plus the account's other personal `reona5/*` repos, whose visibility must be checked rather than assumed",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar. Note this repo is a public dotfiles checkout, so shell history, SSH config, GPG material and 1Password items must never be pasted into it or its remote",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`)",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development — dotfiles/toolchain maintenance (mise bootstrap, Homebrew/mas packages, Neovim, zsh, Alacritty), plus general web development across personal repos",
+      "**Trusted repo**: `/Users/shimada.reona/src/github.com/reona5/dotfiles` and its remote `https://github.com/reona5/dotfiles`. This repo is PUBLIC: only that repo's own dotfiles work is OK to commit or push there — content ported, repointed, or first read from outside this session's repo is not its own work, whoever directed the port. Visibility scopes confidential material only: secrets and sensitive data (personal & entrusted) are never cleared into any repo by its visibility",
+      "**Org-specific CLIs**: `mise` (bootstrap/tool management), `mas`, `ghq`, `herdr` and `herdr-remote`, `moshi` / `moshi-hook`, `actionlint`, `jj`, `ni`/`nr`, `cld`, `op`, `tailscale`",
+      "**Routine under repo prefix**: routine work is confined to `~/src/github.com/reona5/` (ghq layout); `mise bootstrap`, `mise -n` previews and `actionlint` runs in the dotfiles checkout are the everyday loop"
+    ]
+  }
 }

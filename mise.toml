@@ -245,7 +245,12 @@ if [ ! -f "$HOME/src/github.com/reona5/switchyard-bundle/docker-compose.yml" ]; 
 elif ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; then
   echo "switchyard: docker not running; image not built. Launch Docker Desktop, then \\`switchyard-serve build\\`."
 elif ! docker image inspect switchyard-switchyard >/dev/null 2>&1; then
-  "$HOME/.bin.local/switchyard-serve" build
+  # ビルドは Docker Hub の base image と crates.io に触る数分の処理なので、回線次第で
+  # 失敗する（実際に rust:1.96.1-bookworm の metadata 取得が DeadlineExceeded で落ちた）。
+  # ルータは後からいつでも建てられる一方、ここで落とすと bootstrap の他が全部済んでいても
+  # 失敗扱いになる。案内だけ出して先へ進める。
+  "$HOME/.bin.local/switchyard-serve" build \
+    || echo "switchyard: image build failed; retry with \\`switchyard-serve build\\`."
 fi
 ''',
   # mise の brew-cask が未対応のアーティファクト種別を使う cask も brew で入れる。

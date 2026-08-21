@@ -29,7 +29,7 @@
     "bash": {
       "*": "allow",
       "git push*": "ask",
-      "git push --force*": "deny",
+      "git push --force*": "ask",
       "rm -rf*": "ask",
       "sudo*": "deny"
     },

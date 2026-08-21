@@ -19,7 +19,8 @@
     "npm:pi-subagents",
     "npm:@gotgenes/pi-permission-system",
     "npm:@narumitw/pi-btw",
-    "git:github.com/himorishige/pi-coding-agent-extensions"
+    "git:github.com/himorishige/pi-coding-agent-extensions",
+    "npm:@czottmann/pi-automode"
   ],
   "lastChangelogVersion": "0.84.2",
   "theme": "dark",

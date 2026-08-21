@@ -140,7 +140,10 @@
 "~/.codex/hooks.json" = { source = ".config/codex/hooks.json", mode = "symlink" }
 # pi も ~/.claude と同じ理由でディレクトリごとは張らない。~/.pi/agent/ には
 # auth.json（provider の資格情報）と models-store.json（取得済みモデルカタログ）が
-# 同居しており、どちらもリポジトリに入れてはいけない。管理対象の 4 つだけを張る。
+# 同居しており、どちらもリポジトリに入れてはいけない。管理対象だけを個別に張る。
+# extensions/ 配下は拡張が自分で作るディレクトリ（logs/ など）なので、同じ理由で
+# ディレクトリごとではなく config.json だけを張る。
+"~/.pi/agent/extensions/pi-permission-system/config.json" = { source = ".config/pi/permission-system.json", mode = "symlink" }
 "~/.pi/agent/keybindings.json" = { source = ".config/pi/keybindings.json", mode = "symlink" }
 "~/.pi/agent/models.json" = { source = ".config/pi/models.json", mode = "symlink" }
 "~/.pi/agent/settings.json" = { source = ".config/pi/settings.json", mode = "symlink" }

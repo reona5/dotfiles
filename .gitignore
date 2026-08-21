@@ -68,6 +68,7 @@
 /.config/pi/*
 !/.config/pi/keybindings.json
 !/.config/pi/models.json
+!/.config/pi/permission-system.json
 !/.config/pi/settings.json
 !/.config/pi/turn-recap.json
 !/.config/pnpm/

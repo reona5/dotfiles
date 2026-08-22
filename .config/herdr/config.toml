@@ -10,7 +10,7 @@ name = "catppuccin"
 auto_switch = false
 
 [theme.custom]
-panel_bg = "terminal"
+panel_bg = "reset"
 
 [terminal]
 # 旧 set -g default-shell /bin/zsh

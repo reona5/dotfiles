@@ -36,6 +36,11 @@ between decisions one-by-one. For each question, provide your recommended answer
 Ask the questions one at a time, waiting for feedback on each question before
 continuing. Asking multiple questions at once is bewildering.
 
+Put each question through the selection dialog the harness provides — `AskUserQuestion`
+in Claude Code, the `questionnaire` tool in pi — with 2-4 concrete options and your
+recommendation first. A decision I can settle with one keystroke beats a paragraph of
+prose I have to reply to. Fall back to plain text only when no such tool exists.
+
 If a *fact* can be found by exploring the environment (filesystem, tools, etc.),
 look it up rather than asking me. The *decisions*, though, are mine — put each one
 to me and wait for my answer. When I use a fuzzy or overloaded term, sharpen it on

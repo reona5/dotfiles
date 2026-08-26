@@ -1,6 +1,6 @@
 {
   "defaultProvider": "switchyard",
-  "defaultModel": "auto",
+  "defaultModel": "k3-only",
   "enableInstallTelemetry": false,
   "enableAnalytics": false,
   "subagents": {
@@ -19,7 +19,13 @@
     "npm:pi-subagents",
     "npm:@gotgenes/pi-permission-system",
     "npm:@narumitw/pi-btw",
-    "git:github.com/himorishige/pi-coding-agent-extensions",
+    {
+      "source": "git:github.com/himorishige/pi-coding-agent-extensions",
+      "extensions": [
+        "./extensions/focus-ui.ts",
+        "./extensions/plan-mode/index.ts"
+      ]
+    },
     "npm:pi-web-access",
     "npm:pi-lens",
     "git:github.com/ahm3tj4f/pi-undo",

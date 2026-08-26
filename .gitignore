@@ -66,6 +66,8 @@
 # ため、既定で全無視し追跡するものだけを拾う。
 !/.config/pi/
 /.config/pi/*
+!/.config/pi/extensions/
+!/.config/pi/extensions/*.ts
 !/.config/pi/keybindings.json
 !/.config/pi/models.json
 !/.config/pi/permission-system.json

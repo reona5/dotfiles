@@ -24,3 +24,10 @@ Before grilling, run this and read its output:
   just grill the plan as-is.
 
 Then conduct the grilling.
+
+## Ask with options, not prose
+
+Put each question through the selection dialog the harness provides — `AskUserQuestion`
+in Claude Code, the `questionnaire` tool in pi — with 2-4 concrete options and your
+recommendation first. A decision I can settle with one keystroke beats a paragraph of
+prose I have to reply to. Fall back to plain text only when no such tool exists.

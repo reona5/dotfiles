@@ -22,8 +22,8 @@
     {
       "source": "git:github.com/himorishige/pi-coding-agent-extensions",
       "extensions": [
-        "./extensions/focus-ui.ts",
-        "./extensions/plan-mode/index.ts"
+        "extensions/focus-ui.ts",
+        "extensions/plan-mode/index.ts"
       ]
     },
     "npm:pi-web-access",
@@ -33,7 +33,7 @@
     "npm:pi-codex-image-gen",
     "git:github.com/earendil-works/pi-transcribe"
   ],
-  "lastChangelogVersion": "0.84.2",
+  "lastChangelogVersion": "0.84.3",
   "theme": "dark",
   "tuiMode": "fullscreen",
   "defaultThinkingLevel": "medium"

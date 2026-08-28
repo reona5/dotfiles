@@ -12,6 +12,7 @@
 #
 # 実行:  mise bootstrap        （リポジトリ直下で。config は symlink されないため）
 # 確認:  mise bootstrap -n     （dry-run。適用せず差分だけ表示）
+# 更新:  mise run update       （brew && mise の管理下をまとめて最新化）
 
 # ---------------------------------------------------------------------------
 # system packages（旧 .Brewfile + brew タスク）
@@ -309,19 +310,43 @@ done
   # 更新は `gh skill update`。冪等（--force で既存を上書き）。
   "command -v gh >/dev/null 2>&1 && gh skill install github/gh-stack gh-stack --agent claude-code --scope user --force || true",
   '''
-# CleanShot は Homebrew cask の最新版(4.8.9)が手持ちライセンスの対象外のため、
-# brew-cask では管理せず、公式 CDN の versioned DMG からライセンス済みの
-# 4.7.7 を固定インストールする（Homebrew cask は旧バージョン固定に非対応）。
-# 既に導入済みなら何もしない（冪等）。
+# CleanShot は最新版が手持ちライセンスの対象外のため、公式 CDN の versioned DMG から
+# ライセンス済みの 4.7.7 を固定インストールする（Homebrew cask は旧バージョン固定に非対応）。
+#
+# cask として入っていたら外す。brew 管理下に居る限り `brew upgrade`（= `mise run update`）が
+# 問答無用で最新へ上げてしまい、実際に 4.8.9 -> 4.8.10 へ上がっていた。cask には brew pin が
+# 無いので、管理から外すことが brew に触らせない唯一の手段。
+#
+# 判定は「入っているか」ではなく「版が 4.7.7 か」で見る。以前の導入済みチェックだけでは、
+# brew に置き換えられても条件が偽のままで、上記の drift を取りこぼしていた。
+#
+# アプリ自身の自動更新（Sparkle）は既に無効なので、brew から外せば版は固定される。
+# 念のため崩れていないか確かめるなら:
+#   defaults read pl.maketheweb.cleanshotx | grep -E 'SUEnableAutomaticChecks|SUAutomaticallyUpdate'
+# どちらも 0 であること。
 CLEANSHOT_VERSION=4.7.7
-if [ ! -d "/Applications/CleanShot X.app" ]; then
+app="/Applications/CleanShot X.app"
+if command -v brew >/dev/null 2>&1 && brew list --cask cleanshot >/dev/null 2>&1; then
+  brew uninstall --cask cleanshot
+fi
+current="$(defaults read "$app/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || true)"
+if [ "$current" != "$CLEANSHOT_VERSION" ]; then
+  # 起動中のまま差し替えると壊れたバンドルで動き続けるので、先に落として後で元に戻す。
+  # 元が停止していたなら起動しない（bootstrap が勝手に GUI を立ち上げないようにする）。
+  was_running=false
+  pgrep -x "CleanShot X" >/dev/null 2>&1 && was_running=true
+  osascript -e 'quit app "CleanShot X"' >/dev/null 2>&1 || true
   tmp="$(mktemp -d)"
   curl -fsSL -o "$tmp/CleanShot.dmg" "https://updates.getcleanshot.com/v3/CleanShot-X-${CLEANSHOT_VERSION}.dmg"
   hdiutil attach -nobrowse -quiet "$tmp/CleanShot.dmg" -mountpoint "$tmp/mnt"
+  # cp -R の上書きでは旧版のファイルが残るため、バンドルごと置き換える。
+  # 設定とライセンスは ~/Library 配下なので、ここを消しても失われない。
+  rm -rf "$app"
   cp -R "$tmp/mnt/CleanShot X.app" /Applications/
   hdiutil detach -quiet "$tmp/mnt"
-  xattr -dr com.apple.quarantine "/Applications/CleanShot X.app" 2>/dev/null || true
+  xattr -dr com.apple.quarantine "$app" 2>/dev/null || true
   rm -rf "$tmp"
+  $was_running && open -a "$app" >/dev/null 2>&1 || true
 fi
 ''',
   '''
@@ -371,4 +396,49 @@ if [ "$(cat /etc/pam.d/sudo_local 2>/dev/null)" != "$desired" ]; then
   fi
 fi
 ''',
+]
+
+# ---------------------------------------------------------------------------
+# 日常の更新（brew update && brew upgrade 相当をまとめる）
+#   mise run update
+#
+# 更新対象は 3 系統に分かれており、どれか 1 つでは全部は上がらない:
+#   1. brew            [bootstrap.packages] の formula / cask と、bootstrap タスクが
+#                      brew install しているもの（tap formula・cask 群）、そして mise 本体。
+#                      mise の brew backend で入れたものも Cellar に居るので brew outdated に出る。
+#                      `mise bootstrap` は導入済みならスキップするだけでアップグレードはしないため、
+#                      これらを上げられるのは brew だけ。
+#   2. mise upgrade    ~/.config/mise/config.toml の [tools]（ランタイム・cargo・github backend）。
+#                      config が "latest" 指定なので範囲指定を気にせず最新へ上がる。
+#   3. mise run bootstrap
+#                      brew では戻せないものの復元。特に hermes-agent の slack extra は venv ごと
+#                      Cellar 配下にあり `brew upgrade hermes-agent` で消えるため、brew の後に
+#                      流す必要がある。ついでに uv / pnpm global / pi 拡張も最新化される。冪等。
+#
+# brew upgrade は formula と cask の両方を見る（--cask の指定は要らない）。--greedy は付けない。
+# 自前で自動更新する cask まで brew が上書きしてしまい、ライセンス都合で 4.7.7 に固定している
+# CleanShot のような「brew に任せない」判断と衝突するため。
+#
+# 注: このタスクは対話的に（自分のシェルから）実行すること。sudo を要求する箇所が 2 つある。
+#   - 自己更新機構を持つ cask（Slack / Google Chrome）は /Applications 配下が root:wheel に
+#     なっており、chown に sudo が要る。無いと `Permission denied @ apply2files` で失敗する。
+#   - bootstrap の sudo_local（Touch ID）と Capsomnia。こちらは案内を出してスキップされる。
+# 先に `sudo -v` を済ませておくと途中で止まらない。あわせて対象アプリは終了しておくこと。
+# ---------------------------------------------------------------------------
+[tasks.update]
+description = "brew と mise の管理下をまとめて最新化する"
+run = [
+  '''
+if command -v brew >/dev/null 2>&1; then
+  brew update
+  # cask は対象アプリが起動していると chown に失敗し、その 1 本のために brew 全体が
+  # 非ゼロで終わる。ここで止めると後続の mise upgrade まで巻き添えになるので、案内だけ
+  # 出して先へ進める（失敗した cask はアプリを終了してから brew upgrade を流し直す）。
+  brew upgrade || echo "brew upgrade: 一部失敗。起動中のアプリを終了してから \`brew upgrade\` を流し直すこと。"
+else
+  echo "brew not found; skipping system packages"
+fi
+''',
+  "mise upgrade",
+  "mise run bootstrap",
 ]

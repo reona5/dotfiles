@@ -182,5 +182,8 @@
       "**Org-specific CLIs**: `mise` (bootstrap/tool management), `mas`, `ghq`, `herdr` and `herdr-remote`, `moshi` / `moshi-hook`, `actionlint`, `jj`, `ni`/`nr`, `cld`, `op`, `tailscale`",
       "**Routine under repo prefix**: routine work is confined to `~/src/github.com/reona5/` (ghq layout); `mise bootstrap`, `mise -n` previews and `actionlint` runs in the dotfiles checkout are the everyday loop"
     ]
+  },
+  "sandbox": {
+    "enabled": true
   }
 }

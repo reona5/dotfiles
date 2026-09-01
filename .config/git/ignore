@@ -13,3 +13,5 @@ GTAGS
 .github/copilot-instructions.md
 **/*.local.*
 **/.envrc
+
+**/.claude/.cc-writes/

@@ -139,6 +139,49 @@
     "lua-lsp@claude-plugins-official": true
   },
   "language": "japanese",
+  "sandbox": {
+    "enabled": true,
+    "network": {
+      "strictAllowlist": true,
+      "allowedDomains": [
+        "github.com",
+        "*.github.com",
+        "*.githubusercontent.com",
+        "registry.npmjs.org",
+        "*.npmjs.org",
+        "pypi.org",
+        "files.pythonhosted.org",
+        "crates.io",
+        "static.crates.io",
+        "proxy.golang.org",
+        "sum.golang.org",
+        "formulae.brew.sh",
+        "ghcr.io",
+        "*.docker.io",
+        "*.docker.com",
+        "*.amazonaws.com",
+        "*.anthropic.com",
+        "*.ts.net"
+      ],
+      "allowUnixSockets": [
+        "~/.gnupg/S.gpg-agent",
+        "/tmp/claude-501",
+        "/private/tmp/claude-501"
+      ],
+      "allowLocalBinding": true
+    },
+    "filesystem": {
+      "allowWrite": [
+        "~/.gnupg"
+      ],
+      "allowRead": [
+        "/etc/ssl/cert.pem",
+        "/private/etc/ssl/cert.pem",
+        "/opt/homebrew/etc/ca-certificates/cert.pem",
+        "/opt/homebrew/share/ca-certificates/cacert.pem"
+      ]
+    }
+  },
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
@@ -182,18 +225,5 @@
       "**Org-specific CLIs**: `mise` (bootstrap/tool management), `mas`, `ghq`, `herdr` and `herdr-remote`, `moshi` / `moshi-hook`, `actionlint`, `jj`, `ni`/`nr`, `cld`, `op`, `tailscale`",
       "**Routine under repo prefix**: routine work is confined to `~/src/github.com/reona5/` (ghq layout); `mise bootstrap`, `mise -n` previews and `actionlint` runs in the dotfiles checkout are the everyday loop"
     ]
-  },
-  "sandbox": {
-    "enabled": true,
-    "filesystem": {
-      "allowWrite": [
-        "~/.gnupg"
-      ]
-    },
-    "network": {
-      "allowUnixSockets": [
-        "~/.gnupg/S.gpg-agent"
-      ]
-    }
   }
 }

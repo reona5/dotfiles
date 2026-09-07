@@ -15,13 +15,18 @@ ambiguous which one I mean, ask.
 ## 2. Format the comment body
 
 Docs get long and would make the issue noisy, so keep the **first view simple**: a
-short visible header line saying what this is (and which skill session produced it,
-e.g. `` `/to-spec` session ``), then the document collapsed inside one `<details>`
-block with a plain summary naming the document type — `仕様`, `設計資料`, etc. No
-item counts, no English labels, no decoration:
+short visible header line naming the **activity** that produced this, then the
+document collapsed inside one `<details>` block with a plain summary naming the
+document type — `仕様`, `設計資料`, etc. No item counts, no English labels, no
+decoration.
+
+Never put a custom skill name in the header — `/to-spec`, `/deliver` and friends mean
+nothing to the rest of the team. For a document that came out of a grilling session
+(the usual case) write `` `/grilling` セッション ``; if it didn't, write a short plain
+line saying what it is instead.
 
 ```md
-`/to-spec` session
+`/grilling` セッション
 
 <details>
 <summary>仕様</summary>

@@ -1,5 +1,5 @@
 ---
-name: grill-to-pr
+name: deliver
 description: The full delivery flow for the branch's linked issue — grill the plan, distill a spec, post it to the issue, implement, open a PR (assignee me, Copilot review), then run a parallel multi-agent code review.
 disable-model-invocation: true
 ---
@@ -17,7 +17,7 @@ Branches here often encode a GitHub issue number (e.g. `feat/2105-insight-index`
 Run this and read its output:
 
 ```sh
-~/.claude/skills/grill-to-pr/resolve-issue.sh
+~/.claude/skills/deliver/resolve-issue.sh
 ```
 
 - If it prints an issue, treat its title / body / 完成の定義 (acceptance criteria) /
@@ -68,10 +68,13 @@ Assemble the accumulated material into a spec using the format in
 ## 4. to-ticket: post the spec to the issue ✋
 
 Specs get long and would make the issue noisy, so keep the **first view simple**:
-a short visible header line, then the spec collapsed inside one `<details>` block:
+a short visible header line, then the spec collapsed inside one `<details>` block.
+The header line names the **activity**, not the skill — write `` `/grilling` セッション ``
+and never the custom skill name: `/deliver` means nothing to the rest of the team,
+while a grilling session is something they can read.
 
 ```md
-`/grill-to-pr` session
+`/grilling` セッション
 
 <details>
 <summary>仕様</summary>

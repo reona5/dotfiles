@@ -68,10 +68,12 @@ When we reach shared understanding:
    long and would make the issue noisy, so keep the **first view simple**: a short
    visible header line, then the actual 設計資料 collapsed inside one `<details>`
    block with a plain summary. No item counts, no English labels, no decoration —
-   just `設計資料`:
+   just `設計資料`. The header line names the **activity**, not the skill — write
+   `` `/grilling` セッション `` and never the custom skill name, which means nothing
+   to the rest of the team:
 
    ```md
-   `/grill-with-docs` session
+   `/grilling` セッション
 
    <details>
    <summary>設計資料</summary>

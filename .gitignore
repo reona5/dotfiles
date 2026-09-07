@@ -35,6 +35,7 @@
 /.config/claude/skills/gog-*
 # gh 由来の skill は mise.toml の bootstrap で `gh skill install` する（実体は持たない）。
 /.config/claude/skills/gh-stack/
+/.config/claude/skills/show-me/
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/

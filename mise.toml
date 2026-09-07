@@ -309,6 +309,9 @@ done
   # gh 由来の skill は dotfiles に実体を持たず（.gitignore 済み）、gh を source of truth にする。
   # 更新は `gh skill update`。冪等（--force で既存を上書き）。
   "command -v gh >/dev/null 2>&1 && gh skill install github/gh-stack gh-stack --agent claude-code --scope user --force || true",
+  # humanlayer/skills は skill 数が多いため、名前ではなくリポジトリ内の正確なパスを渡して
+  # ツリー全走査を避ける。
+  "command -v gh >/dev/null 2>&1 && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent claude-code --scope user --force || true",
   '''
 # CleanShot は最新版が手持ちライセンスの対象外のため、公式 CDN の versioned DMG から
 # ライセンス済みの 4.7.7 を固定インストールする（Homebrew cask は旧バージョン固定に非対応）。

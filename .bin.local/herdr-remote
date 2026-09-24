@@ -5,21 +5,21 @@
 # HERDR_SOCKET_PATH で差し替えられるので、SSH でリモートのソケットを手元へ転送すれば
 # 手元の herdr コマンドがそのままリモートのサーバーを操作できる。
 #
-# Raycast の Herdr 拡張は Herdr Binary(herdrPath) プリファレンスで実行ファイルを
-# 指定できるため、そこにこのスクリプトを指すとワークスペースや worktree の管理が
-# リモートのサーバーに対して行われる。拡張は 5 秒間隔でポーリングするので、
-# 同時に呼ばれてもトンネルを壊し合わないようロックを取る。
+# Herdr の Raycast 拡張（Tinycast でもそのまま動く）は Herdr Binary(herdrPath)
+# プリファレンスで実行ファイルを指定できるため、そこにこのスクリプトを指すと
+# ワークスペースや worktree の管理がリモートのサーバーに対して行われる。拡張は
+# 5 秒間隔でポーリングするので、同時に呼ばれてもトンネルを壊し合わないようロックを取る。
 #
 # ただし worktree の作成・削除はふだん手元の MacBook で行うため、既定はローカル
 # 接続とし、リモートを見るのは HERDR_REMOTE_CLI を明示的に有効にしたときだけにする。
-# こうしておくと Raycast 側の設定は本スクリプトを指したまま固定でよく、切り替えは
+# こうしておくとランチャー側の設定は本スクリプトを指したまま固定でよく、切り替えは
 # remote.env の 1 行で済む。
 #
 # 接続先はこのファイルに書かず、dotfiles 管理外の設定ファイルから読む。
 #
 #   ~/.config/herdr/remote.env
 #     HERDR_REMOTE_HOST=<~/.ssh/config で定義した Host エイリアス>
-#     HERDR_REMOTE_CLI=1                         # 任意。CLI/Raycast をリモートへ向ける
+#     HERDR_REMOTE_CLI=1                         # 任意。CLI/ランチャー拡張をリモートへ向ける
 #     HERDR_REMOTE_SOCK=/tmp/herdr-remote.sock   # 任意
 #
 # HERDR_REMOTE_HOST は herdr-remote-attach も参照する。あちらは接続先が必須なので、
@@ -29,7 +29,7 @@
 # 手元と違っていても設定不要。
 #
 # HERDR_REMOTE_DEBUG=1 を渡すと実行内容を HERDR_REMOTE_LOG(既定 /tmp/herdr-remote.log)
-# に記録する。Raycast のように env が細い呼び出し元を調べるとき用。
+# に記録する。ランチャー拡張のように env が細い呼び出し元を調べるとき用。
 
 set -eu
 

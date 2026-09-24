@@ -85,7 +85,7 @@
 "brew-cask:iterm2" = "latest"
 "brew-cask:muzzle" = "latest"
 "brew-cask:nani" = "latest"
-# raycast も bootstrap タスク側で brew から入れる（下記参照）
+# tinycast も bootstrap タスク側で brew から入れる（下記参照）
 "brew-cask:sequel-ace" = "latest"
 "brew-cask:slack" = "latest"
 "brew-cask:spotify" = "latest"
@@ -275,9 +275,15 @@ fi
   "command -v brew >/dev/null 2>&1 && brew install --cask google-japanese-ime gyazo || true",
   # 配布 URL に拡張子がない cask も brew で入れる。mise の brew-cask は URL から
   # アーカイブ形式を判定するため展開に失敗し、`app artifact ... was not found` で落ちる。
-  #   raycast:            https://releases.raycast.com/releases/<ver>/download?build=arm
   #   visual-studio-code: https://update.code.visualstudio.com/<ver>/darwin-arm64/stable
-  "command -v brew >/dev/null 2>&1 && brew install --cask raycast visual-studio-code || true",
+  "command -v brew >/dev/null 2>&1 && brew install --cask visual-studio-code || true",
+  # ランチャー。Raycast から移行した（Raycast のエクスポート .rayconfig と、
+  # ~/.config/raycast/extensions に入っている Raycast 拡張をそのまま取り込める）。
+  # サードパーティ tap 配布で、Homebrew は `brew trust` した tap しか読み込まない。
+  # trust の記録は $XDG_CONFIG_HOME/homebrew/trust.json（dotfiles 管理外）に入るので、
+  # 宣言では表せず bootstrap で trust してから入れる。どちらも冪等。
+  # 本体は毎日自己更新し、`brew upgrade` は意図的にスキップされる。
+  "command -v brew >/dev/null 2>&1 && brew trust --tap abue-ammar/tinycast && brew install --cask abue-ammar/tinycast/tinycast || true",
   # herdr プラグイン（GitHub 配布・dotfiles にはファイルを持たないため bootstrap で導入）。
   # hunk レビュー統合。冪等（導入済みなら再取得のみ）。
   "command -v herdr >/dev/null 2>&1 && herdr plugin install yuucu/herdr-hunk --yes || true",
@@ -308,10 +314,12 @@ done
 ''',
   # gh 由来の skill は dotfiles に実体を持たず（.gitignore 済み）、gh を source of truth にする。
   # 更新は `gh skill update`。冪等（--force で既存を上書き）。
-  "command -v gh >/dev/null 2>&1 && gh skill install github/gh-stack gh-stack --agent claude-code --scope user --force || true",
+  # 自作 skill と同じく Claude Code（~/.claude/skills）と Agent Skills 標準（~/.agents/skills、--agent codex）の両方へ入れる。
+  "command -v gh >/dev/null 2>&1 && gh skill install github/gh-stack gh-stack --agent claude-code --scope user --force && gh skill install github/gh-stack gh-stack --agent codex --scope user --force || true",
   # humanlayer/skills は skill 数が多いため、名前ではなくリポジトリ内の正確なパスを渡して
   # ツリー全走査を避ける。
-  "command -v gh >/dev/null 2>&1 && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent claude-code --scope user --force || true",
+  "command -v gh >/dev/null 2>&1 && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent claude-code --scope user --force && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent codex --scope user --force || true",
+  "command -v gh >/dev/null 2>&1 && gh skill install coji/natural-japanese natural-japanese --agent claude-code --scope user --force && gh skill install coji/natural-japanese natural-japanese --agent codex --scope user --force || true",
   '''
 # CleanShot は最新版が手持ちライセンスの対象外のため、公式 CDN の versioned DMG から
 # ライセンス済みの 4.7.7 を固定インストールする（Homebrew cask は旧バージョン固定に非対応）。

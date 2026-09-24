@@ -36,6 +36,10 @@
 # gh 由来の skill は mise.toml の bootstrap で `gh skill install` する（実体は持たない）。
 /.config/claude/skills/gh-stack/
 /.config/claude/skills/show-me/
+/.config/claude/skills/natural-japanese/
+# synced/ は claude.ai の組織スキルを Claude Code が同期して置くキャッシュ（バケット ID 付き）。
+# ログインすれば再取得されるので dotfiles には持たない。
+/.config/claude/skills/synced/
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/

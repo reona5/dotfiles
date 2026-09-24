@@ -140,9 +140,8 @@
   },
   "language": "japanese",
   "sandbox": {
-    "enabled": true,
+    "enabled": false,
     "network": {
-      "strictAllowlist": true,
       "allowedDomains": [
         "github.com",
         "*.github.com",
@@ -163,6 +162,7 @@
         "*.anthropic.com",
         "*.ts.net"
       ],
+      "strictAllowlist": true,
       "allowUnixSockets": [
         "~/.gnupg/S.gpg-agent",
         "/tmp/claude-501",

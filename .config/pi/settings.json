@@ -33,7 +33,7 @@
     "npm:pi-codex-image-gen",
     "git:github.com/earendil-works/pi-transcribe"
   ],
-  "lastChangelogVersion": "0.84.3",
+  "lastChangelogVersion": "0.85.1",
   "theme": "dark",
   "tuiMode": "fullscreen",
   "defaultThinkingLevel": "medium"

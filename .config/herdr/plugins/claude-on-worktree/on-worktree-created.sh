@@ -1,6 +1,6 @@
 #!/bin/sh
 # herdr の worktree.created イベントで、新しく作られた worktree の初期(root)ペインに
-# `pi` を流し込む。
+# `claude --dangerously-skip-permissions`（zeno の `cld`）を流し込む。
 #
 # herdr が注入する env のうち、新 worktree ワークスペースの root ペイン id が
 # HERDR_PANE_ID に入る（実測済み。worktree 直後は 1 ペインなのでそれが root）。
@@ -15,4 +15,4 @@ if [ -z "$pane" ] && [ -n "$HERDR_WORKSPACE_ID" ]; then
 fi
 [ -n "$pane" ] || exit 0
 
-"$herdr" pane run "$pane" 'pi'
+"$herdr" pane run "$pane" 'claude --dangerously-skip-permissions'

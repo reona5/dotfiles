@@ -1,14 +1,14 @@
 # dotfiles と環境構築を mise の native bootstrap へ寄せる。
 #
 # `mise bootstrap` が以下を順に、宣言的かつ idempotent に適用する:
-#   1. [bootstrap.packages]     system packages（brew formula / brew-cask / mas）
+#   1. [bootstrap.packages]     system packages（brew formula / brew-cask / mas / macos-app）
 #   2. [bootstrap.repos]        別リポジトリの clone（switchyard-bundle）
 #   3. [dotfiles]               $HOME への symlink
 #   4. shell activation
 #   5. [bootstrap.macos.defaults] macOS のシステム設定
-#   8. [bootstrap.user]         ログインシェル
-#   9. mise install             [tools] のランタイム（~/.config/mise/config.toml）
-#   10. `bootstrap` タスク        宣言で表せない補助（uv / pnpm global / agent skill）
+#   6. [bootstrap.user]         ログインシェル
+#   7. mise install             [tools] のランタイム（~/.config/mise/config.toml）
+#   8. `bootstrap` タスク         宣言で表せない補助（uv / pnpm global / agent skill）
 #
 # 実行:  mise bootstrap        （リポジトリ直下で。config は symlink されないため）
 # 確認:  mise bootstrap -n     （dry-run。適用せず差分だけ表示）
@@ -70,8 +70,8 @@
 "brew-cask:chromedriver" = "latest"
 "brew-cask:claude" = "latest"
 "brew-cask:claude-code" = "latest"
-# CleanShot はここで管理しない。最新版がライセンス対象外のため、
-# 下の bootstrap タスクでライセンス済みの 4.7.7 に固定して入れる。
+# CleanShot は cask にしない。最新版がライセンス対象外のため、下の
+# "macos-app:cleanshot" でライセンス済みの版に固定して入れる。
 "brew-cask:codex" = "latest"
 "brew-cask:cursor" = "latest"
 "brew-cask:deepl" = "latest"
@@ -98,6 +98,21 @@
 # 入れてからここに足すこと。この理由で RunCat Neo (6757801838) と LINE (539883307) は
 # 宣言していない。
 "mas:497799835" = "latest"      # Xcode
+
+# cask を使わず、公式 CDN の versioned DMG から直接入れるアプリ（mise 2026.9.11+）。
+# CleanShot は最新版が手持ちライセンスの対象外なので、ライセンス済みの版に固定する。
+# cask で入れると `brew upgrade`（= `mise run update`）が問答無用で最新へ上げてしまう
+# （実際に 4.8.9 -> 4.8.10 へ上がっていた）。cask には brew pin が無いので、brew に
+# 触らせないことが固定の唯一の手段。アプリ自身の自動更新（Sparkle）は無効にしてある:
+#   defaults read pl.maketheweb.cleanshotx | grep -E 'SUEnableAutomaticChecks|SUAutomaticallyUpdate'
+# どちらも 0 であること。版を上げるときは version と sha256 の 2 か所を書き換える。
+# adopt は、mise 導入前に手で入れた同じ中身の .app をそのまま引き継ぐため。
+[bootstrap.packages."macos-app:cleanshot"]
+version = "4.7.8"
+url = "https://updates.getcleanshot.com/v3/CleanShot-X-{{version}}.dmg"
+sha256 = "6151cdfcc206f01918b76139e09d8d0327cb702627da9f2324c47290842d7af6"
+artifact = "CleanShot X.app"
+adopt = true
 
 # ---------------------------------------------------------------------------
 # 別リポジトリのチェックアウト
@@ -198,10 +213,10 @@ fi
 ]
 
 # ---------------------------------------------------------------------------
-# 宣言で表せない補助（bootstrap の step 10 で自動実行される escape hatch）
+# 宣言で表せない補助（bootstrap の step 8 で自動実行される escape hatch）
 # ---------------------------------------------------------------------------
 [tasks.bootstrap]
-description = "uv / pnpm global / Switchyard / pi 拡張 / tap formula / herdr プラグイン / agent skill / ライセンス版 CleanShot / Capsomnia を導入する"
+description = "uv / pnpm global / Switchyard / pi 拡張 / tap formula / herdr プラグイン / agent skill / Capsomnia を導入する"
 run = [
   "curl -LsSf https://astral.sh/uv/install.sh | sh",
   "command -v pnpm >/dev/null 2>&1 && pnpm -g i || true",
@@ -321,46 +336,6 @@ done
   "command -v gh >/dev/null 2>&1 && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent claude-code --scope user --force && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent codex --scope user --force || true",
   "command -v gh >/dev/null 2>&1 && gh skill install coji/natural-japanese natural-japanese --agent claude-code --scope user --force && gh skill install coji/natural-japanese natural-japanese --agent codex --scope user --force || true",
   '''
-# CleanShot は最新版が手持ちライセンスの対象外のため、公式 CDN の versioned DMG から
-# ライセンス済みの 4.7.7 を固定インストールする（Homebrew cask は旧バージョン固定に非対応）。
-#
-# cask として入っていたら外す。brew 管理下に居る限り `brew upgrade`（= `mise run update`）が
-# 問答無用で最新へ上げてしまい、実際に 4.8.9 -> 4.8.10 へ上がっていた。cask には brew pin が
-# 無いので、管理から外すことが brew に触らせない唯一の手段。
-#
-# 判定は「入っているか」ではなく「版が 4.7.7 か」で見る。以前の導入済みチェックだけでは、
-# brew に置き換えられても条件が偽のままで、上記の drift を取りこぼしていた。
-#
-# アプリ自身の自動更新（Sparkle）は既に無効なので、brew から外せば版は固定される。
-# 念のため崩れていないか確かめるなら:
-#   defaults read pl.maketheweb.cleanshotx | grep -E 'SUEnableAutomaticChecks|SUAutomaticallyUpdate'
-# どちらも 0 であること。
-CLEANSHOT_VERSION=4.7.7
-app="/Applications/CleanShot X.app"
-if command -v brew >/dev/null 2>&1 && brew list --cask cleanshot >/dev/null 2>&1; then
-  brew uninstall --cask cleanshot
-fi
-current="$(defaults read "$app/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || true)"
-if [ "$current" != "$CLEANSHOT_VERSION" ]; then
-  # 起動中のまま差し替えると壊れたバンドルで動き続けるので、先に落として後で元に戻す。
-  # 元が停止していたなら起動しない（bootstrap が勝手に GUI を立ち上げないようにする）。
-  was_running=false
-  pgrep -x "CleanShot X" >/dev/null 2>&1 && was_running=true
-  osascript -e 'quit app "CleanShot X"' >/dev/null 2>&1 || true
-  tmp="$(mktemp -d)"
-  curl -fsSL -o "$tmp/CleanShot.dmg" "https://updates.getcleanshot.com/v3/CleanShot-X-${CLEANSHOT_VERSION}.dmg"
-  hdiutil attach -nobrowse -quiet "$tmp/CleanShot.dmg" -mountpoint "$tmp/mnt"
-  # cp -R の上書きでは旧版のファイルが残るため、バンドルごと置き換える。
-  # 設定とライセンスは ~/Library 配下なので、ここを消しても失われない。
-  rm -rf "$app"
-  cp -R "$tmp/mnt/CleanShot X.app" /Applications/
-  hdiutil detach -quiet "$tmp/mnt"
-  xattr -dr com.apple.quarantine "$app" 2>/dev/null || true
-  rm -rf "$tmp"
-  $was_running && open -a "$app" >/dev/null 2>&1 || true
-fi
-''',
-  '''
 # Capsomnia（Caps Lock で蓋を閉じてもスリープさせない）は Homebrew cask が無く、
 # GitHub Releases の pkg 配布のみ。特権ヘルパー（/Library/PrivilegedHelperTools/
 # capsomnia-pmset）を含むため .app コピーでは動かず、installer で入れる（要 sudo）。
@@ -427,8 +402,8 @@ fi
 #                      流す必要がある。ついでに uv / pnpm global / pi 拡張も最新化される。冪等。
 #
 # brew upgrade は formula と cask の両方を見る（--cask の指定は要らない）。--greedy は付けない。
-# 自前で自動更新する cask まで brew が上書きしてしまい、ライセンス都合で 4.7.7 に固定している
-# CleanShot のような「brew に任せない」判断と衝突するため。
+# 自前で自動更新する cask まで brew が上書きしてしまい、「brew に任せない」判断と衝突するため。
+# （ライセンス都合で版を固定している CleanShot は macos-app 管理なので、そもそも brew の対象外。）
 #
 # 注: このタスクは対話的に（自分のシェルから）実行すること。sudo を要求する箇所が 2 つある。
 #   - 自己更新機構を持つ cask（Slack / Google Chrome）は /Applications 配下が root:wheel に

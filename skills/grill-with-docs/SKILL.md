@@ -29,25 +29,19 @@ Before grilling, run this and read its output:
 
 ## 2. Grill relentlessly
 
-Interview me relentlessly about every aspect of this until we reach a shared
-understanding. Walk down each branch of the decision tree, resolving dependencies
-between decisions one-by-one. For each question, provide your recommended answer.
+Call the Skill tool with "grilling" and run that session.
 
 Ask the questions one at a time, waiting for feedback on each question before
-continuing. Asking multiple questions at once is bewildering.
+continuing — this replaces grilling's rounds. Asking multiple questions at once is
+bewildering. Still work the design tree: the next question comes from the frontier.
 
 Put each question through the selection dialog the harness provides — `AskUserQuestion`
 in Claude Code, the `questionnaire` tool in pi — with 2-4 concrete options and your
 recommendation first. A decision I can settle with one keystroke beats a paragraph of
 prose I have to reply to. Fall back to plain text only when no such tool exists.
 
-If a *fact* can be found by exploring the environment (filesystem, tools, etc.),
-look it up rather than asking me. The *decisions*, though, are mine — put each one
-to me and wait for my answer. When I use a fuzzy or overloaded term, sharpen it on
-the spot so we're precise — but this is just to keep the grilling clear, not a
-separate deliverable.
-
-Do not act on it until I confirm we have reached a shared understanding.
+When I use a fuzzy or overloaded term, sharpen it on the spot so we're precise — but
+this is just to keep the grilling clear, not a separate deliverable.
 
 ## 3. Build the 設計資料 as you go
 

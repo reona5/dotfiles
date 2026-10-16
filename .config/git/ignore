@@ -10,6 +10,8 @@ GRTAGS
 GTAGS
 .cache/
 .cursor/
+.codex/
+.agents/
 .github/copilot-instructions.md
 **/*.local.*
 **/.envrc

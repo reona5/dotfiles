@@ -18,6 +18,10 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
+  "skillOverrides": {
+    "natural-japanese": "off"
+  },
   "hooks": {
     "PermissionRequest": [
       {
@@ -115,6 +119,14 @@
             "async": true
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/japanese-guard.py"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -134,9 +146,10 @@
     "command": "python3 ~/.claude/statusline.py"
   },
   "enabledPlugins": {
-    "code-review@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true
+    "code-review@claude-plugins-official": false,
+    "frontend-design@claude-plugins-official": false,
+    "lua-lsp@claude-plugins-official": false,
+    "cc-plugin-you-should-know@builtin": true
   },
   "language": "japanese",
   "sandbox": {

@@ -37,6 +37,10 @@
 /.config/claude/skills/gh-stack/
 /.config/claude/skills/show-me/
 /.config/claude/skills/natural-japanese/
+/.config/claude/skills/grilling/
+/.config/claude/skills/pr/
+/.config/claude/skills/retro/
+/.config/claude/skills/writing-for-agents/
 # synced/ は claude.ai の組織スキルを Claude Code が同期して置くキャッシュ（バケット ID 付き）。
 # ログインすれば再取得されるので dotfiles には持たない。
 /.config/claude/skills/synced/

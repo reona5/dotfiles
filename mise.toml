@@ -136,6 +136,7 @@ adopt = true
 [dotfiles]
 "~/.bin" = { source = ".bin", mode = "symlink" }
 "~/.bin.local" = { source = ".bin.local", mode = "symlink" }
+"~/.claude/CLAUDE.md" = { source = ".config/claude/CLAUDE.md", mode = "symlink" }
 "~/.claude/settings.json" = { source = ".config/claude/settings.json", mode = "symlink" }
 "~/.claude/statusline.py" = { source = ".config/claude/statusline.py", mode = "symlink" }
 "~/.claude/skills" = { source = ".config/claude/skills", mode = "symlink" }
@@ -334,6 +335,12 @@ done
   # humanlayer/skills は skill 数が多いため、名前ではなくリポジトリ内の正確なパスを渡して
   # ツリー全走査を避ける。
   "command -v gh >/dev/null 2>&1 && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent claude-code --scope user --force && gh skill install humanlayer/skills plugins/show-me/skills/show-me --agent codex --scope user --force || true",
+  # mattpocock/skills も skill 数が多いのでパス指定。retro は writing-for-agents を Skill tool で呼ぶので併せて入れる。
+  # grilling はインタビュー本体の primitive。自作の grill-me / grill-with-docs / deliver が Skill tool で呼ぶ。
+  "command -v gh >/dev/null 2>&1 && gh skill install mattpocock/skills skills/productivity/grilling --agent claude-code --scope user --force && gh skill install mattpocock/skills skills/productivity/grilling --agent codex --scope user --force || true",
+  "command -v gh >/dev/null 2>&1 && gh skill install mattpocock/skills skills/engineering/pr --agent claude-code --scope user --force && gh skill install mattpocock/skills skills/engineering/pr --agent codex --scope user --force || true",
+  "command -v gh >/dev/null 2>&1 && gh skill install mattpocock/skills skills/engineering/retro --agent claude-code --scope user --force && gh skill install mattpocock/skills skills/engineering/retro --agent codex --scope user --force || true",
+  "command -v gh >/dev/null 2>&1 && gh skill install mattpocock/skills skills/productivity/writing-for-agents --agent claude-code --scope user --force && gh skill install mattpocock/skills skills/productivity/writing-for-agents --agent codex --scope user --force || true",
   "command -v gh >/dev/null 2>&1 && gh skill install coji/natural-japanese natural-japanese --agent claude-code --scope user --force && gh skill install coji/natural-japanese natural-japanese --agent codex --scope user --force || true",
   '''
 # Capsomnia（Caps Lock で蓋を閉じてもスリープさせない）は Homebrew cask が無く、

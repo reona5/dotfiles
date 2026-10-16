@@ -62,3 +62,5 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 
 . "$HOME/.local/share/../bin/env"
+export PATH=/opt/homebrew/opt/mysql-client@8.4/bin:$PATH
+export PATH="/opt/homebrew/opt/mysql-client@8.4/bin:$PATH"

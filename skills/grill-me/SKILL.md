@@ -4,7 +4,7 @@ description: A relentless interview to sharpen a plan or design.
 disable-model-invocation: true
 ---
 
-Run a `/grilling` session: a relentless interview to sharpen the plan or design at hand.
+Call the Skill tool with "grilling", then run that session with the local additions below.
 
 ## First, pull in the linked issue (if the branch has one)
 
@@ -23,9 +23,11 @@ Before grilling, run this and read its output:
 - If it prints nothing (no issue number in the branch, or the fetch failed),
   just grill the plan as-is.
 
-Then conduct the grilling.
+## Ask one question at a time, with options
 
-## Ask with options, not prose
+Ask the questions one at a time, waiting for feedback on each question before
+continuing — this replaces grilling's rounds. Asking multiple questions at once is
+bewildering. Still work the design tree: the next question comes from the frontier.
 
 Put each question through the selection dialog the harness provides — `AskUserQuestion`
 in Claude Code, the `questionnaire` tool in pi — with 2-4 concrete options and your

@@ -1,12 +1,12 @@
 ---
 name: deliver
-description: The full delivery flow for the branch's linked issue — grill the plan, distill a spec, post it to the issue, implement, open a PR (assignee me, Copilot review), then run a parallel multi-agent code review.
+description: The full delivery flow for the branch's linked issue — grill the plan, distill a spec, post it to the issue, implement, open a PR (assignee me, Copilot review), run a parallel multi-agent code review, then offer a retro.
 disable-model-invocation: true
 ---
 
 Run the full delivery flow for the branch's linked GitHub issue:
 
-**grilling → spec → issue comment → 実装 → PR → parallel code review → 指摘対応**
+**grilling → spec → issue comment → 実装 → PR → parallel code review → 指摘対応 → retro**
 
 Each phase feeds the next. Steps marked ✋ require my explicit confirmation
 before you act — everything else you drive yourself.
@@ -32,23 +32,18 @@ Run this and read its output:
 
 ## 2. Grill relentlessly
 
-Interview me relentlessly about every aspect of this until we reach a shared
-understanding. Grill the plan **against the issue**: surface gaps between the plan
-and what the issue asks for, unmet acceptance criteria, and unstated assumptions.
-Walk down each branch of the decision tree, resolving dependencies between
-decisions one-by-one. For each question, provide your recommended answer.
+Call the Skill tool with "grilling" and run that session. Grill the plan **against
+the issue**: surface gaps between the plan and what the issue asks for, unmet
+acceptance criteria, and unstated assumptions.
 
 Ask the questions one at a time, waiting for feedback on each question before
-continuing. Asking multiple questions at once is bewildering.
+continuing — this replaces grilling's rounds. Asking multiple questions at once is
+bewildering. Still work the design tree: the next question comes from the frontier.
 
 Put each question through the selection dialog the harness provides — `AskUserQuestion`
 in Claude Code, the `questionnaire` tool in pi — with 2-4 concrete options and your
 recommendation first. A decision I can settle with one keystroke beats a paragraph of
 prose I have to reply to. Fall back to plain text only when no such tool exists.
-
-If a *fact* can be found by exploring the environment (filesystem, tools, etc.),
-look it up rather than asking me. The *decisions*, though, are mine — put each one
-to me and wait for my answer.
 
 As we talk, accumulate three things in your working notes (not in repo files):
 
@@ -107,6 +102,12 @@ If implementation reveals the spec was wrong somewhere, stop and tell me: we adj
 the spec first (and note the deviation for the PR body), then continue. Silent
 drift between spec and code defeats the whole flow.
 
+Capture **before/after evidence** as you go — the PR body's Evidence section (step 6)
+needs it. Before changing behavior, record the "before": a test that fails on the
+current code, or the current output / screenshot. After the change, record the same
+thing passing / changed. Grabbing the "before" up front is the point; it can't be
+reconstructed once the code has moved on.
+
 Do not commit or push during this step — that happens at the step 6 checkpoint.
 
 ## 6. Open the PR ✋
@@ -125,13 +126,15 @@ rather than deleting a section that doesn't apply. If `.github/PULL_REQUEST_TEMP
 holds multiple templates, ask me which one to use. Fold the content described
 below into the template's corresponding sections instead of adding your own.
 
-Draft the PR and show me:
+Call the Skill tool with `pr` for the body's shape — Summary (the smallest visual
+that makes the change clear), Evidence (the before/after from step 5), Merge Danger
+(one-way or two-way door, plus blast radius). Draft the PR and show me:
 
 - **Title** — imperative, scoped to what the PR does
-- **Body** — a short summary, the 主要な設計判断 that a reviewer needs (one line
-  each), a reference to the issue (`Closes #N` only if this PR alone completes the
-  issue's 完成の定義; otherwise a plain `#N` reference), and what was tested —
-  laid out in the template's structure when one exists, or as-is when not
+- **Body** — the `pr` skill's sections, plus the 主要な設計判断 a reviewer needs (one
+  line each) and a reference to the issue (`Closes #N` only if this PR alone
+  completes the issue's 完成の定義; otherwise a plain `#N` reference) — laid out in
+  the template's structure when one exists, or in the `pr` skill's structure when not
 
 This single confirmation covers commit, push, and PR creation. Once I approve:
 
@@ -154,7 +157,7 @@ review runs in subagents (fresh context, no access to this conversation), and yo
 neither review nor filter the findings yourself. Your job here is orchestration
 only.
 
-Spawn **three review agents in a single message** so they run concurrently. Each
+Spawn **four review agents in a single message** so they run concurrently. Each
 gets a distinct axis and only the material its axis needs — never include your
 implementation narrative, your rationale, or any "this should be correct" framing
 in a reviewer prompt:
@@ -169,11 +172,18 @@ in a reviewer prompt:
 3. **Tests & regressions** — missing coverage for the new behavior, existing
    behavior the diff could break.
    Material: diff + spec (for what the intended behavior is).
+4. **Standards** — does the code follow this repo's documented coding standards
+   (`CODING_STANDARDS.md`, `CONTRIBUTING.md`, lint configs' intent, …), plus the
+   code smells in [SMELL-BASELINE.md](SMELL-BASELINE.md)? Cite the rule for each
+   documented-standard breach; label each smell as a judgement call.
+   Material: diff + the standards files you found + SMELL-BASELINE.md pasted in full.
 
-Tell each agent that findings must be anchored as `file:line`, and that **"no
-findings" is an acceptable answer** — padding with nitpicks is worse than silence.
+Tell each agent that findings must be anchored as `file:line`, and to report every
+issue it finds — tagged with severity and confidence — rather than filtering its own
+list; the adjudicator does the filtering. "No findings" is still an acceptable answer
+when there genuinely are none, but never invent findings to fill the list.
 
-While the agents run, Copilot is reviewing too. Once all three agents return,
+While the agents run, Copilot is reviewing too. Once all four agents return,
 fetch its comments and merge them into the same pool:
 
 ```sh
@@ -188,7 +198,8 @@ Then spawn a **fourth agent — the adjudicator** — with the raw findings from
 sources (the three agents + Copilot), the diff, the spec, and the issue. It
 verifies each finding against the actual code, drops what it can't confirm (marking
 borderline ones as unverified rather than deleting them), dedupes across sources,
-and ranks the survivors by severity. Relay its result as-is — do **not** re-filter
+and ranks the survivors by severity. Standards findings (documented-standard
+breaches and smells) are judgement calls, never ranked above a confirmed bug. Relay its result as-is — do **not** re-filter
 or veto findings yourself; an author dismissing critiques of their own code is
 exactly the bias this setup exists to remove. If you disagree with a finding, say
 so in your presentation, but the finding still goes to step 8.
@@ -210,5 +221,18 @@ all have been asked. Each question carries:
 
 Apply the chosen fixes, run the repo's tests again, then commit and push to the
 same PR branch. Skipped findings go into your final report so nothing is silently
-dropped. If a fix changed one of the spec's 主要な設計判断, post a short follow-up
-comment to the issue saying what changed and why.
+dropped. If a fix changed the spec (a 主要な設計判断, the scope, or the agreed
+behavior), don't post a new comment: edit the step-4 `/grilling` comment and append
+a `## 変更点` section at the end of the spec, just before `</details>`. Write only
+what changed and why — no backstory like 「レビューを受けて」, which means nothing to
+a reader of the spec. Edit it with
+`gh api --method PATCH repos/{owner}/{repo}/issues/comments/<comment-id> -F body=@<file>`,
+after fetching the current body so the existing spec is kept intact.
+
+## 9. Offer a retro
+
+Once the fixes are pushed, ask me whether to run `/retro` on this session (it's
+user-invoked, so suggest it — don't try to call it). Mention what would feed it:
+findings from step 8 that a deterministic check (linter rule, pre-commit hook, CI
+job) could have caught, and anything the Standards reviewer flagged that ought to be
+written down as a repo standard. Skipping is fine; the flow is done either way.

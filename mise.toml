@@ -52,11 +52,13 @@
 "brew:pam-reattach" = "latest"  # herdr / tmux 配下でも sudo の Touch ID を効かせる（下の bootstrap タスクで PAM に組み込む）
 "brew:pngpaste" = "latest"
 "brew:pnpm" = "latest"
+"brew:poppler" = "latest"       # pdftotext / pdftoppm（imozuru skill が PDF を文字にする）
 "brew:ripgrep" = "latest"
 "brew:ruby-lsp" = "latest"
 "brew:rustup" = "latest"        # 旧 Brewfile は rustup-init（現在の formula 名は rustup）
 "brew:sheldon" = "latest"
 "brew:starship" = "latest"
+"brew:tesseract" = "latest"     # 文字の層が無い PDF の OCR（imozuru skill）
 "brew:tree" = "latest"
 "brew:tree-sitter" = "latest"
 "brew:tree-sitter-cli" = "latest"
@@ -64,6 +66,7 @@
 "brew:vim" = "latest"
 "brew:yamllint" = "latest"
 "brew:yarn" = "latest"
+"brew:yt-dlp" = "latest"        # imozuru skill が YouTube の字幕を落とす
 # GUI アプリ（cask）
 "brew-cask:1password-cli" = "latest"
 "brew-cask:alacritty" = "latest"

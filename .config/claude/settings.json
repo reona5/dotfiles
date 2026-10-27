@@ -76,6 +76,15 @@
             "async": true
           }
         ]
+      },
+      {
+        "matcher": "mcp__.*__wrap_up",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/japanese-guard.py"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -149,7 +158,16 @@
     "code-review@claude-plugins-official": false,
     "frontend-design@claude-plugins-official": false,
     "lua-lsp@claude-plugins-official": false,
-    "cc-plugin-you-should-know@builtin": true
+    "cc-plugin-you-should-know@builtin": true,
+    "codex@openai-codex": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
   },
   "language": "japanese",
   "sandbox": {

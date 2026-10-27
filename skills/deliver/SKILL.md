@@ -45,6 +45,17 @@ in Claude Code, the `questionnaire` tool in pi — with 2-4 concrete options and
 recommendation first. A decision I can settle with one keystroke beats a paragraph of
 prose I have to reply to. Fall back to plain text only when no such tool exists.
 
+Before asking, classify the question. If the answer is a fact you can observe —
+current behavior, output, existing callers, whether an approach compiles or passes
+a test — go observe it (read the code, run it, sketch a throwaway probe) and bring
+me the result instead of the question. Spend my questions on product and preference
+calls no experiment can settle.
+
+When the change crosses a function or module boundary, sketch **two structurally
+different designs** before settling it — types, signatures, and module boundaries
+only, no implementation — and put the choice to me as a question with each sketch
+in the option's `preview`.
+
 As we talk, accumulate three things in your working notes (not in repo files):
 
 - **主要な設計判断** — decisions worth remembering, per the criteria in
@@ -104,9 +115,10 @@ drift between spec and code defeats the whole flow.
 
 Capture **before/after evidence** as you go — the PR body's Evidence section (step 6)
 needs it. Before changing behavior, record the "before": a test that fails on the
-current code, or the current output / screenshot. After the change, record the same
-thing passing / changed. Grabbing the "before" up front is the point; it can't be
-reconstructed once the code has moved on.
+current code, or the current output / screenshot. Run that test and watch it go
+**red** on the unchanged code — a test that already passes proves nothing about the
+change. After the change, record the same thing passing / changed. Grabbing the
+"before" up front is the point; it can't be reconstructed once the code has moved on.
 
 Do not commit or push during this step — that happens at the step 6 checkpoint.
 
@@ -153,14 +165,14 @@ enabled on the repo), report it and continue; don't block the flow on it.
 ## 7. Parallel code review
 
 You wrote this code, so **you are the most biased reviewer available** — the
-review runs in subagents (fresh context, no access to this conversation), and you
-neither review nor filter the findings yourself. Your job here is orchestration
-only.
+review runs in **GPT via `codex exec`** (a different model, fresh context, no access
+to this conversation) plus Copilot, and you neither review nor filter the findings
+yourself. Your job here is orchestration only.
 
-Spawn **four review agents in a single message** so they run concurrently. Each
-gets a distinct axis and only the material its axis needs — never include your
-implementation narrative, your rationale, or any "this should be correct" framing
-in a reviewer prompt:
+Write **four review prompts**, one per axis below, to `<dir>/<axis>.prompt.md` in a
+fresh temp directory. Each gets a distinct axis and only the material its axis
+needs, pasted into the prompt — never include your implementation narrative, your
+rationale, or any "this should be correct" framing in a reviewer prompt:
 
 1. **Correctness** — bugs, edge cases, race conditions; every finding needs a
    concrete failure scenario (inputs/state → wrong outcome).
@@ -178,12 +190,35 @@ in a reviewer prompt:
    documented-standard breach; label each smell as a judgement call.
    Material: diff + the standards files you found + SMELL-BASELINE.md pasted in full.
 
-Tell each agent that findings must be anchored as `file:line`, and to report every
+Tell each reviewer that findings must be anchored as `file:line`, and to report every
 issue it finds — tagged with severity and confidence — rather than filtering its own
 list; the adjudicator does the filtering. "No findings" is still an acceptable answer
-when there genuinely are none, but never invent findings to fill the list.
+when there genuinely are none, but never invent findings to fill the list. It may
+read the repo to check context, but must not modify anything.
 
-While the agents run, Copilot is reviewing too. Once all four agents return,
+The Correctness axis also runs on Claude: in the same message as the command below,
+spawn a subagent with the identical `correctness.prompt.md` content, so the same
+question reaches two model families. A bug both raise independently is the
+strongest signal this step produces.
+
+Then run all four codex reviews concurrently in one command, read-only and without
+persisting sessions:
+
+```sh
+root="$(git rev-parse --show-toplevel)"
+for axis in correctness spec-fit tests standards; do
+  codex exec -s read-only --ephemeral -C "$root" \
+    -o "<dir>/$axis.md" - < "<dir>/$axis.prompt.md" > "<dir>/$axis.log" 2>&1 &
+done
+wait
+```
+
+Each `<dir>/<axis>.md` holds that reviewer's final message. If a run fails (empty
+output — check its `.log`; `codex` needs network access, so it may have to run
+outside the Bash sandbox), report it and continue with the reviews that did come
+back; don't substitute your own review for the missing axis.
+
+While codex runs, Copilot is reviewing too. Once all five reviews return,
 fetch its comments and merge them into the same pool:
 
 ```sh
@@ -194,34 +229,45 @@ gh api "repos/{owner}/{repo}/pulls/$(gh pr view --json number -q .number)/commen
 Copilot usually takes a few minutes; if nothing has arrived yet, say so and move
 on — offer to re-run this fetch after the fixes rather than blocking.
 
-Then spawn a **fourth agent — the adjudicator** — with the raw findings from all
-sources (the three agents + Copilot), the diff, the spec, and the issue. It
-verifies each finding against the actual code, drops what it can't confirm (marking
-borderline ones as unverified rather than deleting them), dedupes across sources,
-and ranks the survivors by severity. Standards findings (documented-standard
-breaches and smells) are judgement calls, never ranked above a confirmed bug. Relay its result as-is — do **not** re-filter
+Then spawn a **Claude subagent — the adjudicator** — with the raw findings from all
+sources (the four GPT reviews, the Claude Correctness review, Copilot), the diff,
+the spec, and the issue. It verifies each finding against the actual code, dedupes
+across sources while recording which sources raised each one (a finding raised
+independently by GPT and Claude ranks above a single-source one), and sorts every
+finding into one bucket with a one-line rationale:
+
+- **Act on** — confirmed; would block a real PR (correctness, security, spec gap)
+- **Consider** — legitimate, but the cost of fixing now is debatable; or plausible
+  yet unverified
+- **Noted** — valid but not actionable now (cosmetic, premature, low impact)
+- **Dismissed** — wrong against the actual code, or missing context; with the reason
+
+Standards findings (documented-standard breaches and smells) are judgement calls,
+never placed above a confirmed bug. Relay its result as-is — do **not** re-filter
 or veto findings yourself; an author dismissing critiques of their own code is
 exactly the bias this setup exists to remove. If you disagree with a finding, say
 so in your presentation, but the finding still goes to step 8.
 
 ## 8. Ask about each finding ✋
 
-Put **every surviving finding to me individually with AskUserQuestion** — one
-question per finding, batching up to 4 findings per call (the tool's limit) until
-all have been asked. Each question carries:
+Put **every Act on and Consider finding to me individually with AskUserQuestion** —
+one question per finding, batching up to 4 findings per call (the tool's limit)
+until all have been asked. Each question carries:
 
 - `question`: the finding's one-line claim and its failure scenario
 - `header`: `file:line` (truncated to fit)
-- options: **「修正する (推奨)」 first** when the adjudicator confirmed the
-  finding; put 「スキップ」 first instead for findings it marked unverified or
-  cosmetic. Give each option a description saying what the fix would touch / what
-  skipping risks. If you (the author) disagree with a confirmed finding, note that
-  in the option description — the recommendation stays with the adjudicator's
-  verdict.
+- options: **「修正する (推奨)」 first** for Act on findings; 「スキップ」 first for
+  Consider findings. Give each option a description saying what the fix would
+  touch / what skipping risks. If you (the author) disagree with an Act on finding,
+  note that in the option description — the recommendation stays with the
+  adjudicator's verdict.
+
+List the Noted and Dismissed findings to me in one block, each with the
+adjudicator's rationale; I'll name any I want promoted to a question.
 
 Apply the chosen fixes, run the repo's tests again, then commit and push to the
-same PR branch. Skipped findings go into your final report so nothing is silently
-dropped. If a fix changed the spec (a 主要な設計判断, the scope, or the agreed
+same PR branch. Skipped, Noted, and Dismissed findings go into your final report so
+nothing is silently dropped. If a fix changed the spec (a 主要な設計判断, the scope, or the agreed
 behavior), don't post a new comment: edit the step-4 `/grilling` comment and append
 a `## 変更点` section at the end of the spec, just before `</details>`. Write only
 what changed and why — no backstory like 「レビューを受けて」, which means nothing to

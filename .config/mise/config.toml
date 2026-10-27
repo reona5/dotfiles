@@ -1,4 +1,5 @@
 [tools]
+"github:yusukebe/ax" = { version = "latest", exe = "ax" }
 bun = "latest"
 cargo-binstall = "latest"
 "cargo:cargo-edit" = "latest"

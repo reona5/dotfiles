@@ -1,4 +1,5 @@
 {
+  "$schema": "https://pi.dev/schemas/settings.schema.json",
   "defaultProvider": "switchyard",
   "defaultModel": "k3-only",
   "enableInstallTelemetry": false,
@@ -33,8 +34,13 @@
     "npm:pi-codex-image-gen",
     "git:github.com/earendil-works/pi-transcribe"
   ],
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "1.4.0",
   "theme": "dark",
   "tuiMode": "fullscreen",
-  "defaultThinkingLevel": "medium"
+  "defaultThinkingLevel": "medium",
+  "defaultTools": [
+    "+codemode"
+  ],
+  "cacheWarming": "idle",
+  "showCacheMissNotices": true
 }

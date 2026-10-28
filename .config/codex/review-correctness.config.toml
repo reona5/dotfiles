@@ -1,0 +1,3 @@
+# /deliver step 7 の Correctness レビュー専用（`codex exec -p review-correctness`）。
+# 不具合探しはモデルの強さが効くので、ここだけ上位モデルにする。他の観点は config.toml の model を使う。
+model = "gpt-6-astra"

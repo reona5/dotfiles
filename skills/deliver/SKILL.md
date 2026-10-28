@@ -207,11 +207,17 @@ persisting sessions:
 ```sh
 root="$(git rev-parse --show-toplevel)"
 for axis in correctness spec-fit tests standards; do
-  codex exec -s read-only --ephemeral -C "$root" \
+  profile=()
+  [ "$axis" = correctness ] && profile=(-p review-correctness)
+  codex exec "${profile[@]}" -s read-only --ephemeral -C "$root" \
     -o "<dir>/$axis.md" - < "<dir>/$axis.prompt.md" > "<dir>/$axis.log" 2>&1 &
 done
 wait
 ```
+
+Correctness runs on the stronger model set in `~/.codex/review-correctness.config.toml`;
+the other axes use the default `model` in `~/.codex/config.toml`. Model choice lives
+in those files, not in this command.
 
 Each `<dir>/<axis>.md` holds that reviewer's final message. If a run fails (empty
 output — check its `.log`; `codex` needs network access, so it may have to run

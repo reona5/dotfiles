@@ -158,6 +158,7 @@ adopt = true
 "~/.zsh" = { source = ".config/zsh", mode = "symlink" }
 "~/.codex/config.toml" = { source = ".config/codex/config.toml", mode = "symlink" }
 "~/.codex/hooks.json" = { source = ".config/codex/hooks.json", mode = "symlink" }
+"~/.codex/review-correctness.config.toml" = { source = ".config/codex/review-correctness.config.toml", mode = "symlink" }
 # pi も ~/.claude と同じ理由でディレクトリごとは張らない。~/.pi/agent/ には
 # auth.json（provider の資格情報）と models-store.json（取得済みモデルカタログ）が
 # 同居しており、どちらもリポジトリに入れてはいけない。管理対象だけを個別に張る。

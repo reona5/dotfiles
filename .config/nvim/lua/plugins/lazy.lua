@@ -16,11 +16,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "folke/tokyonight.nvim",
     priority = 1000,
     config = function()
-      require("plugins.catppuccin")
+      require("plugins.tokyonight")
     end
   },
   {

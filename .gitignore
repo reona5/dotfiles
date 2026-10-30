@@ -14,7 +14,7 @@
 !/.config/alacritty/
 /.config/alacritty/*
 !/.config/alacritty/alacritty.toml
-!/.config/alacritty/catppuccin-mocha.toml
+!/.config/alacritty/tokyonight_night.toml
 # ~/.claude は実ディレクトリのままにし（Claude Code がランタイムデータを書き込む）、
 # 管理対象だけを ~/.claude/<name> -> ここ、の個別 symlink で張る（mise.toml の [dotfiles]）。
 # 既定で全無視し、追跡するものだけを個別に拾う。
@@ -85,6 +85,11 @@
 !/.config/pnpm/
 !/.config/pnpm/5/
 !/.config/pnpm/5/package.json
+!/.config/rex/
+/.config/rex/*
+!/.config/rex/init.lua
+!/.config/rex/open-in-nvim.applescript
+!/.config/rex/themes/
 !/.config/sheldon/
 !/.config/sheldon/**
 !/.config/zeno/

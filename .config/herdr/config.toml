@@ -4,8 +4,8 @@ onboarding = false
 # 旧 .tmux.conf からの移植設定。既定値のままの項目は省略している。
 
 [theme]
-# catppuccin（旧 catppuccin mocha 相当のダーク）
-name = "catppuccin"
+# tokyo-night（nvim、alacritty、Rex と同じ Tokyo Night にそろえる）
+name = "tokyo-night"
 
 auto_switch = false
 

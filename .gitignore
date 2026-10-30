@@ -47,6 +47,8 @@
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/
+# hosts.yml は認証情報（keyring 非使用時はトークン）を持つので追跡しない。
+/.config/gh/*
 !/.config/gh/state.yml
 !/.config/gh/config.yml
 !/.config/git/

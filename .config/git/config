@@ -26,3 +26,6 @@
 	autostash = true
 	abbreviateCommands = true
 	autosquash = true
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential

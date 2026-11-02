@@ -17,6 +17,8 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PNPM_HOME:$PATH"
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 export PATH="$HOME/.bin.local:$PATH"
+# Rex のペイン内では Rex が渡す REX_BIN_DIR に rex CLI があるので PATH に通す
+[[ -n "$REX_BIN_DIR" ]] && export PATH="$REX_BIN_DIR:$PATH"
 # Install JSR dependencies for zeno.zsh
 export DENO_TLS_CA_STORE=system
 

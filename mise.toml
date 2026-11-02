@@ -182,8 +182,8 @@ adopt = true
 "com.apple.finder" = { DisableAllAnimations = true, AppleShowAllFiles = true, ShowStatusBar = true, ShowPathbar = true }
 "com.apple.menuextra.clock" = { DateFormat = "EEE d MMM HH:mm" }
 "com.apple.menuextra.battery" = { ShowPercent = "YES" }
-# Rex: テーマ色を Display P3 として読み（Alacritty と同じ見え方）、非フォーカスのペインを暗くしない
-"com.superlogical.rex" = { "Workspace.terminalUsesDisplayP3" = true, "Workspace.inactivePaneFadeMode" = "none" }
+# Rex: テーマ色を Display P3 として読み（Alacritty と同じ見え方）、非フォーカスのペインは背景だけ暗くする
+"com.superlogical.rex" = { "Workspace.terminalUsesDisplayP3" = true, "Workspace.inactivePaneFadeMode" = "surface" }
 
 # ---------------------------------------------------------------------------
 # ログインシェル（旧 install.sh の chsh）

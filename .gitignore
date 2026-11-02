@@ -44,6 +44,8 @@
 # synced/ は claude.ai の組織スキルを Claude Code が同期して置くキャッシュ（バケット ID 付き）。
 # ログインすれば再取得されるので dotfiles には持たない。
 /.config/claude/skills/synced/
+# .trash/ は Claude Code が削除したスキルを退避する場所。dotfiles には持たない。
+/.config/claude/skills/.trash/
 !/.config/codex/
 !/.config/codex/**
 !/.config/gh/

@@ -72,17 +72,41 @@ local function current_dir(ctx)
   return os.getenv("HOME")
 end
 
-local function open_popup(ctx, command)
+local function open_popup(ctx, command, bounds)
   local options = { cwd = current_dir(ctx) }
   if command then
     options.command = command
   end
   local _, err = rex.session.new_layer{
-    bounds = { 0.15, 0.15, 0.7, 0.7 }, -- 旧 -w70% -h70%、中央
+    bounds = bounds or { 0.15, 0.15, 0.7, 0.7 }, -- 旧 -w70% -h70%、中央
     layout = rex.layout.block{ flavor = shell, options = options },
     focus = true,
   }
   if err ~= nil then error(err, 0) end
+end
+
+-- フォーカス中のペインの位置と大きさ(ウィンドウに対する割合)を session.view から探す
+local function find_rect(node, block_id)
+  if node == nil then return nil end
+  if node.block_id == block_id then return node.rect end
+  if node.split then
+    return find_rect(node.split.before, block_id) or find_rect(node.split.after, block_id)
+  end
+  return nil
+end
+
+local function pane_bounds(ctx)
+  local res = rex.session.view{}
+  local view = res and (res.view or res)
+  for _, w in ipairs(view and view.windows or {}) do
+    for _, layer in ipairs(w.layers or {}) do
+      if layer.kind == "tiled" then
+        local rect = find_rect(layer.layout, ctx.block_id)
+        if rect then return rect end
+      end
+    end
+  end
+  return nil
 end
 
 rex.action{
@@ -106,7 +130,40 @@ rex.action{
   end,
 }
 
+-- 旧 copy-mode-vi の代わり。フォーカス中のペインのスクロールバックを、同じ位置に重ねた nvim で開く。
+-- v / V / ctrl+v で選択し、y でクリップボードにコピーして閉じる(旧 copy-pipe-and-cancel)。貼り付けは cmd+v
+-- コマンドはセッションのホスト(mac-mini など)で動くので、nvim に読ませる Lua はスクリプトに埋め込んで
+-- そのホストのファイルに頼らない。コピーも pbcopy ではなく OSC 52 で書き、手元の Rex のクリップボードに届ける
+rex.action{
+  name = "copy_mode",
+  title = "Copy Mode (Scrollback in nvim)",
+  run = function(ctx)
+    local script = [[
+f=$(mktemp -t rex-scrollback)
+l=$(mktemp -t rex-copy-mode)
+trap 'rm -f "$f" "$l"' EXIT
+cat > "$l" <<'EOF'
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    local ev = vim.v.event
+    if ev.operator ~= "y" then return end
+    -- 行単位の選択でも末尾に改行を付けない。貼り付けたコマンドがそのまま実行されるのを避ける
+    local text = table.concat(ev.regcontents, "\n")
+    -- stderr は端末につながっているので、OSC 52 を書き終えてから閉じられる
+    vim.api.nvim_chan_send(vim.v.stderr, "\027]52;c;" .. vim.base64.encode(text) .. "\007")
+    vim.schedule(function() vim.cmd("qa!") end)
+  end,
+})
+EOF
+rex capture -s "$1" -b "$2" --trim --unwrap > "$f"
+nvim -R + -c "luafile $l" "$f"
+]]
+    open_popup(ctx, { "sh", "-c", script, "sh", ctx.session_id, ctx.block_id }, pane_bounds(ctx))
+  end,
+}
+
 -- 旧 bind Space popup / bind g popup lazygit
 rex.bind("ctrl+q>space", "popup_shell")
 rex.bind("ctrl+q>g", "popup_lazygit")
 rex.bind("ctrl+q>e", "edit_config")
+rex.bind("ctrl+q>[", "copy_mode")

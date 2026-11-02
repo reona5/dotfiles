@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+# zeno の常駐サーバーは、起動したシェルの cwd で deno run --node-modules-dir=auto を
+# 実行する。cwd が Node プロジェクトだと Deno がその package.json を拾い、
+# node_modules/.deno/ を作って pnpm のシンボリックリンクを張り替えてしまう。
+# ZENO_SERVER_BIN でこのラッパーに差し替え、zeno 本体のディレクトリで起動させる。
+# 作業ディレクトリへの追従はサーバーが chdir コマンドで行うので、起動時の cwd は関係ない。
+# package.json の探索は起動時にしか行われないため、後から chdir しても影響しない。
+
+: "${ZENO_ROOT:?ZENO_ROOT is not set}"
+
+cd "$ZENO_ROOT" || exit 1
+export DENO_NO_PACKAGE_JSON=1
+exec "$ZENO_ROOT/bin/zeno-server" "$@"

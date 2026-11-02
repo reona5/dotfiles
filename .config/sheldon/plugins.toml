@@ -35,6 +35,8 @@ apply = ['defer']
 inline = '''
 export ZENO_HOME="$HOME/.config/zeno"
 export ZENO_ENABLE_SOCK=1
+# cwd の Node プロジェクトの node_modules を書き換えないよう、固定 cwd で起動するラッパー
+export ZENO_SERVER_BIN="$ZENO_HOME/bin/zeno-server"
 export ZENO_COMPLETION_FALLBACK=expand-or-complete
 
 function zeno-ghq-cd-post-hook-impl() {

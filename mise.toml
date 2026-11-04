@@ -51,6 +51,7 @@
 "brew:neovim" = "latest"
 "brew:pam-reattach" = "latest"  # herdr / tmux 配下でも sudo の Touch ID を効かせる（下の bootstrap タスクで PAM に組み込む）
 "brew:pngpaste" = "latest"
+"brew:pngquant" = "latest"      # CleanShot の PNG を 1MB 未満に減色する（.bin.local/cleanshot-compress）
 "brew:pnpm" = "latest"
 "brew:poppler" = "latest"       # pdftotext / pdftoppm（imozuru skill が PDF を文字にする）
 "brew:ripgrep" = "latest"

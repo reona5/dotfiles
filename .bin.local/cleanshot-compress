@@ -1,0 +1,128 @@
+#!/bin/sh
+# CleanShot で撮った PNG を、CMS のアップロード上限（1MB）に収まるよう自動で圧縮する。
+#
+# CleanShot は撮影した画像を ~/Library/Application Support/CleanShot/media/media_*/ に
+# 置き、Quick Access のオーバーレイからドラッグするとこのファイルがそのまま渡る。
+# そこで LaunchAgent（WatchPaths）でこのフォルダを見張り、上限を超える PNG をその場で
+# pngquant により減色して置き換える。解像度（@2x）は保ったまま、まず画質を落とし、
+# それでも収まらなければ 1x に縮小する。
+#
+# 使い方:
+#   cleanshot-compress            新しい PNG を探して圧縮する（LaunchAgent から呼ばれる）
+#   cleanshot-compress <file>...  指定した PNG を圧縮する
+#   cleanshot-compress install    LaunchAgent を生成して読み込む
+#   cleanshot-compress uninstall  LaunchAgent を外す
+#
+# 依存: pngquant（brew）、sips（macOS 標準）
+
+set -eu
+
+media_dir="$HOME/Library/Application Support/CleanShot/media"
+label="com.reona5.cleanshot-compress"
+plist="$HOME/Library/LaunchAgents/$label.plist"
+log="$HOME/Library/Logs/cleanshot-compress.log"
+limit="${CLEANSHOT_COMPRESS_LIMIT:-1000000}" # バイト。Contentful の上限 1MB より少し下
+xattr_key="com.reona5.cleanshot-compressed"
+
+PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+size_of() { stat -f %z "$1"; }
+
+# 書き込み途中のファイルを触らないよう、サイズが 2 回続けて変わらなくなるまで待つ。
+wait_stable() {
+  prev=-1
+  i=0
+  while [ "$i" -lt 20 ]; do
+    cur=$(size_of "$1" 2>/dev/null || echo -1)
+    [ "$cur" -gt 0 ] && [ "$cur" -eq "$prev" ] && return 0
+    prev=$cur
+    i=$((i + 1))
+    sleep 0.3
+  done
+  return 1
+}
+
+compress() {
+  f=$1
+  [ -f "$f" ] || return 0
+  wait_stable "$f" || return 0
+  before=$(size_of "$f")
+  [ "$before" -ge "$limit" ] || return 0
+
+  dir=$(dirname "$f")
+  tmp="$dir/.cleanshot-compress.$$.png"
+  trap 'rm -f "$tmp"' EXIT
+
+  for q in 65-90 40-75; do
+    pngquant --quality="$q" --speed 3 --strip --force --output "$tmp" -- "$f" 2>/dev/null || continue
+    [ "$(size_of "$tmp")" -lt "$limit" ] && break
+  done
+
+  # 画質を下げても収まらなければ、元画像を半分の大きさ（1x）にしてから減色する。
+  if [ ! -f "$tmp" ] || [ "$(size_of "$tmp")" -ge "$limit" ]; then
+    w=$(sips -g pixelWidth "$f" | awk '/pixelWidth/ {print $2}')
+    sips --resampleWidth $((w / 2)) "$f" --out "$tmp" >/dev/null
+    pngquant --quality=40-90 --speed 3 --strip --force --ext .png -- "$tmp" 2>/dev/null || true
+  fi
+
+  [ -f "$tmp" ] || return 0
+  after=$(size_of "$tmp")
+  if [ "$after" -lt "$before" ]; then
+    mv -f "$tmp" "$f"
+    xattr -w "$xattr_key" 1 "$f"
+    echo "$(date '+%F %T') $before -> $after $f"
+  fi
+  rm -f "$tmp"
+  trap - EXIT
+}
+
+scan() {
+  # 直近 10 分に作られた、まだ圧縮していない PNG だけを対象にする。
+  # WatchPaths はフォルダの直下しか見ないので、media_* が作られた直後に起動され、
+  # 中の PNG はまだ書き込み中のことがある。少し待ってから探し直す。
+  n=0
+  while [ "$n" -lt 3 ]; do
+    find "$media_dir" -type f -name '*.png' ! -name '.cleanshot-compress.*' -mmin -10 2>/dev/null |
+      while IFS= read -r f; do
+        xattr -p "$xattr_key" "$f" >/dev/null 2>&1 && continue
+        compress "$f"
+      done
+    n=$((n + 1))
+    sleep 1
+  done
+}
+
+install_agent() {
+  command -v pngquant >/dev/null || { echo "pngquant がありません: brew install pngquant" >&2; exit 1; }
+  self=$(cd "$(dirname "$0")" && pwd)/$(basename "$0")
+  mkdir -p "$(dirname "$plist")" "$media_dir"
+  cat >"$plist" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>$label</string>
+  <key>ProgramArguments</key>
+  <array><string>/bin/sh</string><string>$self</string></array>
+  <key>WatchPaths</key>
+  <array><string>$media_dir</string></array>
+  <key>ThrottleInterval</key><integer>1</integer>
+  <key>StandardOutPath</key><string>$log</string>
+  <key>StandardErrorPath</key><string>$log</string>
+</dict>
+</plist>
+EOF
+  launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$plist"
+  echo "installed: $plist (log: $log)"
+}
+
+case "${1:-}" in
+  install) install_agent ;;
+  uninstall)
+    launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+    rm -f "$plist"
+    ;;
+  "") scan ;;
+  *) for f in "$@"; do compress "$f"; done ;;
+esac

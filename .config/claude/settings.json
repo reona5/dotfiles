@@ -266,5 +266,9 @@
       "**Routine under repo prefix**: routine work is confined to `~/src/github.com/reona5/` (ghq layout); `mise bootstrap`, `mise -n` previews and `actionlint` runs in the dotfiles checkout are the everyday loop"
     ]
   },
-  "remoteControlAtStartup": true
+  "remoteControlAtStartup": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
 }

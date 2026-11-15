@@ -96,6 +96,15 @@
             "async": true
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/rex-resume.sh end",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -123,6 +132,15 @@
           {
             "type": "command",
             "command": "/bin/sh -c 'rex __internal session-start --agent claude --feature-session-naming=false 2>/dev/null || true'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/rex-resume.sh save",
             "timeout": 5
           }
         ]

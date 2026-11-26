@@ -1,5 +1,5 @@
 [tools]
-"github:yusukebe/ax" = { version = "latest", exe = "ax" }
+"github:yusukebe/ax" = "latest"
 bun = "latest"
 cargo-binstall = "latest"
 "cargo:cargo-edit" = "latest"
@@ -9,7 +9,7 @@ cargo-binstall = "latest"
 "cargo:toml-cli" = "latest"
 "cargo:usage-cli" = { version = "latest", os = ["linux", "macos"] }
 deno = 'latest'
-"github:openclaw/gogcli" = { version = "latest", exe = "gog" }
+"github:openclaw/gogcli" = "latest"
 golang = 'latest'
 node = '24'
 opencode = "latest"

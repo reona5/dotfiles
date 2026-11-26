@@ -5,16 +5,19 @@
       "WebFetch"
     ],
     "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)",
-      "Read(./config/credentials.json)",
-      "Bash(sudo:*)"
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(secrets/**)",
+      "Read(**/config/credentials.json)",
+      "Bash(sudo *)"
     ],
     "ask": [
-      "Bash(git push:*)",
-      "Bash(git push --force:*)",
-      "Bash(rm -rf:*)"
+      "Bash(git push *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(rm -Rf *)",
+      "Bash(rm -r *)",
+      "Bash(rm -R *)"
     ],
     "defaultMode": "auto"
   },
@@ -82,7 +85,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/japanese-guard.py"
+            "command": "~/.claude/hooks/japanese-guard.py",
+            "timeout": 10
           }
         ]
       }
@@ -94,15 +98,6 @@
             "type": "command",
             "command": "'/opt/homebrew/bin/moshi-hook' claude-hook",
             "async": true
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash $HOME/.claude/hooks/rex-resume.sh end",
-            "timeout": 5
           }
         ]
       }
@@ -135,15 +130,6 @@
             "timeout": 5
           }
         ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash $HOME/.claude/hooks/rex-resume.sh save",
-            "timeout": 5
-          }
-        ]
       }
     ],
     "Stop": [
@@ -160,7 +146,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/japanese-guard.py"
+            "command": "~/.claude/hooks/japanese-guard.py",
+            "timeout": 10
           }
         ]
       }
@@ -197,6 +184,7 @@
     }
   },
   "language": "japanese",
+  "outputStyle": "Plain Japanese",
   "sandbox": {
     "enabled": false,
     "network": {

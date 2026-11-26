@@ -144,6 +144,7 @@ adopt = true
 "~/.claude/statusline.py" = { source = ".config/claude/statusline.py", mode = "symlink" }
 "~/.claude/skills" = { source = ".config/claude/skills", mode = "symlink" }
 "~/.claude/hooks" = { source = ".config/claude/hooks", mode = "symlink" }
+"~/.claude/output-styles" = { source = ".config/claude/output-styles", mode = "symlink" }
 "~/.config" = { source = ".config", mode = "symlink" }
 "~/.ctags.d" = { source = ".ctags.d", mode = "symlink" }
 "~/.fzf.zsh" = { source = ".fzf.zsh", mode = "symlink" }

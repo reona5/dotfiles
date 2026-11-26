@@ -22,6 +22,7 @@
 /.config/claude/*
 !/.config/claude/settings.json
 !/.config/claude/statusline.py
+!/.config/claude/output-styles/
 # hooks/ は ~/.claude/hooks の実体。hook スクリプトだけを置く。
 !/.config/claude/hooks/
 /.config/claude/hooks/*

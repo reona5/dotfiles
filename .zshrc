@@ -64,18 +64,3 @@ export PATH="$HOME/.local/bin:$PATH"
 . "$HOME/.local/share/../bin/env"
 export PATH=/opt/homebrew/opt/mysql-client@8.4/bin:$PATH
 export PATH="/opt/homebrew/opt/mysql-client@8.4/bin:$PATH"
-
-# Rex: 再起動などでペインのシェルが起動し直したら、そのペインで動いていた Claude Code を再開する。
-# 記録は .config/claude/hooks/rex-resume.sh が SessionStart/SessionEnd で書く。
-# ペイン直下のログインシェルだけが対象(nvim の :terminal などの入れ子シェルでは再開しない)
-if [[ -n "$REX_BLOCK" && -o login && $SHLVL -eq 1 ]]; then
-  () {
-    local f="${XDG_STATE_HOME:-$HOME/.local/state}/rex-claude/${REX_BLOCK#block:}"
-    [[ -r "$f" ]] || return
-    local id dir
-    IFS=$'\t' read -r id dir < "$f"
-    rm -f "$f" # 再開した claude の SessionStart が書き直す
-    [[ -n "$id" && -d "$dir" ]] || return
-    cd "$dir" && claude --resume "$id"
-  }
-fi
